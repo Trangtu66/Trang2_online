@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phiếu ôn tập trực tuyến</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div>
+      <div class="stamp">Phiếu ôn tập · Ngân hàng câu hỏi</div>
+      <h1 id="topic-title">Đang tải chủ đề…</h1>
+    </div>
+    <a class="admin-link" href="admin.html">Quản trị ngân hàng câu hỏi →</a>
+  </div>
+
+  <!-- ============ MÀN HÌNH BẮT ĐẦU ============ -->
+  <section id="start-screen">
+    <div class="panel">
+      <div class="meta-grid" id="meta-grid">
+        <!-- filled by JS -->
+      </div>
+
+      <label class="field-label" for="student-name">Họ và tên học sinh</label>
+      <input type="text" id="student-name" placeholder="Nhập họ tên của em…" autocomplete="name">
+      <div class="error-msg" id="name-error"></div>
+
+      <p class="hint">Đề được rút ngẫu nhiên từ ngân hàng câu hỏi mỗi lần bấm "Bắt đầu". Em có thể sửa đáp án bất kỳ lúc nào trước khi nộp bài. Hết giờ, bài sẽ tự động nộp.</p>
+
+      <div class="btn-row" style="margin-top:16px;">
+        <button class="btn" id="start-btn">Bắt đầu làm bài</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MÀN HÌNH LÀM BÀI ============ -->
+  <section id="quiz-screen" style="display:none;">
+    <div class="timer-bar" id="timer-bar">
+      <span class="topic-name" id="quiz-taker-name"></span>
+      <span class="clock" id="clock">00:00</span>
+    </div>
+
+    <div class="panel">
+      <div id="group1-block">
+        <div class="q-group-title">Phần 1 · <span>Trắc nghiệm</span> — chọn 1 đáp án đúng</div>
+        <div id="group1-list"></div>
+      </div>
+
+      <div id="group2-block">
+        <div class="q-group-title">Phần 2 · <span>Đúng / Sai</span> — mỗi ý chọn Đúng hoặc Sai</div>
+        <div id="group2-list"></div>
+      </div>
+
+      <div id="group3-block">
+        <div class="q-group-title">Phần 3 · <span>Trả lời ngắn</span></div>
+        <div id="group3-list"></div>
+      </div>
+
+      <div class="btn-row" style="margin-top:22px;">
+        <button class="btn" id="submit-btn">Nộp bài</button>
+      </div>
+      <div class="error-msg" id="submit-error"></div>
+    </div>
+  </section>
+
+  <!-- ============ MÀN HÌNH KẾT QUẢ ============ -->
+  <section id="result-screen" style="display:none;">
+    <div class="score-slip">
+      <div class="who" id="result-name"></div>
+      <div class="score"><span id="result-score">0</span><small>/10</small></div>
+      <div class="sub" id="result-time"></div>
+    </div>
+
+    <div class="panel">
+      <div class="q-group-title" style="margin-top:0;">Tổng hợp điểm theo phần</div>
+      <div id="breakdown-list"></div>
+    </div>
+
+    <div class="panel">
+      <div class="q-group-title" style="margin-top:0;">Chi tiết bài làm</div>
+      <div id="review-list"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn secondary" id="retry-btn">Làm đề mới</button>
+    </div>
+  </section>
+
+  <footer class="site-foot">Đề được tạo ngẫu nhiên từ ngân hàng câu hỏi · Chạy hoàn toàn miễn phí trên GitHub Pages</footer>
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/student.js"></script>
+</body>
+</html>
