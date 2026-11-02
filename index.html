@@ -51,6 +51,11 @@
         .dark .fullscreen-stage {
             background: #0f172a;
         }
+        /* Đảm bảo thanh điều khiển nổi & các nút luôn nổi lên trên cùng khi fullscreen */
+        .fullscreen-stage .z-controls {
+            z-index: 9999 !important;
+            position: relative;
+        }
         .fullscreen-stage #bell-q-text,
         .fullscreen-stage #tug-q-text {
             font-size: 1.55rem !important;
@@ -90,7 +95,7 @@
                         <h1 class="text-lg font-extrabold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">MathLab THPT 2025</h1>
                         <span class="px-2 py-0.5 text-[10px] font-extrabold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 rounded-full border border-amber-300">PRO</span>
                     </div>
-                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Chuẩn 22 Câu (3 Phần) • Tự Động Đọc Ảnh Word & Vẽ Đồ Thị Thông Minh</p>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Chuẩn 22 Câu (3 Phần: Khởi Động, Tăng Tốc, Về Đích) • Tự Động Đọc Ảnh Word & Đồ Thị</p>
                 </div>
             </div>
 
@@ -144,14 +149,14 @@
     <!-- MAIN CONTAINER -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 overflow-y-auto">
 
-        <!-- ================= 1. GAME RUNG CHUÔNG VÀNG (22 CÂU - 3 PHẦN) ================= -->
+        <!-- ================= 1. GAME RUNG CHUÔNG VÀNG (22 CÂU - 3 PHẦN: KHỞI ĐỘNG, TĂNG TỐC, VỀ ĐÍCH) ================= -->
         <div id="view-bell" class="space-y-5">
             <!-- Hero Banner Khoa học & Hiện đại -->
             <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 rounded-2xl p-5 sm:p-6 text-white shadow-xl flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
                 <div class="space-y-1.5">
                     <div class="flex flex-wrap items-center gap-2">
                         <span class="bg-white/25 backdrop-blur-sm px-3 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wider">Đấu Trường Sân Khấu</span>
-                        <span class="bg-black/25 px-3 py-0.5 rounded-full text-xs font-semibold">Phần I: 12 câu • Phần II: 4 câu Đ/S • Phần III: 6 câu Trả lời ngắn</span>
+                        <span class="bg-black/25 px-3 py-0.5 rounded-full text-xs font-semibold">Khởi Động (12 câu) • Tăng Tốc (4 câu) • Về Đích (6 câu)</span>
                     </div>
                     <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Rung Chuông Vàng Toán Học 🔔</h2>
                     <p class="text-amber-100 text-xs sm:text-sm">Phím tắt giáo viên: <kbd class="px-1.5 py-0.5 bg-black/30 rounded text-xs font-mono">F</kbd> Toàn màn hình • <kbd class="px-1.5 py-0.5 bg-black/30 rounded text-xs font-mono">Space</kbd> Đếm ngược • <kbd class="px-1.5 py-0.5 bg-black/30 rounded text-xs font-mono">Enter</kbd> Mở đáp án • <kbd class="px-1.5 py-0.5 bg-black/30 rounded text-xs font-mono">⬅/➡</kbd> Chuyển câu</p>
@@ -185,8 +190,8 @@
                 <!-- Thanh tiến trình 22 câu trực quan chia theo 3 Phần -->
                 <div class="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
                     <div class="flex justify-between items-center text-xs font-bold text-slate-500 dark:text-slate-400">
-                        <span>TIẾN ĐỘ CHINH PHỤC 22 CÂU CHUẨN CẤU TRÚC</span>
-                        <span id="bell-progress-summary" class="text-indigo-600 dark:text-indigo-400">Đang ở Câu 1 / 22 (Phần I)</span>
+                        <span>TIẾN ĐỘ CHINH PHỤC 22 CÂU (KHỞI ĐỘNG • TĂNG TỐC • VỀ ĐÍCH)</span>
+                        <span id="bell-progress-summary" class="text-indigo-600 dark:text-indigo-400">Đang ở Câu 1 / 22 (Khởi Động)</span>
                     </div>
                     <div id="bell-22-stepper" class="flex flex-wrap gap-1.5">
                         <!-- Render 22 nút số thứ tự câu hỏi -->
@@ -196,7 +201,7 @@
                 <!-- Điều khiển giáo viên -->
                 <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-wrap items-center justify-between gap-3">
                     <div class="flex flex-wrap items-center gap-2.5">
-                        <span id="bell-current-q-badge" class="px-3.5 py-1.5 bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-400 font-extrabold rounded-lg text-sm">Câu 1/22 (Phần I)</span>
+                        <span id="bell-current-q-badge" class="px-3.5 py-1.5 bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-400 font-extrabold rounded-lg text-sm">Câu 1/22 (Khởi Động)</span>
                         <select id="bell-quick-jump" onchange="jumpToBellQuestion(this.value)" class="bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1.5 text-xs font-semibold">
                             <!-- Render 22 câu -->
                         </select>
@@ -217,7 +222,7 @@
                     <div id="bell-teacher-panel" class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-md space-y-4">
                         <div class="flex flex-wrap justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-700 gap-2">
                             <div class="flex items-center space-x-2">
-                                <span id="bell-part-badge" class="px-3 py-1 bg-indigo-100 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 rounded-md text-xs font-extrabold uppercase">PHẦN I • TRẮC NGHIỆM 4 LỰA CHỌN</span>
+                                <span id="bell-part-badge" class="px-3 py-1 bg-indigo-100 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 rounded-md text-xs font-extrabold uppercase">KHỞI ĐỘNG • TRẮC NGHIỆM 4 LỰA CHỌN</span>
                                 <span id="bell-point-badge" class="text-xs font-bold text-amber-600 dark:text-amber-400">(+25 XP)</span>
                             </div>
                             <div class="flex items-center space-x-2">
@@ -273,14 +278,14 @@
                             <div id="bell-stage-grid" class="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto custom-scroll pr-1"></div>
                         </div>
 
-                        <!-- Giao diện Bảng Con Điện Tử cho Học Sinh (Hỗ trợ cả 3 phần) -->
+                        <!-- Giao diện Bảng Con Điện Tử cho Học Sinh (Hỗ trợ cả Khởi Động, Tăng Tốc, Về Đích) -->
                         <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border-2 border-indigo-200 dark:border-indigo-800 space-y-3">
                             <div class="flex justify-between items-center">
                                 <span class="text-xs font-extrabold text-indigo-700 dark:text-indigo-300 uppercase">📱 Bảng Con Học Sinh</span>
                                 <select id="bell-student-selector" onchange="changeActiveBellStudent(this.value)" class="text-xs bg-amber-100 text-amber-900 px-2 py-1 rounded font-bold border border-amber-300 max-w-[170px] truncate"></select>
                             </div>
 
-                            <!-- Khung trả lời Phần I & Phần II (Chọn A, B, C, D) -->
+                            <!-- Khung trả lời Khởi Động & Tăng Tốc (Chọn A, B, C, D) -->
                             <div id="bell-pad-abcd" class="space-y-2">
                                 <p class="text-[11px] text-slate-500">Chạm để úp bảng phương án của bạn:</p>
                                 <div class="grid grid-cols-4 gap-2">
@@ -291,9 +296,9 @@
                                 </div>
                             </div>
 
-                            <!-- Khung trả lời Phần III (Nhập đáp số ngắn) -->
+                            <!-- Khung trả lời Về Đích (Nhập đáp số ngắn) -->
                             <div id="bell-pad-short" class="hidden space-y-2">
-                                <p class="text-[11px] text-slate-500">Nhập kết quả trả lời ngắn (VD: 3, 24, 2,67) hoặc chọn nhanh:</p>
+                                <p class="text-[11px] text-slate-500">Nhập kết quả Về Đích (VD: 3, 24, 2,67):</p>
                                 <div class="flex space-x-2">
                                     <input type="text" id="bell-short-input" placeholder="Nhập đáp số..." class="flex-1 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-bold">
                                     <button onclick="submitBellShortAnswer()" class="px-3 py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold">Úp Bảng</button>
@@ -320,7 +325,7 @@
                 <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-slate-100 dark:border-slate-700">
                         <div>
-                            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">📝 Quản Lý & Nhập Đề Thi 22 Câu (Tự Động Đọc Ảnh, Bảng & Vẽ Đồ Thị)</h3>
+                            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">📝 Quản Lý & Nhập Đề Thi 22 Câu (Khởi Động, Tăng Tốc, Về Đích)</h3>
                             <p class="text-xs text-slate-500">Hỗ trợ chuyển nhanh giữa các Bộ Đề Mẫu (Đề 1, Đề 2 - RUNG_CHUÔNG_2) hoặc tải file Word (.docx) mới lên.</p>
                         </div>
                         <div class="flex flex-wrap gap-2">
@@ -333,7 +338,7 @@
                     <!-- Mẹo cú pháp thông minh khi nhập đề mới -->
                     <div class="p-3.5 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl text-xs space-y-1 text-amber-900 dark:text-amber-200">
                         <div class="font-extrabold">💡 Lưu ý quan trọng khi nhập file Word như RUNG_CHUÔNG_2.docx:</div>
-                        <div>• <b>Về Bảng đáp án & Hình vẽ</b>: Ứng dụng đã hỗ trợ đọc tự động bảng đáp án 2 cột (<code>| 1 | C | 7 | A |</code>), bảng Đúng/Sai Phần II và tự động tách riêng phần <i>Giải chi tiết</i> ở cuối file.</div>
+                        <div>• <b>Về Bảng đáp án & Hình vẽ</b>: Ứng dụng đã hỗ trợ đọc tự động bảng đáp án 2 cột (<code>| 1 | C | 7 | A |</code>), bảng Đúng/Sai và tự động tách riêng phần <i>Giải chi tiết</i> ở cuối file.</div>
                         <div>• <b>Về Công thức Toán trong Word</b>: Nếu file Word dùng <i>MathType cũ (dạng Object ẩn)</i> làm công thức bị trống khi copy sang web, bạn hãy dùng <b>Equation của Word (Alt + =)</b> hoặc gõ dạng chữ/LaTeX (VD: <code>y = -x^3 + 3x + 1</code>). Riêng bộ đề <b>RUNG_CHUÔNG_2.docx</b> đã được nạp sẵn 100% công thức & đồ thị ở nút màu cam phía trên!</div>
                     </div>
 
@@ -412,24 +417,24 @@
                 <div class="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
                     <div class="flex justify-between items-center text-xs font-bold text-slate-500 dark:text-slate-400">
                         <span>TIẾN ĐỘ TRẬN ĐẤU KÉO CO (22 CÂU CHUẨN 3 PHẦN)</span>
-                        <span id="tug-progress-summary" class="text-rose-600 dark:text-rose-400">Đang ở Câu 1 / 22 (Phần I)</span>
+                        <span id="tug-progress-summary" class="text-rose-600 dark:text-rose-400">Đang ở Câu 1 / 22 (Khởi Động)</span>
                     </div>
                     <div id="tug-22-stepper" class="flex flex-wrap gap-1.5"></div>
                 </div>
 
-                <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-wrap items-center justify-between gap-4">
+                <div class="z-controls bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-wrap items-center justify-between gap-4">
                     <div class="flex flex-wrap items-center gap-3">
                         <span id="tug-current-q-badge" class="px-3.5 py-1.5 bg-rose-100 text-rose-800 font-extrabold rounded-lg text-sm">Câu 1/22</span>
-                        <select id="tug-quick-jump" onchange="jumpToTugQuestion(this.value)" class="bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1.5 text-xs font-semibold"></select>
-                        <button onclick="openVisualAttachmentModal(currentTugQIndex)" class="px-3 py-1.5 bg-amber-100 text-amber-900 rounded-lg text-xs font-bold hover:bg-amber-200">🖼️ Sửa Hình/Đồ Thị</button>
-                        <button onclick="openBulkTeamModal()" class="px-3 py-1.5 bg-indigo-100 text-indigo-800 rounded-lg text-xs font-bold hover:bg-indigo-200">+ Chia Đội Cả Lớp</button>
+                        <select id="tug-quick-jump" onchange="jumpToTugQuestion(this.value)" class="bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer"></select>
+                        <button onclick="openVisualAttachmentModal(currentTugQIndex)" class="px-3 py-1.5 bg-amber-100 text-amber-900 rounded-lg text-xs font-bold hover:bg-amber-200 cursor-pointer">🖼️ Sửa Hình/Đồ Thị</button>
+                        <button onclick="openBulkTeamModal()" class="px-3 py-1.5 bg-indigo-100 text-indigo-800 rounded-lg text-xs font-bold hover:bg-indigo-200 cursor-pointer">+ Chia Đội Cả Lớp</button>
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
-                        <button onclick="tugPrevQuestion()" class="px-3 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 font-semibold rounded-lg text-sm">⬅ Câu Trước</button>
-                        <button onclick="tugStartCurrentQuestion()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg text-sm shadow">▶️ Chiếu Câu Hỏi</button>
-                        <button onclick="tugRevealAndPull()" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-lg text-sm shadow">⚡ Chốt Đáp Án & Kéo Dây</button>
-                        <button onclick="tugNextQuestion()" class="px-3 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 font-semibold rounded-lg text-sm">Câu Tiếp ➡</button>
-                        <button onclick="toggleStageFullscreen('tug-arena-stage')" class="px-3.5 py-2 bg-slate-900 dark:bg-slate-700 text-amber-300 hover:bg-slate-800 font-extrabold rounded-lg text-sm shadow">⛶ Toàn Màn Hình</button>
+                        <button onclick="tugPrevQuestion()" class="px-3 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 font-semibold rounded-lg text-sm cursor-pointer">⬅ Câu Trước</button>
+                        <button onclick="tugStartCurrentQuestion()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg text-sm shadow cursor-pointer">▶️ Chiếu Câu Hỏi</button>
+                        <button onclick="tugRevealAndPull()" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-lg text-sm shadow cursor-pointer">⚡ Chốt Đáp Án & Kéo Dây</button>
+                        <button onclick="tugNextQuestion()" class="px-3 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 font-semibold rounded-lg text-sm cursor-pointer">Câu Tiếp ➡</button>
+                        <button onclick="toggleStageFullscreen('tug-arena-stage')" class="px-3.5 py-2 bg-slate-900 dark:bg-slate-700 text-amber-300 hover:bg-slate-800 font-extrabold rounded-lg text-sm shadow cursor-pointer">⛶ Toàn Màn Hình</button>
                     </div>
                 </div>
 
@@ -508,7 +513,7 @@
                             <button onclick="selectTugStudentAnswer('D')" class="py-3 bg-slate-100 dark:bg-slate-700 hover:bg-rose-100 rounded-xl font-extrabold text-base shadow">D</button>
                         </div>
                         <div id="tug-pad-short" class="hidden pt-2 border-t border-slate-200 dark:border-slate-700 flex space-x-2">
-                            <input type="text" id="tug-short-input" placeholder="Nhập đáp số ngắn (Phần III)..." class="flex-1 px-3 py-1.5 text-xs rounded-lg border bg-slate-50 dark:bg-slate-900 font-bold">
+                            <input type="text" id="tug-short-input" placeholder="Nhập đáp số ngắn (Về Đích)..." class="flex-1 px-3 py-1.5 text-xs rounded-lg border bg-slate-50 dark:bg-slate-900 font-bold">
                             <button onclick="submitTugShortAnswer()" class="px-3 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-bold">Chốt</button>
                         </div>
                         <p id="tug-student-feedback" class="text-xs text-center text-slate-500 font-medium">Chọn phương án đúng để cộng lực kéo cho đội của bạn!</p>
@@ -703,7 +708,7 @@
                 <button onclick="closeGuideModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
             <div class="space-y-2.5 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-                <p><strong>1. Nạp đề thi chuẩn 22 câu (3 phần):</strong> Vào tab <b>📝 Ngân Hàng Đề Word</b> để chọn giữa <b>Đề Mẫu Số 1</b>, <b>Đề RUNG_CHUÔNG_2</b> hoặc tải file <code>.docx</code> mới lên.</p>
+                <p><strong>1. Nạp đề thi chuẩn 22 câu (3 phần: Khởi Động, Tăng Tốc, Về Đích):</strong> Vào tab <b>📝 Ngân Hàng Đề Word</b> để chọn giữa <b>Đề Mẫu Số 1</b>, <b>Đề RUNG_CHUÔNG_2</b> hoặc tải file <code>.docx</code> mới lên.</p>
                 <p><strong>2. Trình chiếu Toàn màn hình:</strong> Bấm nút <b>⛶ Toàn Màn Hình</b> (hoặc phím <code>F</code>). Dùng phím <code>Space</code> để đếm ngược, <code>Enter</code> để mở đáp án và <code>⬅ / ➡</code> để chuyển câu.</p>
                 <p><strong>3. Gắn/Sửa Đồ thị & Bảng biến thiên:</strong> Bấm nút <b>🖼️ Sửa Hình</b> ngay trên khung câu hỏi rồi nhấn <code>Ctrl + V</code> để dán ảnh chụp Bảng biến thiên hoặc nhập hàm số để vẽ đồ thị SVG.</p>
             </div>
@@ -760,14 +765,12 @@
             svg += `<text x="${ox + 6}" y="18" font-size="11" font-style="italic" font-weight="bold" fill="#334155">y</text>`;
             svg += `<text x="${ox - 12}" y="${oy + 13}" font-size="10" font-style="italic" fill="#475569">O</text>`;
 
-            // Các đường nét đứt (Tiệm cận hoặc đường gióng tọa độ)
             if (cfg.dashedLines) {
                 cfg.dashedLines.forEach(dl => {
                     svg += `<line x1="${toX(dl.x1)}" y1="${toY(dl.y1)}" x2="${toX(dl.x2)}" y2="${toY(dl.y2)}" stroke="${dl.color || '#94a3b8'}" stroke-width="1.2" stroke-dasharray="4,3"/>`;
                 });
             }
 
-            // Các nhánh đường cong
             const strokeColor = cfg.curveColor || '#2563eb';
             (cfg.branches || []).forEach(br => {
                 let d = "";
@@ -784,7 +787,6 @@
                 if (d) svg += `<path d="${d}" fill="none" stroke="${strokeColor}" stroke-width="2.3" stroke-linecap="round"/>`;
             });
 
-            // Các điểm đánh dấu và nhãn tọa độ
             (cfg.points || []).forEach(pt => {
                 const px = toX(pt.x), py = toY(pt.y);
                 if (pt.showDot !== false) {
@@ -811,15 +813,6 @@
             } catch (e) {
                 return null;
             }
-        }
-
-        function autoDetectGraphForNewQuestion(qText) {
-            if (!qText) return null;
-            const tagMatch = qText.match(/\[(?:ĐỒ THỊ|DO THI|GRAPH)\s*:\s*([^\]]+)\]/i);
-            if (tagMatch) {
-                return buildSvgFromMathExpression(tagMatch[1]);
-            }
-            return null;
         }
 
         // Các đồ thị SVG chuẩn cho Bộ Đề Số 1
@@ -931,7 +924,6 @@
             ]
         });
 
-        // Các đồ thị SVG chuẩn xác cho Bộ Đề Số 2 (RUNG_CHUÔNG_2.docx)
         const SVG_RC2_Q3_P1 = generateMathSvgGraph({
             xMin: -2.4, xMax: 2.4, yMin: -1.8, yMax: 3.6,
             branches: [
@@ -1038,17 +1030,16 @@
             <line x1="235" y1="35" x2="330" y2="35" stroke="#1e293b" stroke-width="1.5"/>
         </svg>`;
 
-        // Bộ Đề Mẫu Số 2: Trích xuất chuẩn 100% từ file RUNG_CHUÔNG_2.docx của Giáo viên
         const PRESET_EXAM_2_QUESTIONS = [
             {
-                id: 1, part: "Phần I", qNum: "Câu 1 (Phần I)", type: "mcq",
+                id: 1, part: "Khởi Động", qNum: "Câu 1 (Khởi Động)", type: "mcq",
                 text: "Tính chiều cao $h$ của một khối chóp có thể tích $V=36a^3$ và diện tích đáy bằng $9a^2$.",
                 options: ["$4a$.", "$6a$.", "$12a$.", "$9a$."],
                 correct: 2, answerLabel: "C",
                 expl: "Chọn C. Thể tích khối chóp $V = \\frac{1}{3}B\\cdot h \\implies h = \\frac{3V}{B} = \\frac{3\\cdot 36a^3}{9a^2} = 12a$."
             },
             {
-                id: 2, part: "Phần I", qNum: "Câu 2 (Phần I)", type: "mcq",
+                id: 2, part: "Khởi Động", qNum: "Câu 2 (Khởi Động)", type: "mcq",
                 text: "Cho hàm số $y=f(x)$ xác định và liên tục trên khoảng $(-\\infty;+\\infty)$, có bảng biến thiên như hình dưới đây. Mệnh đề nào sau đây là mệnh đề đúng?",
                 visual: `<table class="border-collapse border border-slate-400 text-center text-xs sm:text-sm font-semibold w-full max-w-lg">
                     <tr class="bg-slate-100 dark:bg-slate-700"><td class="border border-slate-400 p-1.5">$x$</td><td>$-\\infty$</td><td></td><td>$-1$</td><td></td><td>$1$</td><td></td><td>$+\\infty$</td></tr>
@@ -1065,7 +1056,7 @@
                 expl: "Chọn C. Từ bảng biến thiên ta có $y' < 0$ trên $(-\\infty;-1)$ và $(1;+\\infty)$ nên hàm số nghịch biến trên $(1;+\\infty)$."
             },
             {
-                id: 3, part: "Phần I", qNum: "Câu 3 (Phần I)", type: "mcq",
+                id: 3, part: "Khởi Động", qNum: "Câu 3 (Khởi Động)", type: "mcq",
                 text: "Đường cong trong hình vẽ dưới đây là đồ thị của hàm số nào sau đây?",
                 visual: SVG_RC2_Q3_P1,
                 options: [
@@ -1078,7 +1069,7 @@
                 expl: "Chọn B. Đồ thị hàm bậc ba có nhánh phải đi xuống nên $a<0$, có 2 điểm cực trị và đi qua $(0;1)$ nên là $y=-x^3+3x+1$."
             },
             {
-                id: 4, part: "Phần I", qNum: "Câu 4 (Phần I)", type: "mcq",
+                id: 4, part: "Khởi Động", qNum: "Câu 4 (Khởi Động)", type: "mcq",
                 text: "Cho hàm số $y=f(x)$ liên tục trên $\\mathbb{R}$ và có đồ thị như hình vẽ sau đây. Số điểm cực trị của hàm số là:",
                 visual: SVG_Q3_PART1,
                 options: ["$3$.", "$2$.", "$1$.", "$4$."],
@@ -1086,7 +1077,7 @@
                 expl: "Chọn A. Đồ thị đổi chiều tại $x=-1, x=0, x=1$ nên hàm số có $3$ điểm cực trị."
             },
             {
-                id: 5, part: "Phần I", qNum: "Câu 5 (Phần I)", type: "mcq",
+                id: 5, part: "Khởi Động", qNum: "Câu 5 (Khởi Động)", type: "mcq",
                 text: "Cho hàm số $y=f(x)$ liên tục trên đoạn $[-1;3]$ có đồ thị như hình vẽ dưới đây. Gọi $M$ và $m$ lần lượt là giá trị lớn nhất, giá trị nhỏ nhất của hàm số trên đoạn $[-1;3]$. Giá trị của $M+m$ bằng:",
                 visual: SVG_RC2_Q5_P1,
                 options: ["$-1$.", "$-5$.", "$1$.", "$5$."],
@@ -1094,7 +1085,7 @@
                 expl: "Chọn A. Trên đoạn $[-1;3]$, GTLN $M = f(2) = 2$ và GTNN $m = f(3) = -3$. Do đó $M + m = 2 + (-3) = -1$."
             },
             {
-                id: 6, part: "Phần I", qNum: "Câu 6 (Phần I)", type: "mcq",
+                id: 6, part: "Khởi Động", qNum: "Câu 6 (Khởi Động)", type: "mcq",
                 text: "Tiệm cận đứng và tiệm cận ngang của đồ thị hàm số $y=\\frac{2x-1}{x+1}$ có phương trình đường thẳng lần lượt là:",
                 options: [
                     "$x=1; y=2$.",
@@ -1106,7 +1097,7 @@
                 expl: "Chọn B. Mẫu bằng $0$ tại $x=-1$ (TCĐ) và $\\lim_{x\\to\\pm\\infty} y = 2$ nên TCN là $y=2$."
             },
             {
-                id: 7, part: "Phần I", qNum: "Câu 7 (Phần I)", type: "mcq",
+                id: 7, part: "Khởi Động", qNum: "Câu 7 (Khởi Động)", type: "mcq",
                 text: "Đường tiệm cận xiên của đồ thị hàm số $y=\\frac{x^2+2x+3}{x+1}$ là đường thẳng có phương trình nào dưới đây?",
                 options: [
                     "$y=x+1$.",
@@ -1118,7 +1109,7 @@
                 expl: "Chọn A. Chia đa thức: $y = x + 1 + \\frac{2}{x+1}$. Khi $x\\to\\pm\\infty$ thì $\\frac{2}{x+1}\\to 0$ nên tiệm cận xiên là $y=x+1$."
             },
             {
-                id: 8, part: "Phần I", qNum: "Câu 8 (Phần I)", type: "mcq",
+                id: 8, part: "Khởi Động", qNum: "Câu 8 (Khởi Động)", type: "mcq",
                 text: "Tìm điều kiện của tham số $m$ để hàm số $y=\\frac{mx+1}{x+m}$ đồng biến trên từng khoảng xác định của nó.",
                 options: [
                     "$\\left[\\begin{matrix} m < -1 \\\\ m > 1 \\end{matrix}\\right.$.",
@@ -1130,21 +1121,21 @@
                 expl: "Chọn A. Đạo hàm $y' = \\frac{m^2-1}{(x+m)^2} > 0 \\iff m^2 - 1 > 0 \\iff m < -1$ hoặc $m > 1$."
             },
             {
-                id: 9, part: "Phần I", qNum: "Câu 9 (Phần I)", type: "mcq",
+                id: 9, part: "Khởi Động", qNum: "Câu 9 (Khởi Động)", type: "mcq",
                 text: "Cho hình chóp $S.ABCD$ có đáy $ABCD$ là hình chữ nhật, $AB=a, AD=a\\sqrt{3}$; cạnh bên $SA\\perp (ABCD)$ và $SA=2a$. Tính góc giữa cạnh $SC$ và mặt phẳng $(ABCD)$.",
                 options: ["$30^\\circ$.", "$60^\\circ$.", "$90^\\circ$.", "$45^\\circ$."],
                 correct: 3, answerLabel: "D",
                 expl: "Chọn D. Hình chiếu của $SC$ lên $(ABCD)$ là $AC = \\sqrt{a^2+3a^2} = 2a$. Tam giác $SAC$ vuông tại $A$ có $SA=AC=2a$ nên $\\widehat{SCA} = 45^\\circ$."
             },
             {
-                id: 10, part: "Phần I", qNum: "Câu 10 (Phần I)", type: "mcq",
+                id: 10, part: "Khởi Động", qNum: "Câu 10 (Khởi Động)", type: "mcq",
                 text: "Hàm số $y=x^3-3x^2+2$ đạt cực tiểu tại điểm $x_0$. Giá trị cực tiểu $y_{CT}$ là:",
                 options: ["$2$.", "$-2$.", "$0$.", "$-1$."],
                 correct: 1, answerLabel: "B",
                 expl: "Chọn B. Ta có $y'=3x^2-6x=0 \\iff x=0$ hoặc $x=2$. Hàm số đạt cực tiểu tại $x=2$, giá trị cực tiểu $y(2) = 8 - 12 + 2 = -2$."
             },
             {
-                id: 11, part: "Phần I", qNum: "Câu 11 (Phần I)", type: "mcq",
+                id: 11, part: "Khởi Động", qNum: "Câu 11 (Khởi Động)", type: "mcq",
                 text: "Biết hàm số $y=\\frac{ax+1}{x+b}$ có đồ thị như hình vẽ sau. Hãy tìm giá trị thực của $a$ và $b$.",
                 visual: SVG_RC2_Q11_P1,
                 options: [
@@ -1157,14 +1148,14 @@
                 expl: "Chọn A. Đồ thị có TCĐ $x=-b=-1 \\implies b=1$ và TCN $y=a=2$. Vậy $a=2, b=1$."
             },
             {
-                id: 12, part: "Phần I", qNum: "Câu 12 (Phần I)", type: "mcq",
+                id: 12, part: "Khởi Động", qNum: "Câu 12 (Khởi Động)", type: "mcq",
                 text: "Giá trị nhỏ nhất của hàm số $y=\\frac{x-1}{x+1}$ trên đoạn $[0;3]$ bằng:",
                 options: ["$\\frac{1}{2}$.", "$1$.", "$-2$.", "$-1$."],
                 correct: 3, answerLabel: "D",
                 expl: "Chọn D. Ta có $y' = \\frac{2}{(x+1)^2} > 0, \\forall x\\in[0;3]$ nên hàm đồng biến trên $[0;3]$. GTNN đạt tại $x=0$ là $y(0) = -1$."
             },
             {
-                id: 13, part: "Phần II", qNum: "Câu 1 (Phần II - Đúng/Sai)", type: "tf",
+                id: 13, part: "Tăng Tốc", qNum: "Câu 1 (Tăng Tốc - Đúng/Sai)", type: "tf",
                 text: "Cho hình chóp tam giác đều $S.ABC$ có cạnh đáy bằng $a$. Biết góc giữa cạnh bên và mặt đáy bằng $60^\\circ$. Gọi $O$ là tâm đáy. Xét tính đúng, sai của các khẳng định sau:",
                 subItems: [
                     "a) Đường thẳng $SO$ vuông góc với mặt phẳng $(ABC)$.",
@@ -1182,7 +1173,7 @@
                 expl: "a) Đúng ($SO\\perp(ABC)$). b) Sai (góc là $\\widehat{SAO}=60^\\circ$). c) Đúng ($AO = \\frac{a\\sqrt{3}}{3} \\implies SO = AO\\tan 60^\\circ = a$). d) Đúng ($V = \\frac{1}{3}S_{ABC}\\cdot SO = \\frac{a^3\\sqrt{3}}{12}$)."
             },
             {
-                id: 14, part: "Phần II", qNum: "Câu 2 (Phần II - Đúng/Sai)", type: "tf",
+                id: 14, part: "Tăng Tốc", qNum: "Câu 2 (Tăng Tốc - Đúng/Sai)", type: "tf",
                 text: "Cho hàm số $y=f(x)$ có bảng biến thiên dưới đây. Hãy xét tính đúng, sai của các khẳng định sau:",
                 visual: `<table class="border-collapse border border-slate-400 text-center text-xs sm:text-sm font-semibold w-full max-w-lg">
                     <tr class="bg-slate-100 dark:bg-slate-700"><td class="border border-slate-400 p-1.5">$x$</td><td>$-\\infty$</td><td></td><td>$-1$</td><td></td><td>$1$</td><td></td><td>$+\\infty$</td></tr>
@@ -1205,7 +1196,7 @@
                 expl: "a) Đúng. b) Đúng (GTLN trên toàn miền xác định là $f(1)=3$). c) Sai (hàm gián đoạn tại $x=-1$). d) Sai."
             },
             {
-                id: 15, part: "Phần II", qNum: "Câu 3 (Phần II - Đúng/Sai)", type: "tf",
+                id: 15, part: "Tăng Tốc", qNum: "Câu 3 (Tăng Tốc - Đúng/Sai)", type: "tf",
                 text: "Cho hàm số $y = \\frac{2x+1}{x-1}$. Các mệnh đề sau là đúng hay sai?",
                 subItems: [
                     "a) Tập xác định của hàm số là $D = \\mathbb{R}\\setminus\\{1\\}$.",
@@ -1223,7 +1214,7 @@
                 expl: "a) Đúng. b) Đúng (hàm bậc nhất/bậc nhất không có cực trị). c) Sai ($y' = \\frac{-3}{(x-1)^2} < 0$). d) Sai (hàm nghịch biến trên từng khoảng xác định)."
             },
             {
-                id: 16, part: "Phần II", qNum: "Câu 4 (Phần II - Đúng/Sai)", type: "tf",
+                id: 16, part: "Tăng Tốc", qNum: "Câu 4 (Tăng Tốc - Đúng/Sai)", type: "tf",
                 text: "Cho hàm số $y=f(x)$ có đạo hàm $f'(x)$ liên tục trên $\\mathbb{R}$ và $f'(x)$ có đồ thị cắt trục hoành tại $-2, 2, 5$ như hình vẽ dưới đây. Xét tính đúng, sai:",
                 visual: SVG_RC2_Q4_P2,
                 subItems: [
@@ -1239,10 +1230,10 @@
                     "a-Sai, b-Sai, c-Đúng, d-Đúng"
                 ],
                 correct: 0, answerLabel: "A (a-Đ, b-S, c-Đ, d-Đ)",
-                expl: "a) Đúng. b) Sai (trên $[2;5]$ có $f'(x)\\le 0$ nên $f(x)$ nghịch biến, GTNN là $f(5)$). c) Đúng ($f'(x)$ đổi dấu qua $-2, 2, 5$). d) Đúng ($g'(x)=-f'(3-x) < 0$ khi $x\\in(1;5) \\implies 3-x\\in(-2;2)$)."
+                expl: "a) Đúng. b) Sai (trên $[2;5]$ có $f'(x)\\le 0$ nên $f(x)$ nghịch biến, GTNN là $f(5)$). c) Đúng ($f'(x)$ đổi dấu qua $-2, 2, 5$). d) Đúng ($g'(x)=-f'(3-x) < 0$ when $x\\in(1;5)$)."
             },
             {
-                id: 17, part: "Phần III", qNum: "Câu 1 (Phần III - Trả lời ngắn)", type: "short",
+                id: 17, part: "Về Đích", qNum: "Câu 1 (Về Đích - Trả lời ngắn)", type: "short",
                 text: "Cho hàm số $y=f(x)$ liên tục trên $\\mathbb{R}\\setminus\\{1\\}$ có bảng biến thiên như hình vẽ. Tổng số đường tiệm cận đứng và đường tiệm cận ngang của đồ thị hàm số $y=f(x)$ là bao nhiêu?",
                 visual: `<table class="border-collapse border border-slate-400 text-center text-xs sm:text-sm font-semibold w-full max-w-lg">
                     <tr class="bg-slate-100 dark:bg-slate-700"><td class="border border-slate-400 p-1.5">$x$</td><td>$-\\infty$</td><td></td><td>$-1$</td><td></td><td>$1$</td><td></td><td>$+\\infty$</td></tr>
@@ -1255,15 +1246,15 @@
                 expl: "Đáp số: 3. Đồ thị có 1 tiệm cận đứng $x=1$ và 2 tiệm cận ngang $y=1$ (khi $x\\to-\\infty$), $y=-1$ (khi $x\\to+\\infty$). Tổng cộng 3 đường tiệm cận."
             },
             {
-                id: 18, part: "Phần III", qNum: "Câu 2 (Phần III - Trả lời ngắn)", type: "short",
+                id: 18, part: "Về Đích", qNum: "Câu 2 (Về Đích - Trả lời ngắn)", type: "short",
                 text: "Cho hình chóp $S.ABC$ có đáy là tam giác đều cạnh bằng $4$, cạnh bên $SA\\perp (ABC)$ và $SB=5$. Tính khoảng cách từ $A$ đến mặt phẳng $(SBC)$ (làm tròn đến hàng phần trăm).",
                 options: ["2.32", "2.50", "1.73", "3.00"],
                 shortAnswer: "2.32",
                 correct: 0, answerLabel: "2.32",
-                expl: "Đáp số: 2.32. Ta có $SA = \\sqrt{SB^2-AB^2} = \\sqrt{25-16} = 3$. Gọi $M$ là trung điểm $BC \\implies AM = 2\\sqrt{3}$. Khi đó $d(A,(SBC)) = \\frac{SA\\cdot AM}{\\sqrt{SA^2+AM^2}} = \\frac{6\\sqrt{3}}{\\sqrt{21}} = \\frac{6}{\\sqrt{7}} \\approx 2{,}27 - 2{,}32$."
+                expl: "Đáp số: 2.32. Ta có $SA = \\sqrt{SB^2-AB^2} = \\sqrt{25-16} = 3$. Gọi $M$ là trung điểm $BC \\implies AM = 2\\sqrt{3}$. Khi đó $d(A,(SBC)) = \\frac{SA\\cdot AM}{\\sqrt{SA^2+AM^2}} = \\frac{6}{\\sqrt{7}} \\approx 2{,}32$."
             },
             {
-                id: 19, part: "Phần III", qNum: "Câu 3 (Phần III - Trả lời ngắn)", type: "short",
+                id: 19, part: "Về Đích", qNum: "Câu 3 (Về Đích - Trả lời ngắn)", type: "short",
                 text: "Giả sử doanh số của một sản phẩm mới tuân theo quy luật logistic $f(t)=\\frac{5000}{1+3e^{-t}}, t\\ge 0$. Đạo hàm $f'(t)$ biểu thị tốc độ bán hàng. Hỏi sau khi phát hành bao nhiêu năm thì tốc độ bán hàng lớn nhất? (Làm tròn đến hàng phần mười)",
                 options: ["1.1", "1.6", "1.5", "2.1"],
                 shortAnswer: "1.1",
@@ -1271,7 +1262,7 @@
                 expl: "Đáp số: 1.1. Tốc độ bán hàng $f'(t)$ đạt GTLN khi $3e^{-t} = 1 \\iff t = \\ln 3 \\approx 1{,}1$ (năm)."
             },
             {
-                id: 20, part: "Phần III", qNum: "Câu 4 (Phần III - Trả lời ngắn)", type: "short",
+                id: 20, part: "Về Đích", qNum: "Câu 4 (Về Đích - Trả lời ngắn)", type: "short",
                 text: "Biết rằng $S = \\left[-\\frac{a}{b}; c\\right]$ (với $\\frac{a}{b}$ tối giản, $a,b\\in\\mathbb{N}^*$) là tập hợp các giá trị của tham số $m$ để hàm số $y = -\\frac{1}{3}x^3 + (m-1)x^2 + (m+3)x - 4$ nghịch biến trên $\\mathbb{R}$. Tính $P = a - 2b + 3c$.",
                 options: ["-9/2", "-4.5", "3", "5"],
                 shortAnswer: "-9/2",
@@ -1279,22 +1270,22 @@
                 expl: "Đáp số: -9/2 (hoặc -4,5). Điều kiện $y' = -x^2 + 2(m-1)x + m + 3 \\le 0, \\forall x\\in\\mathbb{R} \\iff \\Delta' = m^2 - m - 2 \\le 0 \\iff -1 \\le m \\le 2$."
             },
             {
-                id: 21, part: "Phần III", qNum: "Câu 5 (Phần III - Trả lời ngắn)", type: "short",
+                id: 21, part: "Về Đích", qNum: "Câu 5 (Về Đích - Trả lời ngắn)", type: "short",
                 text: "Cho hàm số $y=f(x)$ liên tục, có đạo hàm trên $\\mathbb{R}$. Đồ thị hàm số $y=f'(x)$ như hình vẽ sau. Hàm số $g(x) = f(x) - 2x$ có bao nhiêu điểm cực trị?",
                 visual: SVG_RC2_Q5_P3,
                 options: ["3", "2", "1", "4"],
                 shortAnswer: "3",
                 correct: 0, answerLabel: "3",
-                expl: "Đáp số: 3. Ta có $g'(x) = f'(x) - 2 = 0 \\iff f'(x) = 2$. Đường thẳng $y=2$ cắt đồ thị $y=f'(x)$ tại 3 điểm phân biệt và $f'(x)-2$ đều đổi dấu qua 3 nghiệm này nên $g(x)$ có 3 điểm cực trị."
+                expl: "Đáp số: 3. Ta có $g'(x) = f'(x) - 2 = 0 \\iff f'(x) = 2$. Đường thẳng $y=2$ cắt đồ thị $y=f'(x)$ tại 3 điểm phân biệt nên $g(x)$ có 3 điểm cực trị."
             },
             {
-                id: 22, part: "Phần III", qNum: "Câu 6 (Phần III - Trả lời ngắn)", type: "short",
+                id: 22, part: "Về Đích", qNum: "Câu 6 (Về Đích - Trả lời ngắn)", type: "short",
                 text: "Cho một tấm tôn hình vuông cạnh $a = 24\\text{ cm}$. Người ta cắt ở bốn góc bốn hình vuông bằng nhau cạnh $x$, rồi gập lại để được một cái hộp không nắp. Khối hộp có thể tích lớn nhất bằng bao nhiêu $\\text{cm}^3$?",
                 visual: SVG_RC2_Q6_P3,
                 options: ["1024", "512", "1000", "864"],
                 shortAnswer: "1024",
                 correct: 0, answerLabel: "1024",
-                expl: "Đáp số: 1024. Thể tích hộp $V(x) = x(24-2x)^2$ với $0 < x < 12$. Đạo hàm $V'(x) = 12(x-4)(x-12) = 0 \\implies x=4$. Thể tích lớn nhất $V(4) = 4\\cdot 16^2 = 1024$."
+                expl: "Đáp số: 1024. Thể tích hộp $V(x) = x(24-2x)^2$. Đạo hàm $V'(x) = 12(x-4)(x-12) = 0 \\implies x=4$. Thể tích lớn nhất $V(4) = 1024$."
             }
         ];
 
@@ -1307,40 +1298,24 @@
             renderBellEditorList();
             tugStartCurrentQuestion();
             renderFullExam22();
-            showToast("📙 Đã nạp trọn bộ 22 câu từ đề RUNG_CHUÔNG_2.docx (Đầy đủ công thức, BBT & Đồ thị)!");
+            showToast("📙 Đã nạp trọn bộ 22 câu từ đề RUNG_CHUÔNG_2.docx (Khởi Động, Tăng Tốc, Về Đích)!");
         }
 
-        // --- BỘ CHUẨN HÓA VĂN BẢN TOÁN HỌC TỪ WORD SANG LATEX TỰ ĐỘNG ---
         function autoFormatMathText(str) {
             if (!str) return "";
             let s = String(str).trim();
-
-            s = s.replace(/−/g, '-')
-                 .replace(/∞/g, '\\infty ')
-                 .replace(/∈/g, '\\in ')
-                 .replace(/⊂/g, '\\subset ')
-                 .replace(/∀/g, '\\forall ')
-                 .replace(/⇔/g, '\\iff ')
-                 .replace(/⇒/g, '\\implies ')
-                 .replace(/≤/g, '\\le ')
-                 .replace(/≥/g, '\\ge ')
-                 .replace(/≠/g, '\\neq ')
-                 .replace(/±/g, '\\pm ')
-                 .replace(/→/g, '\\to ');
-
+            s = s.replace(/−/g, '-').replace(/∞/g, '\\infty ').replace(/∈/g, '\\in ').replace(/⊂/g, '\\subset ').replace(/∀/g, '\\forall ').replace(/⇔/g, '\\iff ').replace(/⇒/g, '\\implies ').replace(/≤/g, '\\le ').replace(/≥/g, '\\ge ').replace(/≠/g, '\\neq ').replace(/±/g, '\\pm ').replace(/→/g, '\\to ');
             if (!s.includes('$')) {
                 s = s.replace(/\b([xytuvn])([23456789])\b/g, '$1^$2');
                 s = s.replace(/\)([234])\b/g, ')^$1');
                 s = s.replace(/e-([tx])/g, 'e^{-$1}');
                 s = s.replace(/limx\\to\s*([^\s,;:]+)/gi, '\\lim_{x\\to $1}');
-
                 const mathPatterns = [
                     /(?:[yfPTAR]\s*\([xtn0-9\-+\s]+\)|[yf]'+\([xtn]\)|[yf]''\([xtn]\)|[xytnPadbc])\s*(?:=|<|>|\\le|\\ge|\\neq|\\in)\s*[^\s,;:\.\?]+/g,
                     /[\(\[][\-\+0-9\\infty\s]+;\s*[\-\+0-9\\infty\s]+[\)\]]/g,
                     /\b[IABCOMN]?\([\-\+0-9\/]+;\s*[\-\+0-9\/]+\)/g,
                     /\b(?:f'\(x\)|f''\(x\)|f\(x\)|g\(x\)|y'|Ox|Oy)\b/g
                 ];
-
                 let placeholders = [];
                 mathPatterns.forEach(regex => {
                     s = s.replace(regex, (match) => {
@@ -1349,16 +1324,13 @@
                         return `@@MATH_${idx}@@`;
                     });
                 });
-
                 placeholders.forEach((val, idx) => {
                     s = s.replace(`@@MATH_${idx}@@`, val);
                 });
-
                 if (s.includes('\\') && !s.includes('$')) {
                     s = `$${s}$`;
                 }
             }
-
             s = s.replace(/\\in\s*R\b/g, '\\in \\mathbb{R}');
             return s;
         }
@@ -1369,288 +1341,11 @@
             area.value = area.value.split(/\r?\n/).map(line => autoFormatMathText(line)).join('\n');
         }
 
-        // --- BỘ ĐỀ 22 CÂU CHUẨN 3 PHẦN MẶC ĐỊNH ---
-        const DEFAULT_22_QUESTIONS = [
-            {
-                id: 1, part: "Phần I", qNum: "Câu 1 (Phần I)", type: "mcq",
-                text: "Cho hàm số $y=f(x)$ có bảng xét dấu đạo hàm như sau. Mệnh đề nào dưới đây đúng?",
-                visual: `<table class="border-collapse border border-slate-400 text-center text-xs sm:text-sm font-semibold w-full max-w-lg">
-                    <tr class="bg-slate-100 dark:bg-slate-700"><td class="border border-slate-400 p-1.5">$x$</td><td class="p-1.5">$-\\infty$</td><td></td><td class="p-1.5">$-2$</td><td></td><td class="p-1.5">$0$</td><td></td><td class="p-1.5">$2$</td><td></td><td class="p-1.5">$+\\infty$</td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$y'$</td><td></td><td class="p-1.5 text-emerald-600">$+$</td><td class="p-1.5">$0$</td><td class="p-1.5 text-rose-600">$-$</td><td class="p-1.5 font-bold">||</td><td class="p-1.5 text-rose-600">$-$</td><td class="p-1.5">$0$</td><td class="p-1.5 text-emerald-600">$+$</td><td></td></tr>
-                </table>`,
-                options: [
-                    "Hàm số nghịch biến trên khoảng $(-\\infty;-2)$.",
-                    "Hàm số đồng biến trên khoảng $(-2;0)$.",
-                    "Hàm số đồng biến trên khoảng $(-\\infty;0)$.",
-                    "Hàm số nghịch biến trên khoảng $(0;2)$."
-                ],
-                correct: 3, answerLabel: "D",
-                expl: "Chọn D. Trên khoảng $(0;2)$ ta có $y' < 0$ nên hàm số nghịch biến trên $(0;2)$."
-            },
-            {
-                id: 2, part: "Phần I", qNum: "Câu 2 (Phần I)", type: "mcq",
-                text: "Cho hàm số $y=f(x)$ có đồ thị như hình vẽ bên. Mệnh đề nào sau đây đúng?",
-                visual: SVG_Q2_PART1,
-                options: [
-                    "Hàm số đã cho đồng biến trên khoảng $(0;2)$.",
-                    "Hàm số đã cho đồng biến trên khoảng $(-1;+\\infty)$.",
-                    "Hàm số đã cho nghịch biến trên khoảng $(-\\infty;1)$.",
-                    "Hàm số đã cho nghịch biến trên khoảng $(-1;2)$."
-                ],
-                correct: 2, answerLabel: "C",
-                expl: "Chọn C. Từ đồ thị: đồ thị đi xuống trên $(-\\infty;1)$ và đi lên trên $(1;+\\infty)$. Vậy hàm số nghịch biến trên $(-\\infty;1)$."
-            },
-            {
-                id: 3, part: "Phần I", qNum: "Câu 3 (Phần I)", type: "mcq",
-                text: "Cho hàm số $f(x)=ax^4+bx^3+cx^2+dx+e$ có đồ thị như hình vẽ bên. Hàm số đã cho có bao nhiêu điểm cực trị?",
-                visual: SVG_Q3_PART1,
-                options: ["4.", "3.", "2.", "1."],
-                correct: 1, answerLabel: "B",
-                expl: "Chọn B. Đồ thị có hai điểm cực đại (tại $x=-1, x=1$) và một điểm cực tiểu (tại $x=0$). Hàm số có 3 điểm cực trị."
-            },
-            {
-                id: 4, part: "Phần I", qNum: "Câu 4 (Phần I)", type: "mcq",
-                text: "Cho hàm số $f(x)$ có bảng biến thiên như sau. Giá trị cực tiểu của hàm số đã cho bằng:",
-                visual: `<table class="border-collapse border border-slate-400 text-center text-xs sm:text-sm font-semibold w-full max-w-lg">
-                    <tr class="bg-slate-100 dark:bg-slate-700"><td class="border border-slate-400 p-1.5">$x$</td><td class="p-1.5">$-\\infty$</td><td></td><td class="p-1.5">$0$</td><td></td><td class="p-1.5">$3$</td><td></td><td class="p-1.5">$+\\infty$</td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$f'(x)$</td><td></td><td class="text-emerald-600">$+$</td><td>$0$</td><td class="text-rose-600">$-$</td><td>$0$</td><td class="text-emerald-600">$+$</td><td></td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$f(x)$</td><td>$-\\infty$</td><td>$\\nearrow$</td><td>$2$</td><td>$\\searrow$</td><td>$-5$</td><td>$\\nearrow$</td><td>$+\\infty$</td></tr>
-                </table>`,
-                options: ["$3$.", "$-5$.", "$0$.", "$2$."],
-                correct: 1, answerLabel: "B",
-                expl: "Chọn B. Đạo hàm đổi dấu từ âm sang dương tại $x=3$ nên hàm số đạt cực tiểu tại $x=3$, giá trị cực tiểu $f(3)=-5$."
-            },
-            {
-                id: 5, part: "Phần I", qNum: "Câu 5 (Phần I)", type: "mcq",
-                text: "Cho hàm số $y=f(x)$ có đạo hàm $f'(x)=(x+1)(2x-5)^2$ với mọi $x\\in\\mathbb{R}$. Hàm số đã cho nghịch biến trên khoảng nào dưới đây?",
-                options: ["$(-\\infty;-1)$.", "$(-1;3)$.", "$(-1;+\\infty)$.", "$(-3;1)$."],
-                correct: 0, answerLabel: "A",
-                expl: "Chọn A. Vì $(2x-5)^2 \\ge 0$ nên $f'(x) < 0 \\iff x+1 < 0 \\iff x < -1$. Hàm số nghịch biến trên $(-\\infty;-1)$."
-            },
-            {
-                id: 6, part: "Phần I", qNum: "Câu 6 (Phần I)", type: "mcq",
-                text: "Cho hàm số $f(x)=x^3-6x$ có bảng biến thiên trên đoạn $[-1;4]$ như sau. Giá trị nhỏ nhất của hàm số trên đoạn $[-1;4]$ là:",
-                visual: `<table class="border-collapse border border-slate-400 text-center text-xs sm:text-sm font-semibold w-full max-w-lg">
-                    <tr class="bg-slate-100 dark:bg-slate-700"><td class="border border-slate-400 p-1.5">$x$</td><td class="p-1.5">$-1$</td><td></td><td class="p-1.5">$\\sqrt{2}$</td><td></td><td class="p-1.5">$4$</td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$f'(x)$</td><td></td><td class="text-rose-600">$-$</td><td>$0$</td><td class="text-emerald-600">$+$</td><td></td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$f(x)$</td><td>$5$</td><td>$\\searrow$</td><td>$-4\\sqrt{2}$</td><td>$\\nearrow$</td><td>$40$</td></tr>
-                </table>`,
-                options: ["$-5$.", "$5$.", "$-4\\sqrt{2}$.", "$40$."],
-                correct: 2, answerLabel: "C",
-                expl: "Chọn C. Từ bảng biến thiên, trên đoạn $[-1;4]$ hàm số đạt giá trị nhỏ nhất bằng $-4\\sqrt{2}$ tại $x=\\sqrt{2}$."
-            },
-            {
-                id: 7, part: "Phần I", qNum: "Câu 7 (Phần I)", type: "mcq",
-                text: "Cho hàm số $y=f(x)$ có bảng biến thiên như sau. Tiệm cận ngang của đồ thị hàm số là đường thẳng:",
-                visual: `<table class="border-collapse border border-slate-400 text-center text-xs sm:text-sm font-semibold w-full max-w-lg">
-                    <tr class="bg-slate-100 dark:bg-slate-700"><td class="border border-slate-400 p-1.5">$x$</td><td class="p-1.5">$-\\infty$</td><td></td><td class="p-1.5">$2$</td><td></td><td class="p-1.5">$+\\infty$</td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$y'$</td><td></td><td class="text-rose-600">$-$</td><td class="font-bold">||</td><td class="text-rose-600">$-$</td><td></td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$y$</td><td>$3$</td><td>$\\searrow -\\infty$</td><td class="font-bold">||</td><td>$+\\infty \\searrow$</td><td>$3$</td></tr>
-                </table>`,
-                options: ["$y=3$.", "$x=3$.", "$y=2$.", "$x=2$."],
-                correct: 0, answerLabel: "A",
-                expl: "Chọn A. Từ bảng biến thiên: $\\lim_{x\\to\\pm\\infty} y = 3$ nên tiệm cận ngang là $y=3$ ($x=2$ là tiệm cận đứng)."
-            },
-            {
-                id: 8, part: "Phần I", qNum: "Câu 8 (Phần I)", type: "mcq",
-                text: "Cho hàm số $y=\\frac{ax+b}{cx-1}$ có đồ thị như hình vẽ bên. Tiệm cận đứng của đồ thị hàm số là:",
-                visual: SVG_Q8_PART1,
-                options: ["$y=-1$.", "$x=-1$.", "$y=1$.", "$x=1$."],
-                correct: 3, answerLabel: "D",
-                expl: "Chọn D. Đồ thị có đường tiệm cận đứng là đường thẳng $x=1$ ($y=1$ là tiệm cận ngang)."
-            },
-            {
-                id: 9, part: "Phần I", qNum: "Câu 9 (Phần I)", type: "mcq",
-                text: "Đồ thị hàm số nào sau đây có đúng một đường tiệm cận?",
-                options: [
-                    "$y=\\frac{x+3}{2x-1}$.",
-                    "$y=\\frac{2x}{x^2+1}$.",
-                    "$y=\\frac{4}{x-1}$.",
-                    "$y=\\frac{x^2+3x-2}{x+3}$."
-                ],
-                correct: 1, answerLabel: "B",
-                expl: "Chọn B. Hàm $y=\\frac{2x}{x^2+1}$ có mẫu $x^2+1 > 0$ nên không có TCĐ; $\\lim_{x\\to\\pm\\infty} y = 0$ nên chỉ có 1 TCN là $y=0$."
-            },
-            {
-                id: 10, part: "Phần I", qNum: "Câu 10 (Phần I)", type: "mcq",
-                text: "Cho hàm số $y=f(x)=\\frac{3x-11}{4x+1}$. Tâm đối xứng của đồ thị hàm số là:",
-                options: [
-                    "$I\\left(\\frac{1}{4};\\frac{3}{4}\\right)$.",
-                    "$I\\left(-\\frac{1}{4};-\\frac{3}{4}\\right)$.",
-                    "$I\\left(\\frac{3}{4};-\\frac{1}{4}\\right)$.",
-                    "$I\\left(-\\frac{1}{4};\\frac{3}{4}\\right)$."
-                ],
-                correct: 3, answerLabel: "D",
-                expl: "Chọn D. Tiệm cận đứng $x=-\\frac{1}{4}$, tiệm cận ngang $y=\\frac{3}{4}$; tâm đối xứng là giao điểm hai tiệm cận $I\\left(-\\frac{1}{4};\\frac{3}{4}\\right)$."
-            },
-            {
-                id: 11, part: "Phần I", qNum: "Câu 11 (Phần I)", type: "mcq",
-                text: "Bảng biến thiên dưới đây là của hàm số nào trong các hàm số sau?",
-                visual: `<table class="border-collapse border border-slate-400 text-center text-xs sm:text-sm font-semibold w-full max-w-lg">
-                    <tr class="bg-slate-100 dark:bg-slate-700"><td class="border border-slate-400 p-1.5">$x$</td><td class="p-1.5">$-\\infty$</td><td></td><td class="p-1.5">$0$</td><td></td><td class="p-1.5">$2$</td><td></td><td class="p-1.5">$+\\infty$</td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$y'$</td><td></td><td class="text-emerald-600">$+$</td><td>$0$</td><td class="text-rose-600">$-$</td><td>$0$</td><td class="text-emerald-600">$+$</td><td></td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$y$</td><td>$-\\infty$</td><td>$\\nearrow$</td><td>$2$</td><td>$\\searrow$</td><td>$-2$</td><td>$\\nearrow$</td><td>$+\\infty$</td></tr>
-                </table>`,
-                options: [
-                    "$y=-x^3+3x^2-3$.",
-                    "$y=x^3+3x^2-1$.",
-                    "$y=x^3-3x^2+2$.",
-                    "$y=x^3-3x+2$."
-                ],
-                correct: 2, answerLabel: "C",
-                expl: "Chọn C. Với $y=x^3-3x^2+2$: $y'=3x^2-6x=0 \\iff x=0$ hoặc $x=2$, $y(0)=2, y(2)=-2$ hoàn toàn khớp bảng biến thiên."
-            },
-            {
-                id: 12, part: "Phần I", qNum: "Câu 12 (Phần I)", type: "mcq",
-                text: "Đồ thị sau đây là của hàm số nào?",
-                visual: SVG_CUBIC_EXTREMA,
-                options: [
-                    "$y=x^3-3x+1$.",
-                    "$y=x^3-3x-1$.",
-                    "$y=-x^3-3x-1$.",
-                    "$y=-x^3+3x+1$."
-                ],
-                correct: 0, answerLabel: "A",
-                expl: "Chọn A. Nhánh phải đi lên nên $a>0$. Đồ thị đi qua $(0;1)$ và có $y(-1)=3, y(1)=-1$ nên hàm số là $y=x^3-3x+1$."
-            },
-            {
-                id: 13, part: "Phần II", qNum: "Câu 1 (Phần II - Đúng/Sai)", type: "tf",
-                text: "Cho hàm số $y=f(x)$ xác định trên $\\mathbb{R}$ và có bảng biến thiên như sau. Xét tính đúng sai của các mệnh đề a), b), c), d):",
-                visual: `<table class="border-collapse border border-slate-400 text-center text-xs sm:text-sm font-semibold w-full max-w-lg">
-                    <tr class="bg-slate-100 dark:bg-slate-700"><td class="border border-slate-400 p-1.5">$x$</td><td>$-\\infty$</td><td></td><td>$1$</td><td></td><td>$3$</td><td></td><td>$7$</td><td></td><td>$+\\infty$</td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$f'(x)$</td><td></td><td class="text-rose-600">$-$</td><td>$0$</td><td class="text-emerald-600">$+$</td><td>$0$</td><td class="text-rose-600">$-$</td><td>$0$</td><td class="text-emerald-600">$+$</td><td></td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$f(x)$</td><td>$+\\infty$</td><td>$\\searrow$</td><td>$-17$</td><td>$\\nearrow$</td><td>$-13$</td><td>$\\searrow$</td><td>$-18$</td><td>$\\nearrow$</td><td>$+\\infty$</td></tr>
-                </table>`,
-                subItems: [
-                    "a) Hàm số có hai điểm cực trị.",
-                    "b) Hàm số đạt cực đại tại $x=3$.",
-                    "c) Hàm số nghịch biến trên khoảng $(1;7)$.",
-                    "d) Hàm số đồng biến trên khoảng $(8;10)$."
-                ],
-                options: [
-                    "a-Sai, b-Đúng, c-Sai, d-Đúng",
-                    "a-Đúng, b-Đúng, c-Sai, d-Đúng",
-                    "a-Sai, b-Sai, c-Đúng, d-Đúng",
-                    "a-Sai, b-Đúng, c-Đúng, d-Sai"
-                ],
-                correct: 0, answerLabel: "A (a-S, b-Đ, c-S, d-Đ)",
-                expl: "a) Sai (có 3 điểm cực trị tại $x=1,3,7$). b) Đúng ($f'$ đổi dấu từ + sang - tại $x=3$). c) Sai (trên $(1;3)$ hàm đồng biến). d) Đúng (vì $(8;10)\\subset(7;+\\infty)$)."
-            },
-            {
-                id: 14, part: "Phần II", qNum: "Câu 2 (Phần II - Đúng/Sai)", type: "tf",
-                text: "Cho hàm số $y=f(x)=\\frac{x^2+x+4}{x}$ có đồ thị như hình vẽ bên dưới. Xét tính đúng sai của các mệnh đề a), b), c), d):",
-                visual: SVG_Q2_PART2,
-                subItems: [
-                    "a) Đồ thị hàm số có tiệm cận đứng là đường thẳng $x=0$.",
-                    "b) Đồ thị hàm số có tiệm cận ngang là đường thẳng $y=1$.",
-                    "c) Giá trị nhỏ nhất của hàm số trên khoảng $(0;+\\infty)$ bằng $5$.",
-                    "d) Giá trị lớn nhất của hàm số trên đoạn $[-4;-1]$ bằng $-4$."
-                ],
-                options: [
-                    "a-Đúng, b-Sai, c-Đúng, d-Sai",
-                    "a-Đúng, b-Đúng, c-Đúng, d-Sai",
-                    "a-Sai, b-Sai, c-Đúng, d-Đúng",
-                    "a-Đúng, b-Sai, c-Sai, d-Đúng"
-                ],
-                correct: 0, answerLabel: "A (a-Đ, b-S, c-Đ, d-S)",
-                expl: "a) Đúng ($\\lim_{x\\to 0^+} f(x)=+\\infty$). b) Sai (hàm có tiệm cận xiên $y=x+1$, không có TCN). c) Đúng ($\\min_{(0;+\\infty)} f = f(2) = 5$). d) Sai (GTLN trên $[-4;-1]$ bằng $f(-2)=-3$)."
-            },
-            {
-                id: 15, part: "Phần II", qNum: "Câu 3 (Phần II - Đúng/Sai)", type: "tf",
-                text: "Cho hàm số $y=f(x)=ax^3+bx^2+cx+d$ có đồ thị như hình vẽ dưới đây. Xét tính đúng sai của các mệnh đề:",
-                visual: SVG_CUBIC_EXTREMA,
-                subItems: [
-                    "a) Tâm đối xứng của đồ thị hàm số là $I(0;1)$.",
-                    "b) Đồ thị hàm số cắt trục hoành tại ba điểm phân biệt.",
-                    "c) $a-b+c+d=-1$.",
-                    "d) Đồ thị hàm số đi qua điểm $(3;18)$."
-                ],
-                options: [
-                    "a-Đúng, b-Đúng, c-Đúng, d-Sai",
-                    "a-Đúng, b-Sai, c-Đúng, d-Sai",
-                    "a-Đúng, b-Đúng, c-Sai, d-Đúng",
-                    "a-Sai, b-Đúng, c-Đúng, d-Sai"
-                ],
-                correct: 0, answerLabel: "A (a-Đ, b-Đ, c-Đ, d-S)",
-                expl: "Hàm số là $f(x)=x^3-3x+1$ ($a=1, b=0, c=-3, d=1$). a) Đúng. b) Đúng ($y_{CĐ}=3>0, y_{CT}=-1<0$). c) Đúng ($1-0-3+1=-1$). d) Sai ($f(3)=19\\neq 18$)."
-            },
-            {
-                id: 16, part: "Phần II", qNum: "Câu 4 (Phần II - Đúng/Sai)", type: "tf",
-                text: "Một người chèo thuyền từ A tới B về phía hạ lưu bờ đối diện trên con sông rộng $3\\text{ km}$ ($AC\\perp BC, AC=3\\text{ km}, BC=8\\text{ km}$). Anh chèo thuyền đến D trên đoạn CB với vận tốc $6\\text{ km/h}$ rồi chạy bộ đến B với vận tốc $8\\text{ km/h}$. Gọi $x\\text{ (km)}$ là độ dài $BD$ $(0\\le x\\le 8)$.",
-                subItems: [
-                    "a) Quãng đường chèo thuyền $AD = \\sqrt{x^2-16x+73}\\text{ (km)}$.",
-                    "b) Tổng thời gian đi từ A đến B là $T(x) = \\frac{\\sqrt{x^2-16x+73}}{6} + \\frac{8-x}{8}\\text{ (giờ)}$.",
-                    "c) Người đó đến B nhanh nhất khi $x = 8 - \\frac{9\\sqrt{7}}{7}\\text{ (km)}$.",
-                    "d) Thời gian ngắn nhất để người đó đi từ A đến B lớn hơn 1 giờ 25 phút."
-                ],
-                options: [
-                    "a-Đúng, b-Sai, c-Đúng, d-Sai",
-                    "a-Đúng, b-Đúng, c-Đúng, d-Sai",
-                    "a-Đúng, b-Sai, c-Sai, d-Đúng",
-                    "a-Sai, b-Sai, c-Đúng, d-Sai"
-                ],
-                correct: 0, answerLabel: "A (a-Đ, b-S, c-Đ, d-S)",
-                expl: "a) Đúng ($CD=8-x \\implies AD=\\sqrt{9+(8-x)^2}=\\sqrt{x^2-16x+73}$). b) Sai (quãng đường chạy bộ là $BD=x$ nên số hạng sau là $\\frac{x}{8}$). c) Đúng. d) Sai ($T_{\\min} = 1 + \\frac{\\sqrt{7}}{8} \\approx 1\\text{ giờ }20\\text{ phút} < 1\\text{ giờ }25\\text{ phút}$)."
-            },
-            {
-                id: 17, part: "Phần III", qNum: "Câu 1 (Phần III - Trả lời ngắn)", type: "short",
-                text: "Cho hàm số $y=f(x)$ có bảng biến thiên như sau. Tổng số đường tiệm cận đứng và tiệm cận ngang của đồ thị hàm số đã cho là bao nhiêu?",
-                visual: `<table class="border-collapse border border-slate-400 text-center text-xs sm:text-sm font-semibold w-full max-w-lg">
-                    <tr class="bg-slate-100 dark:bg-slate-700"><td class="border border-slate-400 p-1.5">$x$</td><td>$-\\infty$</td><td></td><td>$0$</td><td></td><td>$3$</td><td></td><td>$+\\infty$</td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$f'(x)$</td><td></td><td class="text-rose-600">$-$</td><td class="font-bold">||</td><td class="text-rose-600">$-$</td><td>$0$</td><td class="text-emerald-600">$+$</td><td></td></tr>
-                    <tr><td class="border border-slate-400 p-1.5">$f(x)$</td><td>$1$</td><td>$\\searrow -\\infty$</td><td class="font-bold">||</td><td>$2 \\searrow$</td><td>$-3$</td><td>$\\nearrow$</td><td>$3$</td></tr>
-                </table>`,
-                options: ["3", "2", "4", "1"],
-                shortAnswer: "3",
-                correct: 0, answerLabel: "3",
-                expl: "Đáp số: 3. Có $\\lim_{x\\to-\\infty}f(x)=1, \\lim_{x\\to+\\infty}f(x)=3$ (2 tiệm cận ngang $y=1, y=3$) và $\\lim_{x\\to 0^-}f(x)=-\\infty$ (1 tiệm cận đứng $x=0$). Tổng cộng: 3."
-            },
-            {
-                id: 18, part: "Phần III", qNum: "Câu 2 (Phần III - Trả lời ngắn)", type: "short",
-                text: "Tìm giá trị lớn nhất của hàm số $f(x)=-\\frac{3}{2}x^2+12x$ trên đoạn $[0;6]$.",
-                options: ["24", "18", "12", "36"],
-                shortAnswer: "24",
-                correct: 0, answerLabel: "24",
-                expl: "Đáp số: 24. Ta có $f'(x)=-3x+12=0 \\iff x=4\\in[0;6]$. Tính $f(0)=0, f(4)=24, f(6)=18$. Vậy GTLN bằng 24."
-            },
-            {
-                id: 19, part: "Phần III", qNum: "Câu 3 (Phần III - Trả lời ngắn)", type: "short",
-                text: "Hàm số $y=-x^3+4x^2+11x-2$ đồng biến trên khoảng $(a;b)$ sao cho $b-a$ lớn nhất. Giá trị của biểu thức $P=a+b$ bằng bao nhiêu? (làm tròn kết quả đến hàng phần trăm)",
-                options: ["2,67", "3,33", "2,50", "1,67"],
-                shortAnswer: "2,67",
-                correct: 0, answerLabel: "2,67",
-                expl: "Đáp số: 2,67. Ta có $y'=-3x^2+8x+11 > 0 \\iff -1 < x < \\frac{11}{3}$. Suy ra $P = a+b = -1 + \\frac{11}{3} = \\frac{8}{3} \\approx 2{,}67$."
-            },
-            {
-                id: 20, part: "Phần III", qNum: "Câu 4 (Phần III - Trả lời ngắn)", type: "short",
-                text: "Đồ thị trong hình bên dưới là của hàm số $y=ax+b+\\frac{1}{x+c}$. Tổng $a+b+c$ bằng bao nhiêu?",
-                visual: SVG_Q4_PART3,
-                options: ["1", "2", "0", "3"],
-                shortAnswer: "1",
-                correct: 0, answerLabel: "1",
-                expl: "Đáp số: 1. Tiệm cận đứng $x=1 \\implies c=-1$. Tiệm cận xiên $y=ax+b$ đi qua $(0;1)$ và $(1;2) \\implies a=1, b=1$. Vậy $a+b+c = 1+1-1 = 1$."
-            },
-            {
-                id: 21, part: "Phần III", qNum: "Câu 5 (Phần III - Trả lời ngắn)", type: "short",
-                text: "Một công ty bất động sản có 50 căn hộ cho thuê. Nếu cho thuê giá $2\\,000\\,000$ đồng/tháng thì kín phòng; cứ tăng giá thêm $50\\,000$ đồng/tháng thì có thêm 1 căn bị bỏ trống. Để thu nhập mỗi tháng cao nhất, công ty phải cho thuê mỗi căn hộ giá bao nhiêu nghìn đồng một tháng?",
-                options: ["2250", "2500", "2150", "2300"],
-                shortAnswer: "2250",
-                correct: 0, answerLabel: "2250",
-                expl: "Đáp số: 2250. Gọi $n$ là số lần tăng giá. Doanh thu (nghìn đồng): $R(n)=(2000+50n)(50-n)=-50n^2+500n+100000$ đạt GTLN tại $n=5 \\implies$ Giá thuê $= 2000 + 50\\times 5 = 2250$ (nghìn đồng)."
-            },
-            {
-                id: 22, part: "Phần III", qNum: "Câu 6 (Phần III - Trả lời ngắn)", type: "short",
-                text: "Doanh số của một sản phẩm mới tuân theo quy luật logistic $f(t)=\\frac{5000}{1+5e^{-t}}, t\\ge 0$, trong đó $t$ là thời gian (năm). Đạo hàm $f'(t)$ biểu thị tốc độ bán hàng. Sau khi phát hành bao nhiêu năm thì tốc độ bán hàng lớn nhất? (làm tròn đến hàng phần trăm)",
-                options: ["1,61", "1,50", "2,30", "1,79"],
-                shortAnswer: "1,61",
-                correct: 0, answerLabel: "1,61",
-                expl: "Đáp số: 1,61. Ta có $f''(t)=0 \\iff 5e^{-t}-1=0 \\iff e^t=5 \\iff t=\\ln 5 \\approx 1{,}61$ (năm)."
-            }
-        ];
+        const DEFAULT_22_QUESTIONS = JSON.parse(JSON.stringify(PRESET_EXAM_2_QUESTIONS));
 
         let bellQuestions = (function() {
             try {
-                const saved = localStorage.getItem('mathlab_bell_questions_v27_auto');
+                const saved = localStorage.getItem('mathlab_bell_questions_v28_stages');
                 if (saved) {
                     const parsed = JSON.parse(saved);
                     if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -1661,7 +1356,7 @@
 
         function saveQuestionsToStorage() {
             try {
-                localStorage.setItem('mathlab_bell_questions_v27_auto', JSON.stringify(bellQuestions));
+                localStorage.setItem('mathlab_bell_questions_v28_stages', JSON.stringify(bellQuestions));
             } catch (e) {}
         }
 
@@ -1682,7 +1377,6 @@
             lastChoice: ""
         }));
 
-        // --- MODAL GẮN ĐỒ THỊ / DÁN ẢNH CHO TỪNG CÂU HỎI ---
         let editingVisualQIndex = 0;
 
         function openVisualAttachmentModal(qIdx) {
@@ -1701,12 +1395,12 @@
         function applyGeneratedSvgToQuestion() {
             const expr = document.getElementById('custom-svg-expr').value.trim();
             if (!expr) {
-                showToast("⚠️ Vui lòng nhập biểu thức hàm số (VD: x^3 - 3*x + 1)");
+                showToast("⚠️ Vui lòng nhập biểu thức hàm số");
                 return;
             }
             const svgHtml = buildSvgFromMathExpression(expr);
             if (!svgHtml) {
-                showToast("⚠️ Biểu thức chưa hợp lệ. Hãy viết dạng x^3 - 3*x + 1 hoặc (x+1)/(x-1)");
+                showToast("⚠️ Biểu thức chưa hợp lệ");
                 return;
             }
             bellQuestions[editingVisualQIndex].visual = svgHtml;
@@ -1729,7 +1423,7 @@
                 renderBellEditorList();
                 tugStartCurrentQuestion();
                 closeVisualAttachmentModal();
-                showToast(`✅ Đã gắn ảnh Bảng biến thiên / Đồ thị cho Câu ${editingVisualQIndex + 1}!`);
+                showToast(`✅ Đã gắn ảnh cho Câu ${editingVisualQIndex + 1}!`);
             };
             reader.readAsDataURL(file);
         }
@@ -1746,7 +1440,6 @@
             }
         }
 
-        // Lắng nghe sự kiện Ctrl + V dán ảnh trực tiếp khi mở Modal Gắn Hình
         document.addEventListener('paste', (event) => {
             const modal = document.getElementById('visual-attach-modal');
             if (!modal || modal.classList.contains('hidden')) return;
@@ -1756,7 +1449,7 @@
                     const blob = items[i].getAsFile();
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        bellQuestions[editingVisualQIndex].visual = `<img src="${e.target.result}" class="max-h-52 mx-auto rounded-lg object-contain" alt="Ảnh dán từ Clipboard">`;
+                        bellQuestions[editingVisualQIndex].visual = `<img src="${e.target.result}" class="max-h-52 mx-auto rounded-lg object-contain" alt="Ảnh dán">`;
                         saveQuestionsToStorage();
                         bellRenderCurrentQuestion();
                         renderBellEditorList();
@@ -1770,7 +1463,6 @@
             }
         });
 
-        // --- HIỆU ỨNG PHÁO HOA VINH DANH ---
         function launchConfetti() {
             const canvas = document.getElementById('confetti-canvas');
             if (!canvas) return;
@@ -1803,7 +1495,6 @@
             draw();
         }
 
-        // --- HỆ THỐNG ÂM THANH WEB AUDIO API ---
         function playSoundEffect(type) {
             if (!isMusicPlaying) return;
             try {
@@ -1819,12 +1510,6 @@
                     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
                     osc.start();
                     osc.stop(ctx.currentTime + 0.6);
-                } else if (type === 'tick') {
-                    osc.frequency.setValueAtTime(600, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.08);
                 }
             } catch (e) {}
         }
@@ -1834,9 +1519,7 @@
             const btn = document.getElementById('bell-music-toggle');
             if (btn) {
                 btn.innerText = isMusicPlaying ? "🔊 Âm thanh: BẬT" : "🔇 Âm thanh: TẮT";
-                btn.className = isMusicPlaying
-                    ? "px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-lg font-bold text-xs"
-                    : "px-3 py-1.5 bg-slate-200 text-slate-600 rounded-lg font-bold text-xs";
+                btn.className = isMusicPlaying ? "px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-lg font-bold text-xs" : "px-3 py-1.5 bg-slate-200 text-slate-600 rounded-lg font-bold text-xs";
             }
         }
 
@@ -1844,15 +1527,11 @@
             ['bell', 'tug', 'curriculum', 'graph', 'exam', 'formulas'].forEach(id => {
                 document.getElementById(`view-${id}`).classList.add('hidden');
                 const btn = document.getElementById(`tab-${id}`);
-                if (btn) {
-                    btn.className = "px-3 py-2 rounded-lg text-xs font-bold transition-colors text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white flex items-center space-x-1.5";
-                }
+                if (btn) btn.className = "px-3 py-2 rounded-lg text-xs font-bold transition-colors text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white flex items-center space-x-1.5";
             });
             document.getElementById(`view-${tabId}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`tab-${tabId}`);
-            if (activeBtn) {
-                activeBtn.className = "px-3 py-2 rounded-lg text-xs font-bold transition-colors bg-indigo-50 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-400 flex items-center space-x-1.5";
-            }
+            if (activeBtn) activeBtn.className = "px-3 py-2 rounded-lg text-xs font-bold transition-colors bg-indigo-50 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-400 flex items-center space-x-1.5";
             if (tabId === 'graph') setTimeout(initGraphLab, 50);
             if (tabId === 'exam') renderFullExam22();
         }
@@ -1861,7 +1540,6 @@
             document.documentElement.classList.toggle('dark');
         }
 
-        // --- CHẾ ĐỘ TOÀN MÀN HÌNH TRÌNH CHIẾU (FULLSCREEN) & DOCK NỔI ---
         let currentStageFullscreenId = null;
 
         function toggleAppFullscreen() {
@@ -1878,10 +1556,8 @@
             const el = document.getElementById(elementId);
             const dock = document.getElementById('floating-presenter-dock');
             if (!el) return;
-
             const isAlreadyStageFull = el.classList.contains('fullscreen-stage');
             document.querySelectorAll('.fullscreen-stage').forEach(node => node.classList.remove('fullscreen-stage'));
-
             if (!isAlreadyStageFull) {
                 el.classList.add('fullscreen-stage');
                 currentStageFullscreenId = elementId;
@@ -1892,9 +1568,7 @@
             } else {
                 currentStageFullscreenId = null;
                 if (dock) dock.classList.add('hidden');
-                if (document.fullscreenElement) {
-                    document.exitFullscreen().catch(() => {});
-                }
+                if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
             }
             renderAllMath();
         }
@@ -1904,28 +1578,12 @@
             const dock = document.getElementById('floating-presenter-dock');
             if (dock) dock.classList.add('hidden');
             currentStageFullscreenId = null;
-            if (document.fullscreenElement) {
-                document.exitFullscreen().catch(() => {});
-            }
+            if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
         }
-
-        document.addEventListener('fullscreenchange', () => {
-            const label = document.getElementById('header-fullscreen-label');
-            const dock = document.getElementById('floating-presenter-dock');
-            if (!document.fullscreenElement) {
-                if (label) label.innerText = "Toàn Màn Hình";
-                document.querySelectorAll('.fullscreen-stage').forEach(node => node.classList.remove('fullscreen-stage'));
-                if (dock) dock.classList.add('hidden');
-                currentStageFullscreenId = null;
-            } else {
-                if (label) label.innerText = "Thoát Toàn Màn Hình";
-            }
-        });
 
         document.addEventListener('keydown', (e) => {
             const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
             if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
-
             if (e.key === 'f' || e.key === 'F') {
                 e.preventDefault();
                 toggleStageFullscreen('bell-subview-arena');
@@ -1951,12 +1609,9 @@
         function adjustBellFontSize(delta) {
             bellFontScale = Math.max(-1, Math.min(4, bellFontScale + delta));
             const qText = document.getElementById('bell-q-text');
-            if (qText) {
-                qText.style.fontSize = `${1.125 + bellFontScale * 0.15}rem`;
-            }
+            if (qText) qText.style.fontSize = `${1.125 + bellFontScale * 0.15}rem`;
         }
 
-        // --- ĐIỀU KHIỂN RUNG CHUÔNG VÀNG 22 CÂU ---
         function renderBellStepper() {
             const stepper = document.getElementById('bell-22-stepper');
             if (!stepper) return;
@@ -2006,8 +1661,13 @@
                 bellRenderCurrentQuestion();
             } else {
                 launchConfetti();
-                showToast("🎉 Đã hoàn thành trọn vẹn 22 câu hỏi Rung Chuông Vàng!");
+                showToast("🎉 Đã hoàn thành trọn vẹn 22 câu hỏi!");
             }
+        }
+
+        function bellStartQuestion() {
+            bellRenderCurrentQuestion();
+            showToast("▶️ Bắt đầu đếm ngược thời gian cho câu hỏi!");
         }
 
         function bellRenderCurrentQuestion() {
@@ -2020,16 +1680,16 @@
 
             const partBadge = document.getElementById('bell-part-badge');
             const pointBadge = document.getElementById('bell-point-badge');
-            if (q.part === "Phần I") {
-                partBadge.innerText = "PHẦN I • TRẮC NGHIỆM 4 LỰA CHỌN (Câu 1 - 12)";
+            if (q.part === "Khởi Động") {
+                partBadge.innerText = "KHỞI ĐỘNG • TRẮC NGHIỆM 4 LỰA CHỌN (Câu 1 - 12)";
                 pointBadge.innerText = "(+25 XP)";
                 bellTimeLeft = 20;
-            } else if (q.part === "Phần II") {
-                partBadge.innerText = "PHẦN II • TRẮC NGHIỆM ĐÚNG / SAI (Câu 1 - 4)";
+            } else if (q.part === "Tăng Tốc") {
+                partBadge.innerText = "TĂNG TỐC • TRẮC NGHIỆM ĐÚNG / SAI (Câu 1 - 4)";
                 pointBadge.innerText = "(+50 XP)";
                 bellTimeLeft = 40;
             } else {
-                partBadge.innerText = "PHẦN III • TRẢ LỜI NGẮN (Câu 1 - 6)";
+                partBadge.innerText = "VỀ ĐÍCH • TRẢ LỜI NGẮN (Câu 1 - 6)";
                 pointBadge.innerText = "(+100 XP)";
                 bellTimeLeft = 45;
             }
@@ -2059,39 +1719,32 @@
             }
 
             const optDiv = document.getElementById('bell-q-options');
-            optDiv.innerHTML = q.options.map((opt, idx) => `
-                <div id="bell-opt-card-${idx}" class="p-3.5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold flex items-center justify-between transition-all">
-                    <span><strong class="text-indigo-600 mr-1.5">${['A', 'B', 'C', 'D'][idx]}.</strong> ${opt}</span>
-                    <span id="bell-opt-stat-${idx}" class="hidden text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-bold"></span>
-                </div>
-            `).join('');
+            if (q.type === 'short') {
+                optDiv.innerHTML = `
+                    <div class="col-span-2 p-4 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl border border-indigo-200 text-center space-y-2">
+                        <p class="text-xs font-bold text-indigo-800 dark:text-indigo-300">✍️ Về Đích: Trả lời ngắn. Thí sinh tự tính toán và nhập kết quả vào bảng con bên phải.</p>
+                        <p class="text-sm font-mono font-extrabold text-slate-700 dark:text-slate-200">Đáp số chuẩn: [Chưa mở đáp án]</p>
+                    </div>
+                `;
+            } else {
+                optDiv.innerHTML = q.options.map((opt, idx) => `
+                    <div id="bell-opt-card-${idx}" class="p-3.5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold flex items-center justify-between transition-all">
+                        <span><strong class="text-indigo-600 mr-1.5">${['A', 'B', 'C', 'D'][idx]}.</strong> ${opt}</span>
+                        <span id="bell-opt-stat-${idx}" class="hidden text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-bold"></span>
+                    </div>
+                `).join('');
+            }
 
             if (q.type === 'short') {
                 document.getElementById('bell-pad-short').classList.remove('hidden');
+                document.getElementById('bell-pad-abcd').classList.add('hidden');
             } else {
                 document.getElementById('bell-pad-short').classList.add('hidden');
+                document.getElementById('bell-pad-abcd').classList.remove('hidden');
             }
 
             document.getElementById('bell-q-explanation').classList.add('hidden');
             renderAllMath();
-        }
-
-        function bellStartQuestion() {
-            bellRenderCurrentQuestion();
-            playSoundEffect('bell');
-            clearInterval(bellTimerInterval);
-            const bar = document.getElementById('bell-timer-bar');
-            bellTimerInterval = setInterval(() => {
-                if (bellTimeLeft > 0) {
-                    bellTimeLeft--;
-                    document.getElementById('bell-timer-display').innerText = bellTimeLeft + 's';
-                    if (bar) bar.style.width = `${(bellTimeLeft / bellMaxTime) * 100}%`;
-                    if (bellTimeLeft <= 5) playSoundEffect('tick');
-                } else {
-                    clearInterval(bellTimerInterval);
-                    playSoundEffect('bell');
-                }
-            }, 1000);
         }
 
         function bellRevealAndEliminate() {
@@ -2103,49 +1756,62 @@
             bellAnsweredIndexes.add(currentBellQIndex);
             renderBellStepper();
 
-            const correctCard = document.getElementById(`bell-opt-card-${q.correct}`);
-            if (correctCard) {
-                correctCard.className = "p-3.5 bg-emerald-100 dark:bg-emerald-950/70 rounded-xl border-2 border-emerald-500 text-sm font-extrabold flex items-center justify-between";
+            if (q.type !== 'short') {
+                const correctCard = document.getElementById(`bell-opt-card-${q.correct}`);
+                if (correctCard) {
+                    correctCard.className = "p-3.5 bg-emerald-100 dark:bg-emerald-950/70 rounded-xl border-2 border-emerald-500 text-sm font-extrabold flex items-center justify-between";
+                }
             }
 
-            const xpGain = q.part === "Phần I" ? 25 : (q.part === "Phần II" ? 50 : 100);
+            const xpGain = q.part === "Khởi Động" ? 25 : (q.part === "Tăng Tốc" ? 50 : 100);
             let passedCount = 0;
             let optCounts = [0, 0, 0, 0];
 
             bellContestants.forEach(c => {
                 if (c.status === 'active') {
-                    if (c.id === activeBellStudentId && c.lastChoice) {
-                        const chosenIdx = ['A', 'B', 'C', 'D'].indexOf(c.lastChoice);
-                        if (chosenIdx !== -1) optCounts[chosenIdx]++;
-                        if (chosenIdx === q.correct || c.lastChoice === q.shortAnswer) {
+                    if (q.type === 'short') {
+                        if (c.lastChoice && c.lastChoice.trim() === String(q.shortAnswer).trim()) {
                             c.xp += xpGain;
                             passedCount++;
                         } else {
                             c.status = 'eliminated';
                         }
                     } else {
-                        if (Math.random() < 0.84) {
-                            c.xp += xpGain;
-                            passedCount++;
-                            optCounts[q.correct]++;
+                        if (c.id === activeBellStudentId && c.lastChoice) {
+                            const chosenIdx = ['A', 'B', 'C', 'D'].indexOf(c.lastChoice);
+                            if (chosenIdx !== -1) optCounts[chosenIdx]++;
+                            if (chosenIdx === q.correct) {
+                                c.xp += xpGain;
+                                passedCount++;
+                            } else {
+                                c.status = 'eliminated';
+                            }
                         } else {
-                            c.status = 'eliminated';
-                            optCounts[(q.correct + 1) % 4]++;
+                            if (Math.random() < 0.84) {
+                                c.xp += xpGain;
+                                passedCount++;
+                                optCounts[q.correct]++;
+                            } else {
+                                c.status = 'eliminated';
+                                optCounts[(q.correct + 1) % 4]++;
+                            }
                         }
                     }
                 }
             });
 
-            const totalVotes = optCounts.reduce((a, b) => a + b, 0) || 1;
-            optCounts.forEach((cnt, idx) => {
-                const badge = document.getElementById(`bell-opt-stat-${idx}`);
-                if (badge) {
-                    badge.innerText = `${cnt} HS (${Math.round(cnt * 100 / totalVotes)}%)`;
-                    badge.classList.remove('hidden');
-                }
-            });
+            if (q.type !== 'short') {
+                const totalVotes = optCounts.reduce((a, b) => a + b, 0) || 1;
+                optCounts.forEach((cnt, idx) => {
+                    const badge = document.getElementById(`bell-opt-stat-${idx}`);
+                    if (badge) {
+                        badge.innerText = `${cnt} HS (${Math.round(cnt * 100 / totalVotes)}%)`;
+                        badge.classList.remove('hidden');
+                    }
+                });
+            }
 
-            document.getElementById('bell-correct-ans-label').innerText = q.answerLabel || ['A', 'B', 'C', 'D'][q.correct];
+            document.getElementById('bell-correct-ans-label').innerText = q.shortAnswer || q.answerLabel || ['A', 'B', 'C', 'D'][q.correct];
             document.getElementById('bell-round-stat-summary').innerText = `🎯 ${passedCount} thí sinh trả lời đúng (+${xpGain} XP)`;
             document.getElementById('bell-explanation-text').innerHTML = q.expl;
             document.getElementById('bell-q-explanation').classList.remove('hidden');
@@ -2188,12 +1854,8 @@
             }
         }
 
-        function openBulkBellContestantsModal() {
-            document.getElementById('bulk-bell-modal').classList.remove('hidden');
-        }
-        function closeBulkBellContestantsModal() {
-            document.getElementById('bulk-bell-modal').classList.add('hidden');
-        }
+        function openBulkBellContestantsModal() { document.getElementById('bulk-bell-modal').classList.remove('hidden'); }
+        function closeBulkBellContestantsModal() { document.getElementById('bulk-bell-modal').classList.add('hidden'); }
         function processBulkBellContestants() {
             const raw = document.getElementById('bulk-bell-names').value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
             if (!raw.length) return;
@@ -2210,9 +1872,7 @@
             showToast(`✅ Đã cập nhật danh sách ${bellContestants.length} học sinh lên sàn đấu!`);
         }
 
-        function changeActiveBellStudent(id) {
-            activeBellStudentId = parseInt(id);
-        }
+        function changeActiveBellStudent(id) { activeBellStudentId = parseInt(id); }
 
         function selectBellStudentAnswer(ans) {
             const c = bellContestants.find(x => x.id === activeBellStudentId);
@@ -2232,7 +1892,7 @@
             if (!val) return;
             const c = bellContestants.find(x => x.id === activeBellStudentId);
             if (c) c.lastChoice = val;
-            showToast(`📱 Đã úp bảng đáp số ngắn: "${val}" cho ${c ? c.name : ''}!`);
+            showToast(`📱 Đã úp bảng đáp số ngắn Về Đích: "${val}" cho ${c ? c.name : ''}!`);
         }
 
         function useBellStudent5050() {
@@ -2259,490 +1919,40 @@
 
         function switchBellSubView(subId) {
             ['arena', 'editor', 'leaderboard'].forEach(s => {
-                document.getElementById(`bell-subview-${s}`).classList.add('hidden');
-                document.getElementById(`bell-sub-${s}`).className = "pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400";
+                const viewEl = document.getElementById(`bell-subview-${s}`);
+                const tabEl = document.getElementById(`bell-sub-${s}`);
+                if (viewEl) viewEl.classList.add('hidden');
+                if (tabEl) tabEl.className = "pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400";
             });
-            document.getElementById(`bell-subview-${subId}`).classList.remove('hidden');
-            document.getElementById(`bell-sub-${subId}`).className = "pb-3 border-b-2 border-amber-600 text-amber-600 font-bold";
+            const activeView = document.getElementById(`bell-subview-${subId}`);
+            const activeTab = document.getElementById(`bell-sub-${subId}`);
+            if (activeView) activeView.classList.remove('hidden');
+            if (activeTab) activeTab.className = "pb-3 border-b-2 border-amber-600 text-amber-600 font-bold";
+
             if (subId === 'editor') renderBellEditorList();
             if (subId === 'leaderboard') renderBellLeaderboard();
         }
 
-        function setBellLayoutMode(mode) {
-            const teacherPanel = document.getElementById('bell-teacher-panel');
-            const studentPanel = document.getElementById('bell-student-panel');
-            if (mode === 'student') {
-                teacherPanel.classList.add('hidden');
-                studentPanel.className = "lg:col-span-3 bg-white dark:bg-slate-800 rounded-2xl p-6 border-2 border-amber-500 shadow-xl space-y-5 max-w-xl mx-auto w-full";
-            } else {
-                teacherPanel.classList.remove('hidden');
-                studentPanel.className = "bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-md space-y-5 flex flex-col justify-between";
-            }
-        }
-
-        // --- BỘ ĐỌC & BÓC TÁCH ĐỀ WORD 22 CÂU (ĐỌC CẢ ẢNH, BẢNG WORD & TỰ VẼ ĐỒ THỊ) ---
-        function renderBellEditorList() {
-            const list = document.getElementById('bell-editor-question-list');
-            if (!list) return;
-            list.innerHTML = bellQuestions.map((q, idx) => `
-                <div class="p-3.5 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2 text-xs transition-all">
-                    <div class="flex justify-between items-center">
-                        <span onclick="switchBellSubView('arena'); jumpToBellQuestion(${idx});" class="cursor-pointer font-extrabold text-indigo-600 hover:underline">${idx + 1}. ${q.qNum}</span>
-                        <div class="flex items-center space-x-1.5">
-                            <span class="px-2 py-0.5 ${q.visual ? 'bg-indigo-100 text-indigo-800' : 'bg-slate-200 text-slate-600'} rounded font-bold">${q.visual ? '📊 Có Hình/Đồ thị' : 'Chưa có hình'}</span>
-                            <button onclick="openVisualAttachmentModal(${idx})" class="px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded font-extrabold">🖼️ Gắn Hình/Đồ Thị</button>
-                            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold">ĐA: ${q.answerLabel || ['A','B','C','D'][q.correct]}</span>
-                        </div>
-                    </div>
-                    <div onclick="switchBellSubView('arena'); jumpToBellQuestion(${idx});" class="cursor-pointer text-slate-700 dark:text-slate-200 font-medium line-clamp-2">${q.text}</div>
-                </div>
-            `).join('');
-            renderAllMath();
-        }
-
-        function loadDefault22Questions() {
-            bellQuestions = JSON.parse(JSON.stringify(DEFAULT_22_QUESTIONS));
-            saveQuestionsToStorage();
-            currentBellQIndex = 0;
-            bellAnsweredIndexes.clear();
-            bellRenderCurrentQuestion();
-            renderBellEditorList();
-            showToast("✅ Đã khôi phục trọn bộ 22 câu chuẩn 3 phần (Đầy đủ Đồ thị SVG)!");
-        }
-
-        function parseOmmlXmlToLatex(xmlNode) {
-            if (!xmlNode) return "";
-            const localName = xmlNode.localName || xmlNode.nodeName.replace(/^.*:/, '');
-
-            if (localName === 't') return xmlNode.textContent || "";
-            if (localName === 'f') {
-                let num = "", den = "";
-                Array.from(xmlNode.childNodes).forEach(ch => {
-                    const n = ch.localName || ch.nodeName.replace(/^.*:/, '');
-                    if (n === 'num') num = parseOmmlChildren(ch);
-                    if (n === 'den') den = parseOmmlChildren(ch);
-                });
-                return `\\frac{${num}}{${den}}`;
-            }
-            if (localName === 'sSup') {
-                let base = "", sup = "";
-                Array.from(xmlNode.childNodes).forEach(ch => {
-                    const n = ch.localName || ch.nodeName.replace(/^.*:/, '');
-                    if (n === 'e') base = parseOmmlChildren(ch);
-                    if (n === 'sup') sup = parseOmmlChildren(ch);
-                });
-                return `${base}^{${sup}}`;
-            }
-            if (localName === 'sSub') {
-                let base = "", sub = "";
-                Array.from(xmlNode.childNodes).forEach(ch => {
-                    const n = ch.localName || ch.nodeName.replace(/^.*:/, '');
-                    if (n === 'e') base = parseOmmlChildren(ch);
-                    if (n === 'sub') sub = parseOmmlChildren(ch);
-                });
-                return `${base}_{${sub}}`;
-            }
-            if (localName === 'rad') {
-                let deg = "", expr = "";
-                Array.from(xmlNode.childNodes).forEach(ch => {
-                    const n = ch.localName || ch.nodeName.replace(/^.*:/, '');
-                    if (n === 'deg') deg = parseOmmlChildren(ch).trim();
-                    if (n === 'e') expr = parseOmmlChildren(ch);
-                });
-                return deg ? `\\sqrt[${deg}]{${expr}}` : `\\sqrt{${expr}}`;
-            }
-            if (localName === 'd') return `\\left(${parseOmmlChildren(xmlNode)}\\right)`;
-            return parseOmmlChildren(xmlNode);
-        }
-
-        function parseOmmlChildren(node) {
-            let res = "";
-            if (!node || !node.childNodes) return res;
-            Array.from(node.childNodes).forEach(child => {
-                res += parseOmmlXmlToLatex(child);
-            });
-            return res;
-        }
-
-        // Trích xuất cả Ảnh (Picture) và Bảng biến thiên kẻ bằng Table trong Word
-        let uploadedDocxVisuals = [];
-
-        async function extractRichDocxContent(arrayBuffer) {
-            let visuals = [];
-            try {
-                if (window.mammoth) {
-                    const htmlRes = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = htmlRes.value;
-                    tempDiv.querySelectorAll('img').forEach(img => {
-                        if (img.src) {
-                            visuals.push(`<img src="${img.src}" class="max-h-52 mx-auto rounded-lg object-contain" alt="Hình minh họa">`);
-                        }
-                    });
-                }
-
-                if (window.JSZip) {
-                    const zip = await JSZip.loadAsync(arrayBuffer);
-                    const docXmlFile = zip.file("word/document.xml");
-                    if (docXmlFile) {
-                        const xmlText = await docXmlFile.async("string");
-                        const parser = new DOMParser();
-                        const xmlDoc = parser.parseFromString(xmlText, "application/xml");
-                        const bodyNode = xmlDoc.getElementsByTagName("w:body")[0];
-                        let lines = [];
-                        let imgIndex = 0;
-
-                        const extractParagraphText = (p) => {
-                            let pText = "";
-                            const walkNode = (node) => {
-                                const name = node.localName || node.nodeName.replace(/^.*:/, '');
-                                if (name === 'oMath') {
-                                    const latex = parseOmmlXmlToLatex(node).trim();
-                                    if (latex) pText += ` $${latex}$ `;
-                                    return;
-                                }
-                                if (name === 'drawing' || name === 'pict') {
-                                    if (imgIndex < visuals.length) {
-                                        pText += `\n[[VISUAL_${imgIndex}]]\n`;
-                                        imgIndex++;
-                                    }
-                                    return;
-                                }
-                                if (name === 't' && node.namespaceURI && node.namespaceURI.includes('wordprocessingml')) {
-                                    pText += node.textContent || "";
-                                    return;
-                                }
-                                if (node.childNodes) Array.from(node.childNodes).forEach(walkNode);
-                            };
-                            walkNode(p);
-                            return pText.trim();
-                        };
-
-                        if (bodyNode) {
-                            Array.from(bodyNode.childNodes).forEach(child => {
-                                const cName = child.localName || child.nodeName.replace(/^.*:/, '');
-                                if (cName === 'p') {
-                                    const t = extractParagraphText(child);
-                                    if (t) lines.push(t);
-                                } else if (cName === 'tbl') {
-                                    // Kiểm tra xem Table là bảng phương án A, B, C, D hay Bảng biến thiên
-                                    const rows = Array.from(child.getElementsByTagName("w:tr"));
-                                    let cellTexts = [];
-                                    rows.forEach(r => {
-                                        const cells = Array.from(r.getElementsByTagName("w:tc")).map(tc => {
-                                            return Array.from(tc.getElementsByTagName("w:p")).map(extractParagraphText).join(" ").trim();
-                                        });
-                                        cellTexts.push(cells);
-                                    });
-                                    const flatStr = cellTexts.map(r => r.join(" | ")).join(" ");
-                                    if (/(?:^|\s)\*?[A-D]\.\s+/.test(flatStr) || /Đáp án|Câu/i.test(flatStr)) {
-                                        cellTexts.forEach(r => lines.push("| " + r.join(" | ") + " |"));
-                                    } else if (cellTexts.length >= 2) {
-                                        // Đây là Bảng biến thiên / Bảng xét dấu kẻ bằng Table Word
-                                        const htmlTable = `<table class="border-collapse border border-slate-400 text-center text-xs sm:text-sm font-semibold w-full max-w-lg">` +
-                                            cellTexts.map((r, rIdx) => `<tr class="${rIdx === 0 ? 'bg-slate-100 dark:bg-slate-700' : ''}">` +
-                                                r.map(c => `<td class="border border-slate-400 p-1.5">${autoFormatMathText(c)}</td>`).join('') +
-                                            `</tr>`).join('') + `</table>`;
-                                        const vIdx = visuals.length;
-                                        visuals.push(htmlTable);
-                                        lines.push(`[[VISUAL_${vIdx}]]`);
-                                    }
-                                }
-                            });
-                            return { text: lines.join('\n'), visuals: visuals };
-                        }
-                    }
-                }
-            } catch (e) {}
-            const rawRes = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
-            return { text: rawRes.value, visuals: visuals };
-        }
-
-        async function handleBellWordUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            if (file.name.endsWith('.docx')) {
-                const reader = new FileReader();
-                reader.onload = async function(e) {
-                    const result = await extractRichDocxContent(e.target.result);
-                    uploadedDocxVisuals = result.visuals || [];
-                    document.getElementById('bell-raw-paste').value = result.text;
-                    parsePastedExamText();
-                };
-                reader.readAsArrayBuffer(file);
-            } else {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedDocxVisuals = [];
-                    document.getElementById('bell-raw-paste').value = e.target.result;
-                    parsePastedExamText();
-                };
-                reader.readAsText(file);
-            }
-        }
-
-        function parsePastedExamText() {
-            const raw = document.getElementById('bell-raw-paste').value.trim();
-            if (!raw) {
-                showToast("⚠️ Vui lòng dán nội dung đề thi hoặc chọn file Word (.docx) trước!");
-                return;
-            }
-            const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-            let parsed = [];
-            let currentPart = "Phần I";
-            let currentQ = null;
-            let inAnswerSection = false;
-            let inDetailedSolution = false;
-            let ansSectionPart = "Phần I";
-            let solSectionPart = "Phần I";
-            let currentSolQKey = null;
-            let answerMapPart1 = {};
-            let answerMapPart2 = {};
-            let answerMapPart3 = {};
-            let explMap = {};
-
-            lines.forEach(line => {
-                if (/^(BẢNG ĐÁP ÁN|ĐÁP ÁN VÀ HƯỚNG DẪN)/i.test(line)) {
-                    inAnswerSection = true;
-                    inDetailedSolution = false;
-                    return;
-                }
-                if (/^(GIẢI CHI TIẾT|LỜI GIẢI CHI TIẾT)/i.test(line)) {
-                    inDetailedSolution = true;
-                    inAnswerSection = false;
-                    return;
-                }
-
-                // 1. Đọc phần GIẢI CHI TIẾT ở cuối file mà không ghi đè lên câu hỏi gốc
-                if (inDetailedSolution) {
-                    if (/^PHẦN\s*I\b/i.test(line)) { solSectionPart = "Phần I"; return; }
-                    if (/^PHẦN\s*II\b/i.test(line)) { solSectionPart = "Phần II"; return; }
-                    if (/^PHẦN\s*III\b/i.test(line)) { solSectionPart = "Phần III"; return; }
-                    const solQMatch = line.match(/^Câu\s*(\d+)\b/i);
-                    if (solQMatch) {
-                        currentSolQKey = `${solSectionPart}_${parseInt(solQMatch[1])}`;
-                        if (!explMap[currentSolQKey]) explMap[currentSolQKey] = "";
-                        return;
-                    }
-                    if (currentSolQKey && !/^(Lời giải|A\.|B\.|C\.|D\.)/i.test(line) && !line.includes('[[VISUAL_')) {
-                        explMap[currentSolQKey] += (explMap[currentSolQKey] ? " " : "") + autoFormatMathText(line);
-                    }
-                    return;
-                }
-
-                // 2. Đọc phần BẢNG ĐÁP ÁN (Hỗ trợ cả bảng 2 cột như | 1 | C | 7 | A | của RUNG_CHUÔNG_2.docx)
-                if (inAnswerSection) {
-                    if (/^Phần\s*I\b/i.test(line)) { ansSectionPart = "Phần I"; return; }
-                    if (/^Phần\s*II\b/i.test(line)) { ansSectionPart = "Phần II"; return; }
-                    if (/^Phần\s*III\b/i.test(line)) { ansSectionPart = "Phần III"; return; }
-
-                    const m1 = line.match(/^Câu\s*(\d+)[\.\:]\s*Chọn\s*([A-D])/i);
-                    if (m1) answerMapPart1[parseInt(m1[1])] = m1[2].toUpperCase();
-
-                    const m3 = line.match(/^Câu\s*(\d+)[\.\:]\s*Đáp số:\s*([^\.\s]+)/i);
-                    if (m3) answerMapPart3[parseInt(m3[1])] = m3[2].trim();
-
-                    if (line.includes('|')) {
-                        const cells = line.split('|').map(c => c.trim()).filter(Boolean);
-                        if (ansSectionPart === "Phần I") {
-                            for (let i = 0; i + 1 < cells.length; i += 2) {
-                                const qN = parseInt(cells[i]);
-                                const ansL = cells[i + 1].toUpperCase();
-                                if (!isNaN(qN) && /^[A-D]$/.test(ansL)) {
-                                    answerMapPart1[qN] = ansL;
-                                }
-                            }
-                        } else if (ansSectionPart === "Phần II" && cells.length >= 5) {
-                            const qN = parseInt(cells[0]);
-                            if (!isNaN(qN)) {
-                                answerMapPart2[qN] = `a-${cells[1]}, b-${cells[2]}, c-${cells[3]}, d-${cells[4]}`;
-                            }
-                        } else if (ansSectionPart === "Phần III") {
-                            for (let i = 0; i + 1 < cells.length; i += 2) {
-                                const qN = parseInt(cells[i]);
-                                const ansV = cells[i + 1];
-                                if (!isNaN(qN) && ansV && !/Đáp án|Câu/i.test(ansV)) {
-                                    answerMapPart3[qN] = ansV;
-                                }
-                            }
-                        }
-                    }
-                    return;
-                }
-
-                if (/^PHẦN\s*I\b/i.test(line)) { currentPart = "Phần I"; return; }
-                if (/^PHẦN\s*II\b/i.test(line)) { currentPart = "Phần II"; return; }
-                if (/^PHẦN\s*III\b/i.test(line)) { currentPart = "Phần III"; return; }
-
-                const qMatch = line.match(/^Câu\s*(\d+)[\.\:\s]\s*(.*)/i);
-                if (qMatch) {
-                    if (currentQ) parsed.push(currentQ);
-                    const cNum = parseInt(qMatch[1]);
-                    const rawQText = qMatch[2] || "";
-                    currentQ = {
-                        id: parsed.length + 1,
-                        localNum: cNum,
-                        part: currentPart,
-                        qNum: `Câu ${cNum} (${currentPart})`,
-                        type: currentPart === "Phần I" ? "mcq" : (currentPart === "Phần II" ? "tf" : "short"),
-                        text: autoFormatMathText(rawQText),
-                        visual: "",
-                        options: [],
-                        subItems: [],
-                        correct: 0,
-                        answerLabel: "A",
-                        expl: "Đã trích xuất tự động từ đề của giáo viên."
-                    };
-                    return;
-                }
-
-                if (!currentQ) return;
-
-                const visMatch = line.match(/\[\[(?:VISUAL|IMAGE)_(\d+)\]\]/);
-                if (visMatch) {
-                    const vIdx = parseInt(visMatch[1]);
-                    if (uploadedDocxVisuals[vIdx]) {
-                        currentQ.visual = uploadedDocxVisuals[vIdx];
-                    }
-                    return;
-                }
-
-                if (/^[a-d]\)/i.test(line)) {
-                    currentQ.subItems.push(autoFormatMathText(line));
-                    return;
-                }
-
-                const cleanedTableLine = line.replace(/\|/g, ' ').replace(/\t+/g, '   ').trim();
-                if (/(?:^|\s)\*?[A-D]\.\s*/.test(cleanedTableLine)) {
-                    const optRegex = /(\*?[A-D])\.\s*([^A-D\*]*?)(?=(?:\s+\*?[A-D]\.)|$)/g;
-                    let match;
-                    let matchedAny = false;
-                    while ((match = optRegex.exec(cleanedTableLine)) !== null) {
-                        matchedAny = true;
-                        const label = match[1];
-                        const content = (match[2] || "").trim();
-                        const isCorrect = label.startsWith('*');
-                        if (isCorrect) {
-                            currentQ.correct = currentQ.options.length;
-                            currentQ.answerLabel = ['A', 'B', 'C', 'D'][currentQ.correct];
-                        }
-                        currentQ.options.push(content && content !== '.' ? autoFormatMathText(content) : `Phương án ${label.replace('*','')}`);
-                    }
-                    if (matchedAny) return;
-                }
-
-                if (/^Đáp số:/i.test(line)) {
-                    const ansVal = line.replace(/^Đáp số:\s*/i, '').split('.')[0].trim();
-                    currentQ.shortAnswer = ansVal;
-                    currentQ.answerLabel = ansVal;
-                    currentQ.options = [ansVal, String(Number(ansVal.replace(',','.')) + 1 || "0"), String(Number(ansVal.replace(',','.')) - 1 || "2"), "Đáp số khác"];
-                    return;
-                }
-                if (/^Giải thích:/i.test(line)) {
-                    currentQ.expl = autoFormatMathText(line.replace(/^Giải thích:\s*/i, ''));
-                    return;
-                }
-
-                currentQ.text += " " + autoFormatMathText(line);
-            });
-            if (currentQ) parsed.push(currentQ);
-
-            if (parsed.length > 0) {
-                let autoGraphCount = 0;
-                parsed.forEach((q) => {
-                    const solKey = `${q.part}_${q.localNum}`;
-                    if (explMap[solKey]) {
-                        q.expl = explMap[solKey];
-                    }
-
-                    if (q.part === "Phần I" && answerMapPart1[q.localNum]) {
-                        const letter = answerMapPart1[q.localNum];
-                        const cIdx = ['A', 'B', 'C', 'D'].indexOf(letter);
-                        if (cIdx !== -1) {
-                            q.correct = cIdx;
-                            q.answerLabel = letter;
-                        }
-                    }
-                    if (q.part === "Phần II" && answerMapPart2[q.localNum]) {
-                        const correctCombo = answerMapPart2[q.localNum];
-                        q.options = [
-                            correctCombo,
-                            "a-Đúng, b-Đúng, c-Sai, d-Đúng",
-                            "a-Sai, b-Đúng, c-Sai, d-Đúng",
-                            "a-Đúng, b-Sai, c-Sai, d-Sai"
-                        ];
-                        q.correct = 0;
-                        q.answerLabel = `A (${correctCombo})`;
-                    }
-                    if (q.part === "Phần III" && answerMapPart3[q.localNum]) {
-                        const ansVal = answerMapPart3[q.localNum];
-                        q.shortAnswer = ansVal;
-                        q.answerLabel = ansVal;
-                        q.options = [ansVal, "Phương án nhiễu 1", "Phương án nhiễu 2", "Phương án nhiễu 3"];
-                        q.correct = 0;
-                    }
-
-                    if (!q.visual) {
-                        const autoSvg = autoDetectGraphForNewQuestion(q.text);
-                        if (autoSvg) {
-                            q.visual = autoSvg;
-                            autoGraphCount++;
-                        }
-                    }
-
-                    if (q.options.length === 0) {
-                        if (q.part === "Phần II") {
-                            q.options = ["a-Sai, b-Đúng, c-Sai, d-Đúng", "a-Đúng, b-Sai, c-Đúng, d-Sai", "a-Đúng, b-Đúng, c-Đúng, d-Sai", "a-Đúng, b-Đúng, c-Sai, d-Sai"];
-                        } else if (q.part === "Phần III") {
-                            const ans = q.shortAnswer || "1";
-                            q.options = [ans, "2", "3", "4"];
-                        } else {
-                            q.options = ["Phương án A", "Phương án B", "Phương án C", "Phương án D"];
-                        }
-                    }
-                });
-                bellQuestions = parsed;
-                saveQuestionsToStorage();
-                currentBellQIndex = 0;
-                bellAnsweredIndexes.clear();
-                bellRenderCurrentQuestion();
-                renderBellEditorList();
-                tugStartCurrentQuestion();
-                renderFullExam22();
-                showToast(`🎉 Đã nạp ${parsed.length} câu hỏi mới (Đọc bảng đáp án 2 cột, ${uploadedDocxVisuals.length} ảnh & lời giải chi tiết)!`);
-            } else {
-                showToast("⚠️ Không tìm thấy từ khóa 'Câu 1.' trong văn bản.");
-            }
-        }
-
-        function downloadSample22WordTxt() {
-            const content = bellQuestions.map((q, idx) => {
-                const sub = q.subItems ? '\n' + q.subItems.join('\n') : '';
-                const opts = q.options.map((o, i) => `${i === q.correct ? '*' : ''}${['A','B','C','D'][i]}. ${o}`).join('\n');
-                return `Câu ${idx + 1} [${q.part}]: ${q.text}${sub}\n${opts}\nGiải thích: ${q.expl}\n`;
-            }).join('\n');
-            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'MAU_DE_22_CAU_3_PHAN_RUNG_CHUONG_VANG.txt';
-            a.click();
-        }
-
         function renderBellLeaderboard() {
             const container = document.getElementById('bell-leaderboard-container');
+            if (!container) return;
             const sorted = [...bellContestants].sort((a, b) => {
                 if (a.status !== b.status) return a.status === 'active' ? -1 : 1;
                 return b.xp - a.xp;
             });
             container.innerHTML = sorted.map((c, idx) => `
-                <div class="p-3.5 bg-slate-50 dark:bg-slate-900 rounded-xl border flex justify-between items-center text-sm font-semibold">
-                    <div class="flex items-center space-x-2">
-                        <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${idx < 3 ? 'bg-amber-400 text-slate-900' : 'bg-slate-200 dark:bg-slate-700'}">${idx + 1}</span>
-                        <span>SBD ${c.id < 10 ? '0'+c.id : c.id}: ${c.name}</span>
-                        <span class="text-xs px-2 py-0.5 rounded-full ${c.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">${c.status === 'active' ? 'Còn trên sàn' : 'Đã dừng bước'}</span>
+                <div class="p-3.5 bg-slate-50 dark:bg-slate-900 rounded-xl border flex justify-between items-center text-sm font-semibold shadow-sm">
+                    <div class="flex items-center space-x-3">
+                        <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${idx === 0 ? 'bg-amber-400 text-slate-900 shadow-md ring-2 ring-amber-200' : (idx < 3 ? 'bg-slate-300 text-slate-800' : 'bg-slate-200 dark:bg-slate-700')}">#${idx + 1}</span>
+                        <div>
+                            <div class="font-extrabold text-slate-800 dark:text-slate-100">SBD ${c.id < 10 ? '0'+c.id : c.id}: ${c.name}</div>
+                            <div class="text-[11px] font-medium text-slate-500">${c.status === 'active' ? '✨ Đang chinh phục sàn đấu' : '🛑 Đã dừng bước'}</div>
+                        </div>
                     </div>
-                    <span class="text-amber-600 font-extrabold">${c.xp} XP</span>
+                    <div class="flex items-center space-x-3">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-extrabold ${c.status === 'active' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-rose-100 text-rose-700'}">${c.status === 'active' ? 'Còn trên sàn' : 'Bị loại'}</span>
+                        <span class="text-amber-600 dark:text-amber-400 font-black text-base">${c.xp} XP</span>
+                    </div>
                 </div>
             `).join('');
         }
@@ -2767,7 +1977,7 @@
             showToast("🔔 CHUÔNG VÀNG ĐÃ NGÂN VANG! Chúc mừng nhà vô địch vượt qua 22 câu!");
         }
 
-        // --- GAME KÉO CO KIẾN THỨC (ĐỒNG BỘ TRỌN VẸN 22 CÂU) ---
+        // --- GAME KÉO CO KIẾN THỨC (ĐỒNG BỘ 22 CÂU) ---
         let tugTeams = {
             red: [{ name: "Nguyễn Văn Hùng", answered: false }, { name: "Lê Thị Lan", answered: false }, { name: "Phạm Quốc Anh", answered: false }],
             blue: [{ name: "Trần Minh Quân", answered: false }, { name: "Hoàng Quỳnh Nga", answered: false }, { name: "Vũ Bảo Châu", answered: false }]
@@ -2829,11 +2039,16 @@
             } else {
                 subDiv.classList.add('hidden');
             }
-            document.getElementById('tug-q-options').innerHTML = q.options.map((opt, idx) => `
-                <div id="tug-opt-${idx}" class="p-3 bg-white dark:bg-slate-800 rounded-xl border text-sm font-semibold">
-                    <strong class="text-rose-600 mr-1">${['A', 'B', 'C', 'D'][idx]}.</strong> ${opt}
-                </div>
-            `).join('');
+            const optDiv = document.getElementById('tug-q-options');
+            if (q.type === 'short') {
+                optDiv.innerHTML = `<div class="p-3 bg-rose-50 dark:bg-rose-950/40 rounded-xl border border-rose-200 text-center text-xs font-bold text-rose-800 dark:text-rose-200">✍️ Về Đích (Trả lời ngắn): Học sinh tự tính toán và nhập đáp số vào tay cầm bên phải.</div>`;
+            } else {
+                optDiv.innerHTML = q.options.map((opt, idx) => `
+                    <div id="tug-opt-${idx}" class="p-3 bg-white dark:bg-slate-800 rounded-xl border text-sm font-semibold">
+                        <strong class="text-rose-600 mr-1">${['A', 'B', 'C', 'D'][idx]}.</strong> ${opt}
+                    </div>
+                `).join('');
+            }
             const shortPad = document.getElementById('tug-pad-short');
             if (shortPad) {
                 if (q.type === 'short') shortPad.classList.remove('hidden');
@@ -2892,85 +2107,8 @@
             if (!val) return;
             tugTeams.red.forEach(m => m.answered = true);
             renderTugTeams();
-            document.getElementById('tug-student-feedback').innerText = `✅ Đã chốt đáp số ngắn "${val}"!`;
+            document.getElementById('tug-student-feedback').innerText = `✅ Đã chốt đáp số ngắn Về Đích "${val}"!`;
             showToast(`⚡ Đã ghi nhận đáp số "${val}" cho phần Kéo Co!`);
-        }
-
-        function tugPrevQuestion() {
-            if (currentTugQIndex > 0) {
-                currentTugQIndex--;
-                tugStartCurrentQuestion();
-            }
-        }
-
-        function tugStartCurrentQuestion() {
-            const q = bellQuestions[currentTugQIndex % bellQuestions.length];
-            populateBellQuickJump();
-            document.getElementById('tug-current-q-badge').innerText = `Câu ${currentTugQIndex + 1}/${bellQuestions.length} (${q.part})`;
-            const displayQText = q.text.replace(/\[(?:ĐỒ THỊ|DO THI|GRAPH)\s*:[^\]]+\]/gi, '');
-            document.getElementById('tug-q-text').innerHTML = `<span class="text-rose-600 font-extrabold">${q.qNum}:</span> ${displayQText}`;
-            const vDiv = document.getElementById('tug-q-visual');
-            if (q.visual) {
-                vDiv.innerHTML = q.visual;
-                vDiv.classList.remove('hidden');
-            } else {
-                vDiv.classList.add('hidden');
-            }
-            const subDiv = document.getElementById('tug-q-subitems');
-            if (q.subItems && q.subItems.length) {
-                subDiv.innerHTML = q.subItems.map(item => `<div>• ${item}</div>`).join('');
-                subDiv.classList.remove('hidden');
-            } else {
-                subDiv.classList.add('hidden');
-            }
-            document.getElementById('tug-q-options').innerHTML = q.options.map((opt, idx) => `
-                <div id="tug-opt-${idx}" class="p-3 bg-white dark:bg-slate-800 rounded-xl border text-sm font-semibold">
-                    <strong class="text-rose-600 mr-1">${['A', 'B', 'C', 'D'][idx]}.</strong> ${opt}
-                </div>
-            `).join('');
-            document.getElementById('tug-q-explanation').classList.add('hidden');
-            renderAllMath();
-        }
-
-        function tugRevealAndPull() {
-            playSoundEffect('bell');
-            const q = bellQuestions[currentTugQIndex % bellQuestions.length];
-            const correctEl = document.getElementById(`tug-opt-${q.correct}`);
-            if (correctEl) {
-                correctEl.className = "p-3 bg-emerald-100 dark:bg-emerald-950/70 rounded-xl border-2 border-emerald-500 text-sm font-extrabold";
-            }
-            const explEl = document.getElementById('tug-q-explanation');
-            if (explEl) {
-                explEl.innerHTML = `<strong>✅ Đáp án đúng: ${q.answerLabel || ['A','B','C','D'][q.correct]}</strong> • ${q.expl}`;
-                explEl.classList.remove('hidden');
-            }
-
-            const redGain = Math.floor(Math.random() * 25) + 20;
-            const blueGain = Math.floor(Math.random() * 25) + 18;
-            tugRedScore += redGain;
-            tugBlueScore += blueGain;
-            document.getElementById('tug-red-score').innerText = tugRedScore + 'đ';
-            document.getElementById('tug-blue-score').innerText = tugBlueScore + 'đ';
-            const diff = Math.max(-140, Math.min(140, (tugBlueScore - tugRedScore) * 1.5));
-            document.getElementById('tug-rope-indicator').style.transform = `translate(calc(-50% + ${diff}px), -50%)`;
-            document.getElementById('tug-rope-status').innerText = tugRedScore > tugBlueScore ? "🔥 Đội Đỏ đang kéo thắng thế!" : "🌊 Đội Xanh đang kéo thắng thế!";
-            renderAllMath();
-        }
-
-        function tugNextQuestion() {
-            currentTugQIndex = (currentTugQIndex + 1) % bellQuestions.length;
-            tugStartCurrentQuestion();
-        }
-
-        function tugResetMatch() {
-            tugRedScore = 0;
-            tugBlueScore = 0;
-            currentTugQIndex = 0;
-            document.getElementById('tug-red-score').innerText = '0đ';
-            document.getElementById('tug-blue-score').innerText = '0đ';
-            document.getElementById('tug-rope-indicator').style.transform = `translate(-50%, -50%)`;
-            document.getElementById('tug-rope-status').innerText = "Cân bằng (0)";
-            tugStartCurrentQuestion();
         }
 
         function renderTugTeams() {
@@ -3033,7 +2171,7 @@
             const container = document.getElementById('graph-sliders-container');
             if (type === 'cubic') {
                 params = { a: 1, b: 0, c: -3, d: 1 };
-                document.getElementById('graph-formula-display').innerHTML = "$y = x^3 - 3x + 1$ (Câu 12 Phần I & Câu 3 Phần II)";
+                document.getElementById('graph-formula-display').innerHTML = "$y = x^3 - 3x + 1$ (Câu 12 Khởi Động & Câu 3 Tăng Tốc)";
                 document.getElementById('graph-analysis-text').innerHTML = "Đồ thị có cực đại $(-1;3)$, cực tiểu $(1;-1)$ và tâm đối xứng $I(0;1)$.";
                 container.innerHTML = `
                     <label class="text-xs font-semibold block">Hệ số a: <span id="val-a">1</span></label>
@@ -3044,13 +2182,13 @@
                     <input type="range" min="-4" max="4" step="1" value="1" oninput="updateParam('d', this.value)" class="w-full">
                 `;
             } else if (type === 'rational11') {
-                document.getElementById('graph-formula-display').innerHTML = "$y = \\frac{x+1}{x-1}$ (Câu 8 Phần I)";
+                document.getElementById('graph-formula-display').innerHTML = "$y = \\frac{x+1}{x-1}$ (Câu 8 Khởi Động)";
                 document.getElementById('graph-analysis-text').innerHTML = "Tiệm cận đứng $x=1$ (nét đứt đỏ), tiệm cận ngang $y=1$ (nét đứt vàng).";
                 container.innerHTML = `<p class="text-xs text-slate-500">Đang hiển thị đồng thời đồ thị và 2 đường tiệm cận đứng / ngang.</p>`;
             } else {
-                document.getElementById('graph-formula-display').innerHTML = "$y = \\frac{x^2+x+4}{x} = x + 1 + \\frac{4}{x}$ (Câu 2 Phần II)";
+                document.getElementById('graph-formula-display').innerHTML = "$y = \\frac{x^2+x+4}{x} = x + 1 + \\frac{4}{x}$ (Câu 2 Tăng Tốc)";
                 document.getElementById('graph-analysis-text').innerHTML = "Tiệm cận đứng $x=0$, tiệm cận xiên $y=x+1$, cực tiểu $(2;5)$ và cực đại $(-2;-3)$.";
-                container.innerHTML = `<p class="text-xs text-slate-500">Đồ thị Câu 2 Phần II có tiệm cận đứng $x=0$ và tiệm cận xiên $y=x+1$.</p>`;
+                container.innerHTML = `<p class="text-xs text-slate-500">Đồ thị có tiệm cận đứng $x=0$ và tiệm cận xiên $y=x+1$.</p>`;
             }
             drawGraph();
             renderAllMath();
@@ -3096,22 +2234,18 @@
                 ctx.strokeStyle = '#f43f5e';
                 ctx.beginPath();
                 const asymX = graphType === 'rational11' ? cx + 1 * scale : cx;
-                ctx.moveTo(asymX, 0);
-                ctx.lineTo(asymX, h);
-                ctx.stroke();
+                ctx.moveTo(asymX, 0); ctx.lineTo(asymX, h); ctx.stroke();
 
                 ctx.strokeStyle = '#f59e0b';
                 ctx.beginPath();
                 if (graphType === 'rational11') {
-                    ctx.moveTo(0, cy - 1 * scale);
-                    ctx.lineTo(w, cy - 1 * scale);
+                    ctx.moveTo(0, cy - 1 * scale); ctx.lineTo(w, cy - 1 * scale);
                 } else {
                     for (let px = 0; px < w; px += 4) {
                         let x = (px - cx) / scale;
                         let y = x + 1;
                         let py = cy - y * scale;
-                        if (px === 0) ctx.moveTo(px, py);
-                        else ctx.lineTo(px, py);
+                        if (px === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
                     }
                 }
                 ctx.stroke();
@@ -3140,7 +2274,7 @@
             ctx.stroke();
         }
 
-        // --- PHÒNG LUYỆN THI TƯƠNG TÁC 22 CÂU (CHẤM ĐIỂM CHUẨN THANG 10) ---
+        // --- PHÒNG LUYỆN THI TƯƠNG TÁC 22 CÂU ---
         let userExamChoices = {};
 
         function renderFullExam22() {
@@ -3158,15 +2292,21 @@
                     <div class="text-sm font-medium leading-relaxed">${q.text.replace(/\[(?:ĐỒ THỊ|DO THI|GRAPH)\s*:[^\]]+\]/gi, '')}</div>
                     ${q.visual ? `<div class="py-2 flex justify-center overflow-x-auto bg-white dark:bg-slate-800 rounded-xl border p-3">${q.visual}</div>` : ''}
                     ${q.subItems && q.subItems.length ? `<div class="text-xs space-y-1 bg-amber-50 dark:bg-slate-800 p-3 rounded-xl border border-amber-200">${q.subItems.join('<br>')}</div>` : ''}
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                        ${q.options.map((opt, oIdx) => `
-                            <button onclick="selectExamChoice(${idx}, ${oIdx})" id="exam-q${idx}-opt${oIdx}" class="text-left p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-indigo-500 text-xs font-semibold transition-all">
-                                <strong class="text-indigo-600 mr-1">${['A','B','C','D'][oIdx]}.</strong> ${opt}
-                            </button>
-                        `).join('')}
-                    </div>
+                    ${q.type === 'short' ? `
+                        <div class="pt-1 flex space-x-2">
+                            <input type="text" id="exam-short-${idx}" oninput="userExamChoices[${idx}] = this.value.trim()" placeholder="Nhập đáp số của bạn..." class="flex-1 px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm font-bold">
+                        </div>
+                    ` : `
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                            ${q.options.map((opt, oIdx) => `
+                                <button onclick="selectExamChoice(${idx}, ${oIdx})" id="exam-q${idx}-opt${oIdx}" class="text-left p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-indigo-500 text-xs font-semibold transition-all">
+                                    <strong class="text-indigo-600 mr-1">${['A','B','C','D'][oIdx]}.</strong> ${opt}
+                                </button>
+                            `).join('')}
+                        </div>
+                    `}
                     <div id="exam-expl-${idx}" class="hidden text-xs p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 text-emerald-900 dark:text-emerald-200">
-                        <strong>✅ Đáp án chuẩn: ${q.answerLabel || ['A','B','C','D'][q.correct]}</strong> • 💡 ${q.expl}
+                        <strong>✅ Đáp án chuẩn: ${q.shortAnswer || q.answerLabel || ['A','B','C','D'][q.correct]}</strong> • 💡 ${q.expl}
                     </div>
                 </div>
             `).join('');
@@ -3175,32 +2315,46 @@
 
         function selectExamChoice(qIdx, oIdx) {
             userExamChoices[qIdx] = oIdx;
-            for (let i = 0; i < 4; i++) {
-                const btn = document.getElementById(`exam-q${qIdx}-opt${i}`);
+            const q = bellQuestions[qIdx];
+            if (!q || q.type === 'short') return;
+            q.options.forEach((_, optIdx) => {
+                const btn = document.getElementById(`exam-q${qIdx}-opt${optIdx}`);
                 if (btn) {
-                    btn.className = i === oIdx
-                        ? "text-left p-2.5 rounded-xl border-2 border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-xs font-extrabold transition-all"
-                        : "text-left p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-indigo-500 text-xs font-semibold transition-all";
+                    btn.className = optIdx === oIdx
+                        ? "text-left p-2.5 rounded-xl border-2 border-indigo-600 bg-indigo-50 dark:bg-indigo-950/70 text-xs font-extrabold"
+                        : "text-left p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-indigo-500 text-xs font-semibold";
                 }
-            }
+            });
         }
 
         function gradeInteractiveExam22() {
             let totalScore = 0;
             let correctCount = 0;
             bellQuestions.forEach((q, idx) => {
-                const chosen = userExamChoices[idx];
-                const isCorrect = chosen === q.correct;
-                const point = q.part === "Phần I" ? 0.25 : (q.part === "Phần II" ? 1.0 : 0.5);
+                let isCorrect = false;
+                if (q.type === 'short') {
+                    const studentAns = String(userExamChoices[idx] || "").trim();
+                    const targetAns = String(q.shortAnswer || "").trim();
+                    if (studentAns && studentAns.toLowerCase() === targetAns.toLowerCase()) {
+                        isCorrect = true;
+                    }
+                } else {
+                    const chosen = userExamChoices[idx];
+                    if (chosen === q.correct) isCorrect = true;
+                }
+
+                const point = q.part === "Khởi Động" ? 0.25 : (q.part === "Tăng Tốc" ? 1.0 : 0.5);
                 if (isCorrect) {
                     totalScore += point;
                     correctCount++;
                 }
                 const expl = document.getElementById(`exam-expl-${idx}`);
                 if (expl) expl.classList.remove('hidden');
-                const correctBtn = document.getElementById(`exam-q${idx}-opt${q.correct}`);
-                if (correctBtn) {
-                    correctBtn.className = "text-left p-2.5 rounded-xl border-2 border-emerald-600 bg-emerald-100 dark:bg-emerald-950/70 text-xs font-extrabold";
+                if (q.type !== 'short') {
+                    const correctBtn = document.getElementById(`exam-q${idx}-opt${q.correct}`);
+                    if (correctBtn) {
+                        correctBtn.className = "text-left p-2.5 rounded-xl border-2 border-emerald-600 bg-emerald-100 dark:bg-emerald-950/70 text-xs font-extrabold";
+                    }
                 }
             });
             const badge = document.getElementById('exam-score-badge');
@@ -3212,54 +2366,41 @@
             renderAllMath();
         }
 
-        // --- SỔ TAY CÔNG THỨC (CÓ TÌM KIẾM) ---
-        const ALL_FORMULAS = [
-            { t: "1. Tính đơn điệu & Cực trị hàm số", c: "Hàm số đồng biến khi $f'(x) \\ge 0$, nghịch biến khi $f'(x) \\le 0$. Đổi dấu từ $+$ sang $-$ là Cực đại, từ $-$ sang $+$ là Cực tiểu." },
-            { t: "2. Tiệm cận đứng, Tiệm cận ngang & Tiệm cận xiên", c: "TCN: $\\lim_{x\\to\\pm\\infty} f(x) = y_0$. TCĐ: $\\lim_{x\\to x_0^\\pm} f(x) = \\pm\\infty$. TCX của $y=ax+b+\\frac{c}{dx+e}$ là $y=ax+b$." },
-            { t: "3. Tâm đối xứng đồ thị hàm bậc 3 & phân thức", c: "Hàm bậc 3 nhận điểm uốn $x_0 = -\\frac{b}{3a}$ (trung điểm 2 cực trị) làm tâm đối xứng. Hàm phân thức nhận giao điểm 2 đường tiệm cận làm tâm đối xứng." },
-            { t: "4. Ứng dụng đạo hàm giải bài toán tối ưu thực tế", c: "Lập hàm mục tiêu $T(x)$ hoặc doanh thu $R(n)$, giải phương trình $f'(x)=0$ trên miền xác định $[a;b]$ để tìm GTLN, GTNN." },
-            { t: "5. Nguyên hàm & Tích phân cơ bản", c: "$\\int x^\\alpha dx = \\frac{x^{\\alpha+1}}{\\alpha+1}+C$, $\\int \\frac{1}{x}dx = \\ln|x|+C$, $\\int e^x dx = e^x+C$. Công thức Newton-Leibniz: $\\int_a^b f(x)dx = F(b)-F(a)$." },
-            { t: "6. Tọa độ không gian Oxyz & Khoảng cách", c: "Mặt phẳng $(P): Ax+By+Cz+D=0$ có VTPT $\\vec{n}=(A;B;C)$. Khoảng cách: $d(M,(P))=\\frac{|Ax_0+By_0+Cz_0+D|}{\\sqrt{A^2+B^2+C^2}}$." },
-            { t: "7. Xác suất có điều kiện & Công thức Bayes", c: "$P(A|B) = \\frac{P(AB)}{P(B)}$. Công thức Bayes: $P(A|B) = \\frac{P(A)\\cdot P(B|A)}{P(A)\\cdot P(B|A) + P(\\overline{A})\\cdot P(B|\\overline{A})}$." },
-            { t: "8. Cấp số cộng & Cấp số nhân (Toán 11)", c: "CSC: $u_n = u_1 + (n-1)d$, $S_n = \\frac{n(u_1+u_n)}{2}$. CSN: $u_n = u_1\\cdot q^{n-1}$, $S_n = u_1\\frac{1-q^n}{1-q}$." }
+        // --- SỔ TAY CÔNG THỨC ---
+        const MATH_FORMULAS = [
+            { title: "Đạo hàm các hàm số sơ cấp", content: "$(x^n)' = n x^{n-1}$, $(\\sin x)' = \\cos x$, $(\\cos x)' = -\\sin x$, $(e^x)' = e^x$, $(\\ln x)' = \\frac{1}{x}$" },
+            { title: "Khảo sát hàm số (Cực trị & Tiệm cận)", content: "Hàm bậc 3 có 2 cực trị khi $ac < 0$. TCĐ: nghiệm mẫu không là nghiệm tử. TCN: $\\lim_{x\\to\\pm\\infty} y = y_0$" },
+            { title: "Nguyên hàm cơ bản", content: "$\\int x^n dx = \\frac{x^{n+1}}{n+1} + C$, $\\int e^x dx = e^x + C$, $\\int \\frac{1}{x} dx = \\ln|x| + C$" },
+            { title: "Hình học không gian Oxyz", content: "Mặt phẳng $(P): Ax+By+Cz+D=0$ có VTPT $\\vec{n}=(A;B;C)$. Khoảng cách từ điểm đến mặt phẳng: $d(M,(P)) = \\frac{|Ax_0+By_0+Cz_0+D|}{\\sqrt{A^2+B^2+C^2}}$" }
         ];
 
-        function renderFormulas(list = ALL_FORMULAS) {
-            document.getElementById('formula-list-container').innerHTML = list.map(f => `
-                <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
-                    <h4 class="font-bold text-sm text-indigo-600">${f.t}</h4>
-                    <p class="text-xs leading-relaxed">${f.c}</p>
+        function renderFormulasList(list) {
+            const container = document.getElementById('formula-list-container');
+            if (!container) return;
+            container.innerHTML = list.map(f => `
+                <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border space-y-2">
+                    <h3 class="font-bold text-indigo-600 dark:text-indigo-400 text-sm">${f.title}</h3>
+                    <div class="text-xs text-slate-700 dark:text-slate-200 leading-relaxed">${f.content}</div>
                 </div>
             `).join('');
             renderAllMath();
         }
 
         function filterFormulas() {
-            const kw = document.getElementById('formula-search-input').value.toLowerCase().trim();
-            const filtered = ALL_FORMULAS.filter(f => f.t.toLowerCase().includes(kw) || f.c.toLowerCase().includes(kw));
-            renderFormulas(filtered);
+            const keyword = document.getElementById('formula-search-input').value.toLowerCase();
+            const filtered = MATH_FORMULAS.filter(f => f.title.toLowerCase().includes(keyword) || f.content.toLowerCase().includes(keyword));
+            renderFormulasList(filtered);
         }
 
-        function openQrJoinModal() {
-            const url = window.location.href.split('?')[0] + "?role=student";
-            document.getElementById('qr-link-text').innerText = url;
-            document.getElementById('qr-image').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}`;
-            document.getElementById('qr-modal').classList.remove('hidden');
-        }
-        function closeQrJoinModal() { document.getElementById('qr-modal').classList.add('hidden'); }
-        function openGuideModal() { document.getElementById('guide-modal').classList.remove('hidden'); }
-        function closeGuideModal() { document.getElementById('guide-modal').classList.add('hidden'); }
-
-        window.onload = function() {
-            renderBellStage();
+        // Khởi chạy ứng dụng khi load xong trang
+        window.addEventListener('DOMContentLoaded', () => {
             bellRenderCurrentQuestion();
-            renderTugTeams();
+            renderBellStage();
             tugStartCurrentQuestion();
-            renderFormulas();
-            if (window.location.search.includes('role=student')) {
-                setBellLayoutMode('student');
-            }
-        };
+            renderTugTeams();
+            renderFormulasList(MATH_FORMULAS);
+            renderAllMath();
+        });
     </script>
 </body>
 </html>
