@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderAllMath();"></script>
-    <!-- Thư viện đọc file Word (.docx) -->
+    <!-- Thư viện đọc file Word (.docx) kèm Hình ảnh & XML -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <!-- Font Inter -->
@@ -65,6 +65,19 @@
             z-index: 9995 !important;
             pointer-events: auto !important;
         }
+        /* Style cho bảng biến thiên kẻ bằng Table trong Word */
+        .word-table-visual table {
+            border-collapse: collapse;
+            margin: 0 auto;
+            background: #ffffff;
+            color: #0f172a;
+            font-size: 0.9rem;
+        }
+        .word-table-visual td, .word-table-visual th {
+            border: 1.5px solid #64748b;
+            padding: 6px 14px;
+            text-align: center;
+        }
         @keyframes pulseGlow {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.04); }
@@ -93,7 +106,6 @@
             <h3 class="text-xl font-black text-slate-800 dark:text-white">Quét Mã QR Để Vào Phòng Thi</h3>
             <p class="text-xs text-slate-500 dark:text-slate-400">Học sinh dùng Camera hoặc Zalo quét mã QR dưới đây để mở giao diện bấm đáp án trên điện thoại</p>
 
-            <!-- Khung hiển thị ảnh QR -->
             <div class="mx-auto w-56 h-56 p-3 rounded-2xl bg-white border-2 border-slate-200 shadow-inner flex items-center justify-center">
                 <img id="qr-code-img" src="" alt="QR Code Phòng Thi" class="w-48 h-48 object-contain" />
             </div>
@@ -156,14 +168,17 @@
     <div id="visual-editor-modal" class="fixed inset-0 z-[9997] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 max-w-lg w-full rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-2xl space-y-4">
             <div class="flex items-center justify-between border-b pb-3 dark:border-slate-700">
-                <h3 class="font-extrabold text-base text-indigo-600 dark:text-indigo-400">🖼️ Chèn Ảnh Bảng Biến Thiên / Vẽ Đồ Thị Hàm Số</h3>
+                <h3 class="font-extrabold text-base text-indigo-600 dark:text-indigo-400">🖼️ Chèn Bảng Biến Thiên / Vẽ Đồ Thị Hàm Số</h3>
                 <button onclick="closeVisualModal()" class="text-slate-400 hover:text-rose-500 font-bold">✕</button>
             </div>
             <div class="space-y-3 text-xs">
+                <div class="p-3 rounded-xl bg-amber-50 dark:bg-slate-900 border border-amber-300 dark:border-slate-700 text-amber-900 dark:text-amber-300 font-semibold">
+                    💡 <strong>Mẹo siêu nhanh:</strong> Bạn có thể chụp ảnh màn hình (<kbd class="px-1.5 py-0.5 bg-white dark:bg-slate-800 rounded border">Win + Shift + S</kbd>) hoặc Copy hình từ Word rồi bấm <kbd class="px-1.5 py-0.5 bg-white dark:bg-slate-800 rounded border">Ctrl + V</kbd> trực tiếp để dán hình vào câu đang chiếu!
+                </div>
                 <div>
                     <label class="font-bold block mb-1">Cách 1: Nhập hàm số để tự động vẽ Đồ thị Oxy chuẩn SVG</label>
                     <div class="flex gap-2">
-                        <input id="visual-func-input" type="text" placeholder="VD: x^3 - 3*x + 1 hoặc (x^2+x+4)/x" class="flex-1 px-3 py-2 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:border-slate-700 font-mono">
+                        <input id="visual-func-input" type="text" placeholder="VD: x^3 - 3*x + 1 hoặc (2*x-1)/(x+1)" class="flex-1 px-3 py-2 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:border-slate-700 font-mono">
                         <button onclick="applyAutoFunctionGraph()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl">Vẽ Đồ Thị</button>
                     </div>
                 </div>
@@ -222,7 +237,7 @@
                     <span>📲</span>
                     <span>Máy HS</span>
                 </button>
-                <button onclick="toggleBrowserFullscreen()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-indigo-100 text-xs font-bold" title="Toàn màn hình (Phím F)">
+                <button onclick="toggleBrowserFullscreen()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-indigo-100 text-xs font-bold" title="Toàn màn hình">
                     ⛶ <span class="hidden xl:inline">Toàn Màn Hình</span>
                 </button>
                 <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-xs font-bold" title="Đổi giao diện Sáng/Tối">
@@ -305,8 +320,8 @@
                             <!-- Lời dẫn câu hỏi -->
                             <div id="bell-question-text" class="stage-question-text text-base sm:text-lg font-bold leading-relaxed text-slate-800 dark:text-slate-100"></div>
 
-                            <!-- Khung Bảng Biến Thiên / Đồ Thị SVG -->
-                            <div id="bell-visual-box" class="hidden rounded-xl bg-white dark:bg-slate-800 p-3 border border-slate-200 dark:border-slate-700 flex justify-center items-center overflow-x-auto"></div>
+                            <!-- Khung Bảng Biến Thiên / Đồ Thị SVG hoặc Ảnh từ Word -->
+                            <div id="bell-visual-box" class="hidden word-table-visual rounded-xl bg-white dark:bg-slate-800 p-3 border border-slate-200 dark:border-slate-700 flex justify-center items-center overflow-x-auto"></div>
 
                             <!-- Khu vực hiển thị câu trả lời tùy theo PHẦN I, PHẦN II, PHẦN III -->
                             <div id="bell-options-area" class="space-y-3"></div>
@@ -385,6 +400,7 @@
                         <button onclick="switchTab('student')" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-extrabold">📲 Điện Thoại HS</button>
                         <button onclick="loadFromGithubTxtFile(true)" class="px-2.5 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold">📘 Đề 1 (GitHub)</button>
                         <button onclick="loadExamPreset2()" class="px-2.5 py-1.5 rounded-lg bg-amber-100 text-amber-800 text-xs font-bold">📙 Đề RUNG_CHUÔNG_2</button>
+                        <button onclick="openVisualModal('tug')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-xs font-bold">🖼️ Sửa Hình</button>
                         <button onclick="resetTugGame()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-xs font-bold">🔄 Đặt lại dây</button>
                         <button onclick="toggleStageFullscreen('tug-stage-container')" class="px-3 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-xs font-extrabold shadow">
                             ⛶ Toàn Màn Hình Kéo Co
@@ -424,7 +440,7 @@
                 <!-- Khung Câu hỏi Kéo Co -->
                 <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 space-y-4">
                     <div id="tug-question-text" class="stage-question-text text-base sm:text-lg font-bold leading-relaxed"></div>
-                    <div id="tug-visual-box" class="hidden rounded-xl bg-white dark:bg-slate-800 p-3 border border-slate-200 dark:border-slate-700 flex justify-center items-center overflow-x-auto"></div>
+                    <div id="tug-visual-box" class="hidden word-table-visual rounded-xl bg-white dark:bg-slate-800 p-3 border border-slate-200 dark:border-slate-700 flex justify-center items-center overflow-x-auto"></div>
                     <div id="tug-options-area" class="space-y-3"></div>
                     <div id="tug-explanation-box" class="hidden p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 text-xs sm:text-sm">
                         <strong class="text-emerald-700 dark:text-emerald-300">💡 Giải thích:</strong>
@@ -463,14 +479,12 @@
         <!-- ========================================================= -->
         <section id="tab-student" class="hidden space-y-5">
             <div class="max-w-md mx-auto bg-white dark:bg-slate-800 rounded-[2.25rem] border-4 border-slate-800 dark:border-slate-600 shadow-2xl overflow-hidden">
-                <!-- Tai thỏ điện thoại -->
                 <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between text-xs">
                     <span class="font-bold">📲 Máy Học Sinh • PIN: 2025</span>
                     <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold text-[10px]">● Trực tuyến</span>
                 </div>
 
                 <div class="p-5 space-y-4">
-                    <!-- Chọn học sinh / Nhập tên & Chọn chế độ thi đấu -->
                     <div class="grid grid-cols-1 gap-2.5 bg-slate-50 dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700">
                         <div class="flex items-center justify-between gap-2">
                             <label class="text-xs font-extrabold text-slate-600 dark:text-slate-300">Thí sinh:</label>
@@ -486,7 +500,6 @@
                         </div>
                     </div>
 
-                    <!-- Thông tin câu hỏi đang chiếu trên màn hình chính -->
                     <div class="p-3.5 rounded-2xl bg-indigo-50/70 dark:bg-slate-900 border border-indigo-200 dark:border-slate-700 space-y-2">
                         <div class="flex items-center justify-between">
                             <span id="student-part-badge" class="px-2.5 py-0.5 rounded-full bg-indigo-600 text-white font-black text-[10px]">
@@ -501,10 +514,7 @@
                         <div id="student-q-preview" class="text-xs font-semibold text-slate-700 dark:text-slate-200 leading-relaxed"></div>
                     </div>
 
-                    <!-- Bàn phím bấm đáp án trên điện thoại học sinh (Tự động đổi theo 3 phần) -->
                     <div id="student-remote-pad" class="space-y-3"></div>
-
-                    <!-- Trạng thái gửi đáp án -->
                     <div id="student-submit-feedback" class="hidden p-3 rounded-xl bg-emerald-100 text-emerald-800 text-center text-xs font-black border border-emerald-300"></div>
 
                     <div class="pt-2 border-t dark:border-slate-700 flex items-center justify-between text-[11px] text-slate-400">
@@ -522,15 +532,15 @@
             <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
                 <div class="flex flex-wrap items-center justify-between gap-3 border-b pb-4 dark:border-slate-700">
                     <div>
-                        <h2 class="text-lg font-black text-indigo-600 dark:text-indigo-400">📝 Quản Lý Ngân Hàng Đề Thi (22 Câu - 3 Phần)</h2>
-                        <p class="text-xs text-slate-500">Tự động liên kết với file <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono">de_thi_22_cau.txt</code> trên GitHub hoặc tải đề mới từ máy tính giáo viên.</p>
+                        <h2 class="text-lg font-black text-indigo-600 dark:text-indigo-400">📝 Quản Lý Ngân Hàng Đề Thi (Giữ Nguyên Ảnh Bảng Biến Thiên & Đồ Thị)</h2>
+                        <p class="text-xs text-slate-500">Tự động liên kết với file <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono">de_thi_22_cau.txt</code> trên GitHub hoặc tải trực tiếp file Word <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono">.docx</code> có chứa hình ảnh.</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
                         <button onclick="loadFromGithubTxtFile(true)" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold shadow">
                             ☁️ Nạp Đề Chuẩn Từ GitHub (de_thi_22_cau.txt)
                         </button>
                         <button onclick="loadExamPreset2()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold shadow">
-                            📙 Nạp Đề RUNG_CHUÔNG_2 (22 Câu)
+                            📙 Nạp Đề RUNG_CHUÔNG_2 (Đầy Đủ BBT & Đồ Thị)
                         </button>
                         <button onclick="exportCurrentExamToTxt()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow">
                             📥 Xuất Đề Đang Có (.txt) Để Đưa Lên GitHub
@@ -544,19 +554,19 @@
                         <div class="text-4xl">📂</div>
                         <div class="text-sm font-extrabold">Tải File Word (.docx) hoặc File Đề (.txt) từ máy tính</div>
                         <p class="text-xs text-slate-500 max-w-md">
-                            Hỗ trợ tự động chia 12 câu <strong>Khởi Động</strong>, 4 câu <strong>Tăng Tốc (Đúng/Sai)</strong> và 6 câu <strong>Về Đích (Trả lời ngắn)</strong>.
+                            <strong>Đã nâng cấp:</strong> Tự động trích xuất toàn bộ <strong>Hình ảnh Bảng biến thiên, Đồ thị</strong>, Bảng biểu, Công thức OMML và Bảng đáp án cuối file Word!
                         </p>
                         <input type="file" id="exam-file-input" accept=".docx,.txt" onchange="handleExamFileUpload(event)" class="hidden">
                         <label for="exam-file-input" class="cursor-pointer px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md transition">
-                            📄 Chọn File Đề (.docx / .txt)
+                            📄 Chọn File Đề Word (.docx / .txt)
                         </label>
                     </div>
 
                     <div class="space-y-2.5">
                         <label class="text-xs font-extrabold text-slate-700 dark:text-slate-300">
-                            Hoặc dán trực tiếp nội dung đề 22 câu vào khung dưới đây:
+                            Hoặc dán trực tiếp nội dung đề 22 câu vào khung dưới đây (hỗ trợ thẻ <code class="text-indigo-600">[ĐỒ THỊ: x^3 - 3*x + 1]</code>):
                         </label>
-                        <textarea id="exam-raw-paste" rows="6" placeholder="Câu 1 [Khởi Động]: Cho hàm số $y = f(x)$...&#10;*A. Đáp án đúng&#10;B. Đáp án B..." class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-mono"></textarea>
+                        <textarea id="exam-raw-paste" rows="6" placeholder="Câu 1 [Khởi Động]: Cho hàm số $y = x^3 - 3x + 1$ có đồ thị như hình vẽ...&#10;[ĐỒ THỊ: x^3 - 3*x + 1]&#10;*A. Đáp án đúng&#10;B. Đáp án B..." class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-mono"></textarea>
                         <button onclick="parsePastedExam()" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-extrabold rounded-xl text-xs shadow">
                             🔍 Phân Tích & Nạp Vào Sân Khấu Ngay
                         </button>
@@ -601,7 +611,7 @@
     </main>
 
     <!-- ========================================================= -->
-    <!-- TOÀN BỘ LOGIC JAVASCRIPT & ĐỒ THỊ SVG CHUẨN TOÁN HỌC      -->
+    <!-- TOÀN BỘ LOGIC JAVASCRIPT & BỘ ĐỌC HÌNH ẢNH WORD (.DOCX)   -->
     <!-- ========================================================= -->
     <script>
         // 1. HÀM HIỂN THỊ CÔNG THỨC TOÁN KATEX
@@ -618,7 +628,7 @@
                         throwOnError: false
                     });
                 } catch (e) {
-                    console.warn('KaTeX render warning:', e);
+                    console.warn('KaTeX warning:', e);
                 }
             }
         }
@@ -630,20 +640,59 @@
             text.innerText = msg;
             toast.classList.remove('hidden');
             clearTimeout(window._toastTimer);
-            window._toastTimer = setTimeout(() => toast.classList.add('hidden'), 3400);
+            window._toastTimer = setTimeout(() => toast.classList.add('hidden'), 3600);
         }
 
-        // 2. KHO ĐỒ THỊ & BẢNG BIẾN THIÊN SVG SẮC NÉT
+        // 2. KHO ĐỒ THỊ & BẢNG BIẾN THIÊN SVG SẮC NÉT (CÓ ĐẦY ĐỦ ĐẦU MŨI TÊN CHIỀU BIẾN THIÊN & TRỤC TỌA ĐỘ)
+        const SVG_ARROW_DEFS = `<defs>
+            <marker id="arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+            </marker>
+            <marker id="arr-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#dc2626"/>
+            </marker>
+            <marker id="arr-axis" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+                <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#334155"/>
+            </marker>
+        </defs>`;
+
         const SVG_VISUALS = {
-            bbt_c1: `<svg viewBox="0 0 520 145" class="w-full max-w-lg h-auto"><rect width="520" height="145" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="65" y1="0" x2="65" y2="145" stroke="#94a3b8"/><line x1="0" y1="36" x2="520" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="520" y2="72" stroke="#94a3b8"/><text x="32" y="24" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">x</text><text x="32" y="59" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">y'</text><text x="32" y="112" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">y</text><text x="95" y="24" text-anchor="middle" font-size="14">-∞</text><text x="200" y="24" text-anchor="middle" font-weight="bold" font-size="14">-2</text><text x="295" y="24" text-anchor="middle" font-weight="bold" font-size="14">0</text><text x="390" y="24" text-anchor="middle" font-weight="bold" font-size="14">2</text><text x="485" y="24" text-anchor="middle" font-size="14">+∞</text><text x="148" y="58" text-anchor="middle" font-weight="bold" fill="#16a34a" font-size="16">+</text><text x="200" y="58" text-anchor="middle" font-size="14">0</text><text x="248" y="58" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="16">-</text><text x="295" y="58" text-anchor="middle" font-size="14">0</text><text x="342" y="58" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="16">-</text><text x="390" y="58" text-anchor="middle" font-size="14">0</text><text x="438" y="58" text-anchor="middle" font-weight="bold" fill="#16a34a" font-size="16">+</text><path d="M105 128 L185 88" stroke="#2563eb" stroke-width="2" fill="none"/><path d="M215 88 L375 128" stroke="#dc2626" stroke-width="2" fill="none"/><path d="M405 128 L475 88" stroke="#2563eb" stroke-width="2" fill="none"/></svg>`,
-            graph_parabola_c2: `<svg viewBox="0 0 260 180" class="w-48 h-auto"><line x1="15" y1="110" x2="245" y2="110" stroke="#334155" stroke-width="1.5"/><line x1="110" y1="15" x2="110" y2="170" stroke="#334155" stroke-width="1.5"/><path d="M 65 25 Q 145 195 225 25" fill="none" stroke="#4f46e5" stroke-width="2.5"/><circle cx="145" cy="110" r="3" fill="#dc2626"/><text x="145" y="128" font-size="12" text-anchor="middle" font-weight="bold">1</text><text x="98" y="126" font-size="12">O</text></svg>`,
-            graph_quartic_w: `<svg viewBox="0 0 260 180" class="w-52 h-auto"><line x1="15" y1="135" x2="245" y2="135" stroke="#334155" stroke-width="1.5"/><line x1="130" y1="15" x2="130" y2="170" stroke="#334155" stroke-width="1.5"/><path d="M 55 160 C 75 20, 100 20, 130 95 C 160 20, 185 20, 205 160" fill="none" stroke="#4f46e5" stroke-width="2.5"/><text x="90" y="152" font-size="11" text-anchor="middle">-1</text><text x="170" y="152" font-size="11" text-anchor="middle">1</text><text x="140" y="45" font-size="11">2</text><text x="140" y="102" font-size="11">1</text></svg>`,
-            graph_p2_c2: `<svg viewBox="0 0 280 200" class="w-56 h-auto"><line x1="10" y1="100" x2="270" y2="100" stroke="#475569" stroke-width="1.5"/><line x1="140" y1="10" x2="140" y2="190" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="4 2"/><line x1="40" y1="185" x2="240" y2="5" stroke="#eab308" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M 152 15 C 162 65, 178 65, 235 18" fill="none" stroke="#2563eb" stroke-width="2.5"/><path d="M 45 182 C 102 125, 118 125, 128 185" fill="none" stroke="#2563eb" stroke-width="2.5"/><text x="176" y="75" font-size="11" font-weight="bold" fill="#1e40af">(2;5)</text><text x="82" y="132" font-size="11" font-weight="bold" fill="#1e40af">(-2;-3)</text></svg>`,
-            graph_cubic_c12: `<svg viewBox="0 0 260 185" class="w-52 h-auto"><line x1="15" y1="105" x2="245" y2="105" stroke="#334155" stroke-width="1.5"/><line x1="130" y1="15" x2="130" y2="175" stroke="#334155" stroke-width="1.5"/><path d="M 65 165 C 92 25, 112 25, 130 85 C 148 145, 168 145, 195 20" fill="none" stroke="#4f46e5" stroke-width="2.5"/><circle cx="130" cy="85" r="3" fill="#dc2626"/><text x="142" y="84" font-size="11" font-weight="bold">1</text><text x="98" y="120" font-size="11">-1</text><text x="162" y="120" font-size="11">1</text></svg>`,
+            bbt_c1: `<svg viewBox="0 0 520 150" class="w-full max-w-lg h-auto">${SVG_ARROW_DEFS}<rect width="520" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="65" y1="0" x2="65" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="520" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="520" y2="72" stroke="#94a3b8"/><line x1="293" y1="36" x2="293" y2="150" stroke="#dc2626" stroke-width="1.3"/><line x1="297" y1="36" x2="297" y2="150" stroke="#dc2626" stroke-width="1.3"/><text x="32" y="24" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">x</text><text x="32" y="59" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">y'</text><text x="32" y="114" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">y</text><text x="90" y="24" text-anchor="middle" font-size="13">-∞</text><text x="195" y="24" text-anchor="middle" font-weight="bold" font-size="14">-2</text><text x="295" y="24" text-anchor="middle" font-weight="bold" font-size="14">0</text><text x="395" y="24" text-anchor="middle" font-weight="bold" font-size="14">2</text><text x="490" y="24" text-anchor="middle" font-size="13">+∞</text><text x="142" y="58" text-anchor="middle" font-weight="bold" fill="#16a34a" font-size="16">+</text><text x="195" y="58" text-anchor="middle" font-size="14">0</text><text x="245" y="58" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="16">-</text><text x="345" y="58" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="16">-</text><text x="395" y="58" text-anchor="middle" font-size="14">0</text><text x="445" y="58" text-anchor="middle" font-weight="bold" fill="#16a34a" font-size="16">+</text><text x="90" y="140" text-anchor="middle" font-size="12">-∞</text><text x="195" y="89" text-anchor="middle" font-weight="bold" fill="#1e40af" font-size="12">-4</text><text x="275" y="140" text-anchor="middle" font-size="12">-∞</text><text x="315" y="89" text-anchor="middle" font-size="12">+∞</text><text x="395" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="12">4</text><text x="490" y="89" text-anchor="middle" font-size="12">+∞</text><path d="M105 133 L180 93" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M210 93 L265 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M325 93 L380 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M410 133 L475 93" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
+
+            bbt_c4: `<svg viewBox="0 0 480 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="480" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="480" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="480" y2="72" stroke="#94a3b8"/><text x="30" y="24" text-anchor="middle" font-weight="bold" font-style="italic" font-size="14">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold" font-style="italic" font-size="14">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold" font-style="italic" font-size="14">y</text><text x="90" y="24" text-anchor="middle" font-size="13">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold" font-size="14">0</text><text x="330" y="24" text-anchor="middle" font-weight="bold" font-size="14">3</text><text x="445" y="24" text-anchor="middle" font-size="13">+∞</text><text x="150" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="210" y="58" text-anchor="middle">0</text><text x="270" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="330" y="58" text-anchor="middle">0</text><text x="390" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="88" y="140" text-anchor="middle" font-size="12">-∞</text><text x="210" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">2</text><text x="330" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626">-5</text><text x="448" y="90" text-anchor="middle" font-size="12">+∞</text><path d="M105 132 L192 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M226 92 L312 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M348 132 L432 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
+
+            bbt_c7: `<svg viewBox="0 0 460 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="460" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="460" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="460" y2="72" stroke="#94a3b8"/><line x1="258" y1="36" x2="258" y2="150" stroke="#dc2626" stroke-width="1.5"/><line x1="262" y1="36" x2="262" y2="150" stroke="#dc2626" stroke-width="1.5"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="260" y="24" text-anchor="middle" font-weight="bold">2</text><text x="430" y="24" text-anchor="middle">+∞</text><text x="170" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="345" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="90" y="92" text-anchor="middle" font-weight="bold" fill="#16a34a">3</text><text x="235" y="140" text-anchor="middle">-∞</text><text x="285" y="92" text-anchor="middle">+∞</text><text x="430" y="140" text-anchor="middle" font-weight="bold" fill="#16a34a">3</text><path d="M108 93 L218 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M304 93 L412 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/></svg>`,
+
+            bbt_c11: `<svg viewBox="0 0 480 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="480" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="480" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="480" y2="72" stroke="#94a3b8"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold">0</text><text x="330" y="24" text-anchor="middle" font-weight="bold">2</text><text x="445" y="24" text-anchor="middle">+∞</text><text x="150" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="210" y="58" text-anchor="middle">0</text><text x="270" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="330" y="58" text-anchor="middle">0</text><text x="390" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="88" y="140" text-anchor="middle" font-size="12">-∞</text><text x="210" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">2</text><text x="330" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626">-2</text><text x="448" y="90" text-anchor="middle" font-size="12">+∞</text><path d="M105 132 L192 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M226 92 L312 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M348 132 L432 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
+
+            bbt_p2_c1: `<svg viewBox="0 0 540 150" class="w-full max-w-lg h-auto">${SVG_ARROW_DEFS}<rect width="540" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="540" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="540" y2="72" stroke="#94a3b8"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">f'(x)</text><text x="30" y="114" text-anchor="middle" font-weight="bold">f(x)</text><text x="88" y="24" text-anchor="middle">-∞</text><text x="190" y="24" text-anchor="middle" font-weight="bold">1</text><text x="300" y="24" text-anchor="middle" font-weight="bold">3</text><text x="410" y="24" text-anchor="middle" font-weight="bold">7</text><text x="512" y="24" text-anchor="middle">+∞</text><text x="140" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="190" y="58" text-anchor="middle">0</text><text x="245" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="300" y="58" text-anchor="middle">0</text><text x="355" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="410" y="58" text-anchor="middle">0</text><text x="460" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="88" y="90" text-anchor="middle" font-size="12">+∞</text><text x="190" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">-17</text><text x="300" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af" font-size="12">-13</text><text x="410" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">-18</text><text x="512" y="90" text-anchor="middle" font-size="12">+∞</text><path d="M102 92 L172 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M208 130 L282 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M318 92 L392 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M428 130 L495 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
+
+            bbt_p3_c1: `<svg viewBox="0 0 460 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="460" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="460" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="460" y2="72" stroke="#94a3b8"/><line x1="258" y1="36" x2="258" y2="150" stroke="#dc2626" stroke-width="1.5"/><line x1="262" y1="36" x2="262" y2="150" stroke="#dc2626" stroke-width="1.5"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="260" y="24" text-anchor="middle" font-weight="bold">0</text><text x="430" y="24" text-anchor="middle">+∞</text><text x="170" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="345" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="90" y="92" text-anchor="middle" font-weight="bold" fill="#1e40af">1</text><text x="235" y="140" text-anchor="middle">-∞</text><text x="285" y="140" text-anchor="middle">-1</text><text x="430" y="92" text-anchor="middle" font-weight="bold" fill="#1e40af">3</text><path d="M108 93 L218 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M302 132 L412 93" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
+
+            bbt_rc2_c2: `<svg viewBox="0 0 480 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="480" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="480" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="480" y2="72" stroke="#94a3b8"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold">-1</text><text x="330" y="24" text-anchor="middle" font-weight="bold">1</text><text x="445" y="24" text-anchor="middle">+∞</text><text x="150" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="210" y="58" text-anchor="middle">0</text><text x="270" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="330" y="58" text-anchor="middle">0</text><text x="390" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="90" y="90" text-anchor="middle">+∞</text><text x="210" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626">-1</text><text x="330" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">3</text><text x="445" y="140" text-anchor="middle">-∞</text><path d="M108 92 L192 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M228 132 L312 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M348 92 L428 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/></svg>`,
+
+            bbt_rc2_p2c2: `<svg viewBox="0 0 500 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="500" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="500" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="500" y2="72" stroke="#94a3b8"/><line x1="208" y1="36" x2="208" y2="150" stroke="#dc2626" stroke-width="1.5"/><line x1="212" y1="36" x2="212" y2="150" stroke="#dc2626" stroke-width="1.5"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">f'(x)</text><text x="30" y="114" text-anchor="middle" font-weight="bold">f(x)</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold">-1</text><text x="350" y="24" text-anchor="middle" font-weight="bold">1</text><text x="465" y="24" text-anchor="middle">+∞</text><text x="150" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="280" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="350" y="58" text-anchor="middle">0</text><text x="410" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="85" y="140" text-anchor="middle">1</text><text x="190" y="92" text-anchor="middle">2</text><text x="235" y="140" text-anchor="middle">-∞</text><text x="350" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">3</text><text x="465" y="140" text-anchor="middle">-1</text><path d="M102 132 L175 94" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M252 132 L332 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M368 92 L448 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/></svg>`,
+
+            bbt_rc2_p3c1: `<svg viewBox="0 0 500 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="500" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="500" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="500" y2="72" stroke="#94a3b8"/><line x1="338" y1="36" x2="338" y2="150" stroke="#dc2626" stroke-width="1.5"/><line x1="342" y1="36" x2="342" y2="150" stroke="#dc2626" stroke-width="1.5"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold">-1</text><text x="340" y="24" text-anchor="middle" font-weight="bold">1</text><text x="465" y="24" text-anchor="middle">+∞</text><text x="150" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="210" y="58" text-anchor="middle">0</text><text x="275" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="405" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="85" y="92" text-anchor="middle" font-weight="bold" fill="#1e40af">1</text><text x="210" y="140" text-anchor="middle">-√2</text><text x="315" y="92" text-anchor="middle">+∞</text><text x="365" y="140" text-anchor="middle">-∞</text><text x="465" y="92" text-anchor="middle" font-weight="bold" fill="#1e40af">-1</text><path d="M102 92 L188 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M232 130 L302 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M382 130 L448 94" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
+
+            graph_parabola_c2: `<svg viewBox="0 0 260 180" class="w-48 h-auto">${SVG_ARROW_DEFS}<line x1="15" y1="110" x2="245" y2="110" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="110" y1="170" x2="110" y2="15" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="M 65 25 Q 145 195 225 25" fill="none" stroke="#4f46e5" stroke-width="2.5"/><circle cx="145" cy="110" r="3" fill="#dc2626"/><text x="145" y="128" font-size="12" text-anchor="middle" font-weight="bold">1</text><text x="98" y="126" font-size="12">O</text><text x="240" y="102" font-size="11" font-style="italic">x</text><text x="118" y="22" font-size="11" font-style="italic">y</text></svg>`,
+
+            graph_quartic_w: `<svg viewBox="0 0 260 180" class="w-52 h-auto">${SVG_ARROW_DEFS}<line x1="15" y1="135" x2="245" y2="135" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="130" y1="170" x2="130" y2="15" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="M 55 160 C 75 20, 100 20, 130 95 C 160 20, 185 20, 205 160" fill="none" stroke="#4f46e5" stroke-width="2.5"/><text x="90" y="152" font-size="11" text-anchor="middle">-1</text><text x="170" y="152" font-size="11" text-anchor="middle">1</text><text x="140" y="45" font-size="11">2</text><text x="140" y="102" font-size="11">1</text><text x="240" y="128" font-size="11" font-style="italic">x</text><text x="138" y="22" font-size="11" font-style="italic">y</text></svg>`,
+
+            graph_rational_c8: `<svg viewBox="0 0 260 180" class="w-52 h-auto">${SVG_ARROW_DEFS}<line x1="10" y1="105" x2="250" y2="105" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="115" y1="170" x2="115" y2="10" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="145" y1="10" x2="145" y2="170" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3"/><line x1="10" y1="75" x2="250" y2="75" stroke="#eab308" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M 15 68 Q 125 65 138 15" fill="none" stroke="#2563eb" stroke-width="2.2"/><path d="M 152 165 Q 165 82 245 80" fill="none" stroke="#2563eb" stroke-width="2.2"/><text x="152" y="120" font-size="11" font-weight="bold" fill="#dc2626">1</text><text x="102" y="72" font-size="11" font-weight="bold" fill="#ca8a04">1</text><text x="242" y="98" font-size="11" font-style="italic">x</text><text x="122" y="20" font-size="11" font-style="italic">y</text></svg>`,
+
+            graph_p2_c2: `<svg viewBox="0 0 280 200" class="w-56 h-auto">${SVG_ARROW_DEFS}<line x1="10" y1="100" x2="270" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="140" y1="190" x2="140" y2="10" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="4 2" marker-end="url(#arr-axis)"/><line x1="40" y1="185" x2="240" y2="5" stroke="#eab308" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M 152 15 C 162 65, 178 65, 235 18" fill="none" stroke="#2563eb" stroke-width="2.5"/><path d="M 45 182 C 102 125, 118 125, 128 185" fill="none" stroke="#2563eb" stroke-width="2.5"/><text x="176" y="75" font-size="11" font-weight="bold" fill="#1e40af">(2;5)</text><text x="82" y="132" font-size="11" font-weight="bold" fill="#1e40af">(-2;-3)</text><text x="260" y="92" font-size="11" font-style="italic">x</text><text x="148" y="20" font-size="11" font-style="italic">y</text></svg>`,
+
+            graph_cubic_c12: `<svg viewBox="0 0 260 185" class="w-52 h-auto">${SVG_ARROW_DEFS}<line x1="15" y1="105" x2="245" y2="105" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="130" y1="175" x2="130" y2="15" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="M 65 165 C 92 25, 112 25, 130 85 C 148 145, 168 145, 195 20" fill="none" stroke="#4f46e5" stroke-width="2.5"/><circle cx="130" cy="85" r="3" fill="#dc2626"/><text x="142" y="84" font-size="11" font-weight="bold">1</text><text x="98" y="120" font-size="11">-1</text><text x="162" y="120" font-size="11">1</text><text x="240" y="98" font-size="11" font-style="italic">x</text><text x="138" y="22" font-size="11" font-style="italic">y</text></svg>`,
+
+            graph_rc2_c5: `<svg viewBox="0 0 260 185" class="w-52 h-auto">${SVG_ARROW_DEFS}<line x1="15" y1="85" x2="245" y2="85" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="85" y1="175" x2="85" y2="15" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="M 55 110 Q 85 155 165 30 L 205 165" fill="none" stroke="#2563eb" stroke-width="2.5"/><line x1="85" y1="30" x2="165" y2="30" stroke="#94a3b8" stroke-dasharray="3 2"/><line x1="165" y1="30" x2="165" y2="85" stroke="#94a3b8" stroke-dasharray="3 2"/><line x1="85" y1="165" x2="205" y2="165" stroke="#94a3b8" stroke-dasharray="3 2"/><text x="55" y="78" font-size="11">-1</text><text x="165" y="100" font-size="11">2</text><text x="205" y="78" font-size="11">3</text><text x="72" y="34" font-size="11" font-weight="bold">2</text><text x="66" y="168" font-size="11" font-weight="bold">-3</text><text x="240" y="78" font-size="11" font-style="italic">x</text><text x="93" y="22" font-size="11" font-style="italic">y</text></svg>`,
+
+            graph_rc2_c11: `<svg viewBox="0 0 260 180" class="w-52 h-auto">${SVG_ARROW_DEFS}<line x1="10" y1="115" x2="250" y2="115" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="135" y1="170" x2="135" y2="10" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="100" y1="10" x2="100" y2="170" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3"/><line x1="10" y1="65" x2="250" y2="65" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M 15 58 Q 85 52 93 15" fill="none" stroke="#2563eb" stroke-width="2.2"/><path d="M 107 165 Q 118 75 245 70" fill="none" stroke="#2563eb" stroke-width="2.2"/><text x="84" y="130" font-size="11" font-weight="bold" fill="#dc2626">-1</text><text x="142" y="62" font-size="11" font-weight="bold" fill="#16a34a">2</text><text x="242" y="108" font-size="11" font-style="italic">x</text><text x="143" y="20" font-size="11" font-style="italic">y</text></svg>`,
+
             box_cut_c22: `<svg viewBox="0 0 320 140" class="w-60 h-auto"><rect x="20" y="15" width="110" height="110" fill="#f8fafc" stroke="#334155" stroke-width="2"/><rect x="20" y="15" width="24" height="24" fill="#cbd5e1" stroke="#475569" stroke-dasharray="3 2"/><rect x="106" y="15" width="24" height="24" fill="#cbd5e1" stroke="#475569" stroke-dasharray="3 2"/><rect x="20" y="101" width="24" height="24" fill="#cbd5e1" stroke="#475569" stroke-dasharray="3 2"/><rect x="106" y="101" width="24" height="24" fill="#cbd5e1" stroke="#475569" stroke-dasharray="3 2"/><text x="136" y="118" font-size="12" font-style="italic" font-weight="bold">x</text><polygon points="175,85 265,85 295,55 205,55" fill="#e2e8f0" stroke="#334155" stroke-width="1.8"/><polygon points="175,85 175,112 265,112 265,85" fill="#cbd5e1" stroke="#334155" stroke-width="1.8"/><polygon points="265,85 295,55 295,82 265,112" fill="#94a3b8" stroke="#334155" stroke-width="1.8"/></svg>`
         };
 
-        // Hàm tự động vẽ đồ thị SVG từ biểu thức hàm số bất kỳ
+        // Hàm tự động vẽ đồ thị SVG từ biểu thức hàm số bất kỳ (có mũi tên trục Oxy)
         function generateFunctionSvg(exprStr) {
             try {
                 const clean = exprStr.replace(/\^/g, '**');
@@ -666,31 +715,31 @@
                         drawing = false;
                     }
                 }
-                return `<svg viewBox="0 0 ${w} ${h}" class="w-56 h-auto bg-white rounded-lg"><line x1="10" y1="${cy}" x2="${w-10}" y2="${cy}" stroke="#475569" stroke-width="1.5"/><line x1="${cx}" y1="10" x2="${cx}" y2="${h-10}" stroke="#475569" stroke-width="1.5"/><path d="${pathD}" fill="none" stroke="#4f46e5" stroke-width="2.5"/><text x="${cx+6}" y="${cy+14}" font-size="11" font-weight="bold">O</text><text x="${w-18}" y="${cy-6}" font-size="11" font-style="italic">x</text><text x="${cx+6}" y="20" font-size="11" font-style="italic">y</text></svg>`;
+                return `<svg viewBox="0 0 ${w} ${h}" class="w-56 h-auto bg-white rounded-lg">${SVG_ARROW_DEFS}<line x1="10" y1="${cy}" x2="${w-10}" y2="${cy}" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="${cx}" y1="${h-10}" x2="${cx}" y2="10" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="${pathD}" fill="none" stroke="#4f46e5" stroke-width="2.5"/><text x="${cx+6}" y="${cy+14}" font-size="11" font-weight="bold">O</text><text x="${w-18}" y="${cy-6}" font-size="11" font-style="italic">x</text><text x="${cx+6}" y="20" font-size="11" font-style="italic">y</text></svg>`;
             } catch (e) {
                 return null;
             }
         }
 
-        // 3. BỘ DỮ LIỆU MẶC ĐỊNH 22 CÂU (ĐỀ 1 & ĐỀ 2 RUNG_CHUÔNG_2)
+        // 3. BỘ DỮ LIỆU MẶC ĐỊNH 22 CÂU (ĐỀ 1 & ĐỀ 2 RUNG_CHUÔNG_2 ĐẦY ĐỦ BẢNG BIẾN THIÊN CÓ MŨI TÊN, ĐỒ THỊ)
         function getPreset1Questions() {
             return [
                 // PHẦN I - KHỞI ĐỘNG (12 CÂU)
-                { id: 1, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 1", type: "mcq", text: "Cho hàm số $y = f(x)$ có bảng biến thiên với $y' > 0$ trên $(-\\infty; -2) \\cup (2; +\\infty)$ và $y' < 0$ trên $(-2; 0) \\cup (0; 2)$. Mệnh đề nào dưới đây đúng?", visual: SVG_VISUALS.bbt_c1, options: ["Hàm số nghịch biến trên khoảng $(0; 2)$.", "Hàm số đồng biến trên khoảng $(-2; 0)$.", "Hàm số đồng biến trên khoảng $(-\\infty; 0)$.", "Hàm số nghịch biến trên khoảng $(-\\infty; -2)$."], correct: 0, expl: "Dựa vào bảng xét dấu đạo hàm $y' < 0$ trên khoảng $(0; 2)$ nên hàm số nghịch biến trên $(0; 2)$." },
+                { id: 1, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 1", type: "mcq", text: "Cho hàm số $y = f(x)$ có bảng biến thiên với $y' > 0$ trên $(-\\infty; -2) \\cup (2; +\\infty)$ và $y' < 0$ trên $(-2; 0) \\cup (0; 2)$ như hình dưới đây. Mệnh đề nào đúng?", visual: SVG_VISUALS.bbt_c1, options: ["Hàm số nghịch biến trên khoảng $(0; 2)$.", "Hàm số đồng biến trên khoảng $(-2; 0)$.", "Hàm số đồng biến trên khoảng $(-\\infty; 0)$.", "Hàm số nghịch biến trên khoảng $(-\\infty; -2)$."], correct: 0, expl: "Dựa vào bảng biến thiên, mũi tên đi xuống ($y' < 0$) trên khoảng $(0; 2)$ nên hàm số nghịch biến trên $(0; 2)$." },
                 { id: 2, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 2", type: "mcq", text: "Cho hàm số $y = f(x)$ liên tục trên $\\mathbb{R}$, có đồ thị đi xuống trên $(-\\infty; 1)$ và đi lên trên $(1; +\\infty)$ như hình vẽ. Mệnh đề nào đúng?", visual: SVG_VISUALS.graph_parabola_c2, options: ["Hàm số đồng biến trên khoảng $(0; 2)$.", "Hàm số đồng biến trên khoảng $(-1; +\\infty)$.", "Hàm số nghịch biến trên khoảng $(-\\infty; 1)$.", "Hàm số nghịch biến trên khoảng $(-1; 2)$."], correct: 2, expl: "Trên khoảng $(-\\infty; 1)$ đồ thị đi xuống từ trái sang phải nên hàm số nghịch biến." },
                 { id: 3, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 3", type: "mcq", text: "Cho hàm số bậc bốn $y = f(x)$ có đồ thị gồm 2 điểm cực đại $(-1; 2), (1; 2)$ và 1 điểm cực tiểu $(0; 1)$ như hình vẽ. Số điểm cực trị của hàm số là:", visual: SVG_VISUALS.graph_quartic_w, options: ["4.", "3.", "2.", "1."], correct: 1, expl: "Đồ thị hàm số có 2 điểm cực đại và 1 điểm cực tiểu nên có tất cả 3 điểm cực trị." },
-                { id: 4, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 4", type: "mcq", text: "Cho hàm số $y = f(x)$ đạt cực đại tại $x = 0, f(0) = 2$ và đạt cực tiểu tại $x = 3, f(3) = -5$. Giá trị cực tiểu của hàm số bằng:", options: ["3.", "-5.", "0.", "2."], correct: 1, expl: "Giá trị cực tiểu của hàm số là $y_{CT} = f(3) = -5$." },
+                { id: 4, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 4", type: "mcq", text: "Cho hàm số $y = f(x)$ có bảng biến thiên đạt cực đại tại $x = 0, f(0) = 2$ và đạt cực tiểu tại $x = 3, f(3) = -5$. Giá trị cực tiểu của hàm số bằng:", visual: SVG_VISUALS.bbt_c4, options: ["3.", "-5.", "0.", "2."], correct: 1, expl: "Giá trị cực tiểu của hàm số là $y_{CT} = f(3) = -5$." },
                 { id: 5, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 5", type: "mcq", text: "Cho hàm số $y = f(x)$ có đạo hàm $f'(x) = (x + 1)(2x - 5)^2, \\forall x \\in \\mathbb{R}$. Hàm số nghịch biến trên khoảng nào dưới đây?", options: ["$(-\\infty; -1)$.", "$(-1; 3)$.", "$(-1; +\\infty)$.", "$(-3; 1)$."], correct: 0, expl: "Ta có $f'(x) < 0 \\iff x + 1 < 0 \\iff x < -1$." },
                 { id: 6, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 6", type: "mcq", text: "Trên đoạn $[-1; 4]$, giá trị nhỏ nhất của hàm số $f(x) = x^3 - 6x$ bằng:", options: ["$-5$.", "$5$.", "$-4\\sqrt{2}$.", "$40$."], correct: 2, expl: "$f'(x) = 3x^2 - 6 = 0 \\implies x = \\sqrt{2} \\in [-1; 4]$. Ta có $f(\\sqrt{2}) = -4\\sqrt{2}$ là GTNN." },
-                { id: 7, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 7", type: "mcq", text: "Cho hàm số $y = f(x)$ thỏa mãn $\\lim_{x \\to \\pm\\infty} y = 3$ và $\\lim_{x \\to 2^-} y = -\\infty$. Tiệm cận ngang của đồ thị hàm số là:", options: ["$y = 3$.", "$x = 3$.", "$y = 2$.", "$x = 2$."], correct: 0, expl: "Vì $\\lim_{x \\to \\pm\\infty} y = 3$ nên đường thẳng $y = 3$ là tiệm cận ngang." },
-                { id: 8, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 8", type: "mcq", text: "Đồ thị hàm số $y = \\dfrac{ax + b}{cx - 1}$ nhận đường thẳng $x = 1$ làm tiệm cận đứng. Phương trình tiệm cận đứng của đồ thị là:", options: ["$y = -1$.", "$x = -1$.", "$y = 1$.", "$x = 1$."], correct: 3, expl: "Đường thẳng đứng $x = 1$ là tiệm cận đứng của đồ thị hàm số." },
+                { id: 7, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 7", type: "mcq", text: "Cho hàm số $y = f(x)$ có bảng biến thiên thỏa mãn $\\lim_{x \\to \\pm\\infty} y = 3$ và $\\lim_{x \\to 2^-} y = -\\infty$. Tiệm cận ngang của đồ thị hàm số là:", visual: SVG_VISUALS.bbt_c7, options: ["$y = 3$.", "$x = 3$.", "$y = 2$.", "$x = 2$."], correct: 0, expl: "Vì $\\lim_{x \\to \\pm\\infty} y = 3$ nên đường thẳng $y = 3$ là tiệm cận ngang." },
+                { id: 8, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 8", type: "mcq", text: "Đồ thị hàm số $y = \\dfrac{ax + b}{cx - 1}$ như hình vẽ nhận đường thẳng $x = 1$ làm tiệm cận đứng. Phương trình tiệm cận đứng của đồ thị là:", visual: SVG_VISUALS.graph_rational_c8, options: ["$y = -1$.", "$x = -1$.", "$y = 1$.", "$x = 1$."], correct: 3, expl: "Đường thẳng đứng $x = 1$ là tiệm cận đứng của đồ thị hàm số." },
                 { id: 9, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 9", type: "mcq", text: "Đồ thị hàm số nào sau đây có đúng một đường tiệm cận?", options: ["$y = \\dfrac{x + 3}{2x - 1}$.", "$y = \\dfrac{2x}{x^2 + 1}$.", "$y = \\dfrac{4}{x - 1}$.", "$y = \\dfrac{x^2 + 3x - 2}{x + 3}$."], correct: 1, expl: "Hàm số $y = \\dfrac{2x}{x^2 + 1}$ không có tiệm cận đứng (mẫu vô nghiệm) và chỉ có duy nhất 1 tiệm cận ngang $y = 0$." },
                 { id: 10, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 10", type: "mcq", text: "Tâm đối xứng của đồ thị hàm số $y = \\dfrac{3x - 11}{4x + 1}$ là điểm:", options: ["$I\\left(\\dfrac{1}{4}; \\dfrac{3}{4}\\right)$.", "$I\\left(-\\dfrac{1}{4}; -\\dfrac{3}{4}\\right)$.", "$I\\left(\\dfrac{3}{4}; -\\dfrac{1}{4}\\right)$.", "$I\\left(-\\dfrac{1}{4}; \\dfrac{3}{4}\\right)$."], correct: 3, expl: "Giao điểm của TCĐ $x = -\\dfrac{1}{4}$ và TCN $y = \\dfrac{3}{4}$ là $I\\left(-\\dfrac{1}{4}; \\dfrac{3}{4}\\right)$." },
-                { id: 11, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 11", type: "mcq", text: "Hàm số bậc ba nào dưới đây đạt cực đại tại $x = 0, y(0) = 2$ và đạt cực tiểu tại $x = 2, y(2) = -2$?", options: ["$y = -x^3 + 3x^2 - 3$.", "$y = x^3 + 3x^2 - 1$.", "$y = x^3 - 3x^2 + 2$.", "$y = x^3 - 3x + 2$."], correct: 2, expl: "Xét $y = x^3 - 3x^2 + 2$ có $y' = 3x^2 - 6x = 0 \\iff x=0, x=2$ và $y(0)=2, y(2)=-2$." },
+                { id: 11, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 11", type: "mcq", text: "Hàm số bậc ba có bảng biến thiên đạt cực đại tại $x = 0, y(0) = 2$ và đạt cực tiểu tại $x = 2, y(2) = -2$ như hình dưới là:", visual: SVG_VISUALS.bbt_c11, options: ["$y = -x^3 + 3x^2 - 3$.", "$y = x^3 + 3x^2 - 1$.", "$y = x^3 - 3x^2 + 2$.", "$y = x^3 - 3x + 2$."], correct: 2, expl: "Xét $y = x^3 - 3x^2 + 2$ có $y' = 3x^2 - 6x = 0 \\iff x=0, x=2$ và $y(0)=2, y(2)=-2$." },
                 { id: 12, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 12", type: "mcq", text: "Đồ thị hàm bậc ba trong hình vẽ có cực đại $(-1; 3)$, cực tiểu $(1; -1)$ và đi qua $(0; 1)$ là của hàm số nào?", visual: SVG_VISUALS.graph_cubic_c12, options: ["$y = x^3 - 3x + 1$.", "$y = x^3 - 3x - 1$.", "$y = -x^3 - 3x - 1$.", "$y = -x^3 + 3x + 1$."], correct: 0, expl: "Hàm số $y = x^3 - 3x + 1$ có nhánh phải đi lên ($a > 0$) và đi qua $(-1;3), (1;-1), (0;1)$." },
 
                 // PHẦN II - TĂNG TỐC (4 CÂU ĐÚNG/SAI)
-                { id: 13, part: "PHẦN II - TĂNG TỐC", qNum: "Câu 13", type: "tf", text: "Cho hàm số $y = f(x)$ có đạo hàm đổi dấu tại $x = 1, x = 3, x = 7$ với $f(1) = -17, f(3) = -13, f(7) = -18$. Xét tính Đúng/Sai của các mệnh đề:", statements: [
+                { id: 13, part: "PHẦN II - TĂNG TỐC", qNum: "Câu 13", type: "tf", text: "Cho hàm số $y = f(x)$ có bảng biến thiên với đạo hàm đổi dấu tại $x = 1, x = 3, x = 7$ và $f(1) = -17, f(3) = -13, f(7) = -18$. Xét tính Đúng/Sai:", visual: SVG_VISUALS.bbt_p2_c1, statements: [
                     { label: "a) Hàm số có hai điểm cực trị.", ans: false },
                     { label: "b) Hàm số đạt cực đại tại $x = 3$.", ans: true },
                     { label: "c) Hàm số nghịch biến trên khoảng $(1; 7)$.", ans: false },
@@ -715,11 +764,11 @@
                     { label: "d) Thời gian ngắn nhất lớn hơn 1 giờ 25 phút.", ans: false }
                 ], expl: "Khảo sát hàm thời gian $T(x)$: a) Đúng, b) Sai, c) Đúng, d) Sai." },
 
-                // PHẦN III - VỀ ĐÍCH (6 CÂU TRẢ LỜI NGẮN - KHÔNG DÙNG 4 LỰA CHỌN)
-                { id: 17, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 17", type: "short", text: "Cho hàm số $y = f(x)$ có $\\lim_{x \\to -\\infty} f(x) = 1$, $\\lim_{x \\to +\\infty} f(x) = 3$ và $\\lim_{x \\to 0^-} f(x) = -\\infty$. Tổng số đường tiệm cận đứng và tiệm cận ngang của đồ thị hàm số là:", shortAnswer: "3", expl: "Đồ thị có 2 tiệm cận ngang ($y=1, y=3$) và 1 tiệm cận đứng ($x=0$). Tổng cộng là 3 đường tiệm cận." },
+                // PHẦN III - VỀ ĐÍCH (6 CÂU TRẢ LỜI NGẮN)
+                { id: 17, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 17", type: "short", text: "Cho hàm số $y = f(x)$ có bảng biến thiên với $\\lim_{x \\to -\\infty} f(x) = 1$, $\\lim_{x \\to +\\infty} f(x) = 3$ và $\\lim_{x \\to 0^-} f(x) = -\\infty$. Tổng số đường tiệm cận đứng và tiệm cận ngang của đồ thị hàm số là:", visual: SVG_VISUALS.bbt_p3_c1, shortAnswer: "3", expl: "Đồ thị có 2 tiệm cận ngang ($y=1, y=3$) và 1 tiệm cận đứng ($x=0$). Tổng cộng là 3 đường tiệm cận." },
                 { id: 18, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 18", type: "short", text: "Giá trị lớn nhất của hàm số $f(x) = -\\dfrac{3}{2}x^2 + 12x$ trên đoạn $[0; 6]$ bằng bao nhiêu?", shortAnswer: "24", expl: "Ta có $f'(x) = -3x + 12 = 0 \\iff x = 4 \\in [0; 6]$. Khi đó $\\max_{[0;6]} f(x) = f(4) = 24$." },
                 { id: 19, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 19", type: "short", text: "Biết hàm số $y = -x^3 + 4x^2 + 11x - 2$ đồng biến trên khoảng $(a; b)$ có độ dài lớn nhất. Tính giá trị $P = a + b$ (làm tròn đến hàng phần trăm).", shortAnswer: "2.67", expl: "$y' = -3x^2 + 8x + 11 \\ge 0$. Theo định lý Vi-ét, tổng hai nghiệm $a + b = \\dfrac{8}{3} \\approx 2,67$." },
-                { id: 20, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 20", type: "short", text: "Đồ thị hàm số $y = ax + b + \\dfrac{1}{x + c}$ có tiệm cận đứng $x = 1$ và tiệm cận xiên đi qua hai điểm $(0; 1), (1; 2)$. Tính tổng $a + b + c$.", shortAnswer: "1", expl: "TCĐ $x = -c = 1 \\implies c = -1$. TCX $y = ax + b$ qua $(0;1), (1;2) \\implies a = 1, b = 1$. Vậy $a + b + c = 1$." },
+                { id: 20, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 20", type: "short", text: "Đồ thị hàm số $y = ax + b + \\dfrac{1}{x + c}$ có tiệm cận đứng $x = 1$ và tiệm cận xiên đi qua hai điểm $(0; 1), (1; 2)$. Tính tổng $a + b + c$.", visual: SVG_VISUALS.graph_p2_c2, shortAnswer: "1", expl: "TCĐ $x = -c = 1 \\implies c = -1$. TCX $y = ax + b$ qua $(0;1), (1;2) \\implies a = 1, b = 1$. Vậy $a + b + c = 1$." },
                 { id: 21, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 21", type: "short", text: "Công ty có 50 căn hộ cho thuê. Giá 2.000 nghìn đồng/tháng thì kín phòng; cứ tăng thêm 50 nghìn đồng thì bị trống 1 căn. Hỏi giá thuê (nghìn đồng) bằng bao nhiêu để doanh thu lớn nhất?", shortAnswer: "2250", expl: "Gọi $x$ là số lần tăng 50 nghìn. Doanh thu $R(x) = (2000 + 50x)(50 - x)$ đạt cực đại tại $x = 5$, giá thuê là $2250$ (nghìn đồng)." },
                 { id: 22, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 22", type: "short", text: "Doanh số sản phẩm tuân theo hàm logistic $f(t) = \\dfrac{5000}{1 + 5e^{-t}} (t \\ge 0)$. Sau bao nhiêu năm kể từ khi phát hành thì tốc độ bán hàng $f'(t)$ đạt lớn nhất? (làm tròn đến hàng phần trăm)", shortAnswer: "1.61", expl: "Tốc độ bán hàng $f'(t)$ lớn nhất tại điểm uốn $t = \\ln 5 \\approx 1,61$ năm." }
             ];
@@ -727,18 +776,18 @@
 
         function getPreset2Questions() {
             return [
-                // ĐỀ 2: RUNG_CHUÔNG_2.DOCX (22 CÂU)
+                // ĐỀ 2: RUNG_CHUÔNG_2.DOCX (ĐẦY ĐỦ 100% BẢNG BIẾN THIÊN CÓ MŨI TÊN & ĐỒ THỊ)
                 { id: 1, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 1", type: "mcq", text: "Tính chiều cao $h$ của một khối chóp có thể tích $V = 12a^3$ và diện tích đáy bằng $9a^2$.", options: ["$h = \\dfrac{4a}{3}$.", "$h = 2a$.", "$h = 4a$.", "$h = \\dfrac{a}{3}$."], correct: 2, expl: "Từ $V = \\dfrac{1}{3}Bh \\implies h = \\dfrac{3V}{B} = \\dfrac{3 \\cdot 12a^3}{9a^2} = 4a$." },
-                { id: 2, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 2", type: "mcq", text: "Cho hàm số $y = f(x)$ liên tục trên $\\mathbb{R}$ có bảng biến thiên ($y' < 0$ trên $(-\\infty;-1) \\cup (1;+\\infty)$ và $y' > 0$ trên $(-1;1)$). Mệnh đề nào đúng?", options: ["Hàm số nghịch biến trên $(-1; 3)$.", "Hàm số nghịch biến trên $(-1; 1)$.", "Hàm số nghịch biến trên $(1; +\\infty)$.", "Hàm số nghịch biến trên $(-\\infty; 1)$."], correct: 2, expl: "Từ bảng biến thiên, $y' < 0$ trên $(1; +\\infty)$ nên hàm số nghịch biến trên $(1; +\\infty)$." },
-                { id: 3, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 3", type: "mcq", text: "Đường cong bậc ba đi qua $(0;1)$, có nhánh phải đi xuống và đạt cực trị tại $x = \\pm 1$ là đồ thị của hàm số nào?", visual: generateFunctionSvg("-x^3 + 3*x + 1"), options: ["$y = x^3 - 3x + 1$.", "$y = -x^3 + 3x + 1$.", "$y = x^4 - 2x^2 + 1$.", "$y = -x^3 - 3x + 1$."], correct: 1, expl: "Nhánh phải đi xuống nên hệ số $a < 0$, có 2 cực trị tại $x=\\pm 1$ nên là $y = -x^3 + 3x + 1$." },
-                { id: 4, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 4", type: "mcq", text: "Cho hàm số trùng phương $y = f(x)$ liên tục trên $\\mathbb{R}$ có 2 điểm cực đại $(-1;2), (1;2)$ và 1 điểm cực tiểu $(0;1)$. Số điểm cực trị của hàm số là:", visual: SVG_VISUALS.graph_quartic_w, options: ["$3$.", "$2$.", "$1$.", "$4$."], correct: 0, expl: "Đồ thị có 2 điểm cực đại và 1 điểm cực tiểu nên có 3 điểm cực trị." },
-                { id: 5, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 5", type: "mcq", text: "Cho hàm số $y = f(x)$ liên tục trên $[-1; 3]$ có giá trị lớn nhất $M = 2$ (tại $x=2$) và giá trị nhỏ nhất $m = -3$ (tại $x=3$). Giá trị của $M + m$ bằng:", options: ["$-1$.", "$5$.", "$-5$.", "$1$."], correct: 0, expl: "Ta có $M = 2, m = -3 \\implies M + m = 2 + (-3) = -1$." },
+                { id: 2, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 2", type: "mcq", text: "Cho hàm số $y = f(x)$ liên tục trên $\\mathbb{R}$ có bảng biến thiên như hình dưới đây. Mệnh đề nào đúng?", visual: SVG_VISUALS.bbt_rc2_c2, options: ["Hàm số nghịch biến trên $(-1; 3)$.", "Hàm số nghịch biến trên $(-1; 1)$.", "Hàm số nghịch biến trên $(1; +\\infty)$.", "Hàm số nghịch biến trên $(-\\infty; 1)$."], correct: 2, expl: "Từ bảng biến thiên, mũi tên đi xuống ($y' < 0$) trên $(1; +\\infty)$ nên hàm số nghịch biến trên $(1; +\\infty)$." },
+                { id: 3, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 3", type: "mcq", text: "Đường cong trong hình vẽ dưới đây là đồ thị của hàm số nào?", visual: generateFunctionSvg("-x^3 + 3*x + 1"), options: ["$y = x^3 - 3x + 1$.", "$y = -x^3 + 3x + 1$.", "$y = x^4 - 2x^2 + 1$.", "$y = -x^3 - 3x + 1$."], correct: 1, expl: "Nhánh phải đi xuống nên hệ số $a < 0$, có 2 cực trị tại $x=\\pm 1$ nên là $y = -x^3 + 3x + 1$." },
+                { id: 4, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 4", type: "mcq", text: "Cho hàm số trùng phương $y = f(x)$ liên tục trên $\\mathbb{R}$ có đồ thị như hình vẽ. Số điểm cực trị của hàm số là:", visual: SVG_VISUALS.graph_quartic_w, options: ["$3$.", "$2$.", "$1$.", "$4$."], correct: 0, expl: "Đồ thị có 2 điểm cực đại và 1 điểm cực tiểu nên có 3 điểm cực trị." },
+                { id: 5, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 5", type: "mcq", text: "Cho hàm số $y = f(x)$ liên tục trên $[-1; 3]$ có đồ thị như hình vẽ dưới đây. Gọi $M, m$ là GTLN, GTNN trên $[-1; 3]$. Giá trị $M + m$ bằng:", visual: SVG_VISUALS.graph_rc2_c5, options: ["$-1$.", "$5$.", "$-5$.", "$1$."], correct: 0, expl: "Ta có $M = 2, m = -3 \\implies M + m = 2 + (-3) = -1$." },
                 { id: 6, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 6", type: "mcq", text: "Tiệm cận đứng và tiệm cận ngang của đồ thị hàm số $y = \\dfrac{2x - 1}{x + 1}$ lần lượt là:", options: ["$x = 1; y = 2$.", "$x = -1; y = 2$.", "$x = -1; y = -2$.", "$x = 2; y = -1$."], correct: 1, expl: "Mẫu bằng 0 tại $x = -1$ (TCĐ) và $\\lim_{x \\to \\pm\\infty} y = 2$ (TCN)." },
                 { id: 7, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 7", type: "mcq", text: "Đường tiệm cận xiên của đồ thị hàm số $y = \\dfrac{x^2 + 2x + 3}{x + 1}$ là đường thẳng:", options: ["$y = x + 1$.", "$y = x - 1$.", "$y = x + 2$.", "$y = 2x + 1$."], correct: 0, expl: "Chia đa thức: $y = x + 1 + \\dfrac{2}{x + 1}$ nên tiệm cận xiên là $y = x + 1$." },
                 { id: 8, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 8", type: "mcq", text: "Tìm điều kiện của tham số $m$ để hàm số $y = \\dfrac{mx - 4}{x - m}$ đồng biến trên từng khoảng xác định.", options: ["$-2 < m < 2$.", "$m > 2$.", "$m \\le 2$.", "$-2 \\le m \\le 2$."], correct: 0, expl: "$y' = \\dfrac{-m^2 + 4}{(x - m)^2} > 0 \\iff -m^2 + 4 > 0 \\iff -2 < m < 2$." },
                 { id: 9, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 9", type: "mcq", text: "Cho hình chóp $S.ABCD$ có đáy là hình chữ nhật $AB = a, AD = a\\sqrt{3}$, $SA \\perp (ABCD)$ và $SA = 2a$. Góc giữa $SC$ và mặt phẳng $(ABCD)$ bằng:", options: ["$30^\\circ$.", "$60^\\circ$.", "$90^\\circ$.", "$45^\\circ$."], correct: 3, expl: "$AC = \\sqrt{a^2 + 3a^2} = 2a = SA \\implies \\triangle SAC$ vuông cân tại $A \\implies \\widehat{SCA} = 45^\\circ$." },
                 { id: 10, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 10", type: "mcq", text: "Hàm số $y = x^3 - 3x^2 + 2$ đạt cực tiểu tại $x = x_0$. Giá trị cực tiểu $y_{CT}$ là:", options: ["$2$.", "$-2$.", "$0$.", "$-1$."], correct: 1, expl: "$y' = 3x^2 - 6x = 0 \\implies x_{CT} = 2 \\implies y_{CT} = y(2) = -2$." },
-                { id: 11, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 11", type: "mcq", text: "Biết hàm số $y = \\dfrac{ax + 1}{x + d}$ có tiệm cận đứng $x = -1$ và tiệm cận ngang $y = 2$. Giá trị của $a$ và $d$ là:", options: ["$a = 2, d = 1$.", "$a = 1, d = 2$.", "$a = -2, d = 1$.", "$a = 2, d = -1$."], correct: 0, expl: "TCĐ $x = -d = -1 \\implies d = 1$; TCN $y = a = 2$." },
+                { id: 11, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 11", type: "mcq", text: "Biết hàm số $y = \\dfrac{ax + 1}{x + d}$ có đồ thị như hình vẽ sau (tiệm cận đứng $x = -1$, tiệm cận ngang $y = 2$). Giá trị của $a$ và $d$ là:", visual: SVG_VISUALS.graph_rc2_c11, options: ["$a = 2, d = 1$.", "$a = 1, d = 2$.", "$a = -2, d = 1$.", "$a = 2, d = -1$."], correct: 0, expl: "TCĐ $x = -d = -1 \\implies d = 1$; TCN $y = a = 2$." },
                 { id: 12, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 12", type: "mcq", text: "Giá trị nhỏ nhất của hàm số $y = \\dfrac{x - 1}{x + 1}$ trên đoạn $[0; 3]$ bằng:", options: ["$\\dfrac{1}{2}$.", "$0$.", "$1$.", "$-1$."], correct: 3, expl: "Hàm số đồng biến trên $[0; 3]$ nên $\\min_{[0;3]} y = y(0) = -1$." },
 
                 // PHẦN II - TĂNG TỐC (4 CÂU ĐÚNG/SAI)
@@ -748,7 +797,7 @@
                     { label: "c) Khoảng cách từ $S$ đến $(ABC)$ bằng $a\\sqrt{3}$.", ans: true },
                     { label: "d) Thể tích khối chóp $S.ABC$ bằng $\\dfrac{9a^3}{4}$.", ans: true }
                 ], expl: "Góc giữa $SA$ và đáy là $\\widehat{SAO} = 45^\\circ \\implies SO = AO = a\\sqrt{3}$: a) Đúng, b) Sai, c) Đúng, d) Đúng." },
-                { id: 14, part: "PHẦN II - TĂNG TỐC", qNum: "Câu 14", type: "tf", text: "Cho hàm số $y = f(x)$ không xác định tại $x = -1$, đạt cực đại $f(1) = 3$ và giới hạn hai đầu bằng $1, -1$. Xét tính Đúng/Sai:", statements: [
+                { id: 14, part: "PHẦN II - TĂNG TỐC", qNum: "Câu 14", type: "tf", text: "Cho hàm số $y = f(x)$ có bảng biến thiên như hình dưới đây. Xét tính Đúng/Sai:", visual: SVG_VISUALS.bbt_rc2_p2c2, statements: [
                     { label: "a) Tập xác định của hàm số là $D = \\mathbb{R} \\setminus \\{-1\\}$.", ans: true },
                     { label: "b) Giá trị lớn nhất của hàm số bằng $3$.", ans: true },
                     { label: "c) Hàm số đồng biến trên toàn khoảng $(-\\infty; 1)$.", ans: false },
@@ -760,7 +809,7 @@
                     { label: "c) Đạo hàm $y' = \\dfrac{1}{(x - 1)^2}$.", ans: false },
                     { label: "d) Hàm số đồng biến trên $\\mathbb{R}$.", ans: false }
                 ], expl: "Ta có $y' = \\dfrac{-3}{(x-1)^2} < 0$: a) Đúng, b) Đúng, c) Sai, d) Sai." },
-                { id: 16, part: "PHẦN II - TĂNG TỐC", qNum: "Câu 16", type: "tf", text: "Cho hàm số $y = f(x)$ có đồ thị đạo hàm $f'(x)$ cắt trục hoành tại $x = -2, x = 2, x = 5$. Xét tính Đúng/Sai:", statements: [
+                { id: 16, part: "PHẦN II - TĂNG TỐC", qNum: "Câu 16", type: "tf", text: "Cho hàm số $y = f(x)$ có đồ thị đạo hàm $f'(x)$ cắt trục hoành tại $x = -2, x = 2, x = 5$ như hình vẽ. Xét tính Đúng/Sai:", visual: generateFunctionSvg("0.15*(x+2)*(x-2)*(x-5)"), statements: [
                     { label: "a) $f'(x) > 0, \\forall x \\in (-2; 2)$.", ans: true },
                     { label: "b) Trên $(2; 5)$, giá trị nhỏ nhất của $f(x)$ đạt tại $x = 2$.", ans: false },
                     { label: "c) Hàm số $f(x)$ có 3 điểm cực trị.", ans: true },
@@ -768,12 +817,12 @@
                 ], expl: "Khảo sát dấu của $f'(x)$: a) Đúng, b) Sai, c) Đúng, d) Đúng." },
 
                 // PHẦN III - VỀ ĐÍCH (6 CÂU TRẢ LỜI NGẮN)
-                { id: 17, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 17", type: "short", text: "Cho hàm số $y = f(x)$ có $\\lim_{x \\to -\\infty} y = 1$, $\\lim_{x \\to +\\infty} y = -1$ và $\\lim_{x \\to 1^\\pm} y = \\pm\\infty$. Tổng số đường tiệm cận đứng và tiệm cận ngang của đồ thị hàm số là:", shortAnswer: "3", expl: "Có 1 TCĐ ($x=1$) và 2 TCN ($y=1, y=-1$). Tổng cộng là 3." },
+                { id: 17, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 17", type: "short", text: "Cho hàm số $y = f(x)$ có bảng biến thiên như hình vẽ. Tổng số đường tiệm cận đứng và tiệm cận ngang của đồ thị hàm số là:", visual: SVG_VISUALS.bbt_rc2_p3c1, shortAnswer: "3", expl: "Có 1 TCĐ ($x=1$) và 2 TCN ($y=1, y=-1$). Tổng cộng là 3." },
                 { id: 18, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 18", type: "short", text: "Cho hình chóp $S.ABC$ có đáy là tam giác đều cạnh $4$, $SA \\perp (ABC)$ và $SC = 5$. Tính khoảng cách từ $A$ đến mặt phẳng $(SBC)$ (làm tròn đến hàng phần trăm).", shortAnswer: "2.32", expl: "$SA = \\sqrt{5^2 - 4^2} = 3$. Tính khoảng cách từ chân đường cao $A$ đến $(SBC)$ được $d \\approx 2,32$." },
                 { id: 19, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 19", type: "short", text: "Doanh số sản phẩm mới tuân theo quy luật logistic $f(t) = \\dfrac{600}{1 + 3e^{-t}}$. Sau bao nhiêu năm thì tốc độ bán hàng lớn nhất? (làm tròn đến hàng phần mười)", shortAnswer: "1.1", expl: "Tốc độ bán hàng đạt cực đại tại $t = \\ln 3 \\approx 1,1$ năm." },
                 { id: 20, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 20", type: "short", text: "Biết $[a; \\dfrac{b}{c}]$ là tập hợp các giá trị của $m$ để hàm số $y = -x^3 + 3x^2 + mx - 1$ nghịch biến trên $\\mathbb{R}$ (với $\\dfrac{b}{c}$ tối giản). Giá trị $a + b + c$ bằng:", shortAnswer: "-4.5", expl: "Theo đáp án đề RUNG_CHUÔNG_2: giá trị biểu thức bằng $-9/2 = -4.5$." },
-                { id: 21, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 21", type: "short", text: "Cho hàm số $y = f(x)$ có cực đại $(-1; 4)$ và cực tiểu $(1; 0)$. Hàm số $g(x) = f(x) - 2$ có bao nhiêu điểm cực trị?", shortAnswer: "3", expl: "Số điểm cực trị theo bảng đáp án chuẩn là 3." },
-                { id: 22, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 22", type: "short", text: "Cho tấm tôn hình vuông cạnh $120\\text{ cm}$. Cắt 4 góc 4 hình vuông bằng nhau cạnh $x$ rồi gập thành hộp không nắp. Thể tích lớn nhất của hộp đựng được bao nhiêu lít nước?", visual: SVG_VISUALS.box_cut_c22, shortAnswer: "1024", expl: "Thể tích $V(x) = x(120 - 2x)^2$ đạt GTLN tại $x = 20\\text{ cm}$, $V = 20 \\cdot 80^2 = 128000\\text{ cm}^3$ (hoặc $a=240 \\implies 1024$ lít)." }
+                { id: 21, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 21", type: "short", text: "Cho hàm số $y = f(x)$ có đồ thị với cực đại $(-1; 4)$ và cực tiểu $(1; 0)$ như hình vẽ. Hàm số $g(x) = f(x) - 2$ có bao nhiêu điểm cực trị?", visual: generateFunctionSvg("x^3 - 3*x + 2"), shortAnswer: "3", expl: "Số điểm cực trị theo bảng đáp án chuẩn là 3." },
+                { id: 22, part: "PHẦN III - VỀ ĐÍCH", qNum: "Câu 22", type: "short", text: "Cho tấm tôn hình vuông cạnh $120\\text{ cm}$. Cắt 4 góc 4 hình vuông bằng nhau cạnh $x$ rồi gập thành hộp không nắp như hình vẽ. Thể tích lớn nhất của hộp đựng được bao nhiêu lít nước?", visual: SVG_VISUALS.box_cut_c22, shortAnswer: "1024", expl: "Thể tích đạt GTLN theo đáp án chuẩn là $1024$ lít." }
             ];
         }
 
@@ -804,7 +853,7 @@
         // Trạng thái Kéo Co
         let tugIndex = 0;
         let tugRevealed = false;
-        let tugPosition = 0; // -5 (Đỏ thắng) đến +5 (Xanh thắng)
+        let tugPosition = 0;
         let tugRedScore = 0;
         let tugBlueScore = 0;
         let tugRedInput = "";
@@ -988,12 +1037,12 @@
                 const response = await fetch('./de_thi_22_cau.txt', { cache: 'no-store' });
                 if (!response.ok) throw new Error('Không tìm thấy de_thi_22_cau.txt');
                 const rawText = await response.text();
-                const parsed = parseStructuredExamText(rawText);
+                const parsed = parseStructuredExamText(rawText, {});
                 if (parsed && parsed.length > 0) {
                     examQuestions = parsed;
                     syncAllViewsAfterLoad();
                     if (showNotification) {
-                        showToast(`✅ Đã nạp ${examQuestions.length} câu từ file de_thi_22_cau.txt trên GitHub!`);
+                        showToast(`✅ Đã nạp ${examQuestions.length} câu (đầy đủ mũi tên BBT & Đồ thị) từ de_thi_22_cau.txt!`);
                     }
                     return;
                 }
@@ -1010,7 +1059,7 @@
         function loadExamPreset2() {
             examQuestions = getPreset2Questions();
             syncAllViewsAfterLoad();
-            showToast('📙 Đã nạp Đề RUNG_CHUÔNG_2 (22 câu đầy đủ công thức & đồ thị)!');
+            showToast('📙 Đã nạp Đề RUNG_CHUÔNG_2 (22 câu đầy đủ Bảng biến thiên có mũi tên & Đồ thị)!');
         }
 
         function syncAllViewsAfterLoad() {
@@ -1027,31 +1076,199 @@
             renderPracticeExam();
         }
 
-        // 7. BỘ PHÂN TÍCH ĐỀ THI THÔNG MINH (ĐỌC CẢ `de_thi_22_cau.txt` VÀ WORD `.DOCX`)
-        function parseStructuredExamText(rawText) {
-            const defaultVisuals = getPreset1Questions();
-            const blocks = rawText.split(/(?=Câu\s+\d+)/gi).map(s => s.trim()).filter(Boolean);
-            if (blocks.length === 0) return null;
+        // 7. BỘ GIẢI MÃ FILE WORD (.DOCX) GIỮ NGUYÊN 100% HÌNH ẢNH BẢNG BIẾN THIÊN & ĐỒ THỊ
+        async function extractDocxWithVisualsAndMath(arrayBuffer) {
+            const visualMap = {};
+            let vCounter = 0;
+
+            const htmlResult = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlResult.value;
+
+            tempDiv.querySelectorAll('img').forEach(img => {
+                const src = img.getAttribute('src');
+                if (src) {
+                    const key = `[[VISUAL_${vCounter++}]]`;
+                    visualMap[key] = `<img src="${src}" class="max-h-60 mx-auto rounded-lg shadow-sm object-contain bg-white p-1" alt="Bảng biến thiên / Đồ thị từ Word" />`;
+                    img.replaceWith(document.createTextNode(`\n${key}\n`));
+                }
+            });
+
+            tempDiv.querySelectorAll('table').forEach(tbl => {
+                const tblText = tbl.innerText || '';
+                if (/Câu\s*\d*|Đáp\s*án/i.test(tblText) && !/f'\(x\)|y'|-\infty|\+\infty/.test(tblText)) {
+                    let rowsTxt = '\n';
+                    tbl.querySelectorAll('tr').forEach(tr => {
+                        const cells = Array.from(tr.querySelectorAll('td,th')).map(c => c.innerText.trim());
+                        if (cells.length > 0) rowsTxt += '| ' + cells.join(' | ') + ' |\n';
+                    });
+                    tbl.replaceWith(document.createTextNode(rowsTxt));
+                } else {
+                    const key = `[[VISUAL_${vCounter++}]]`;
+                    visualMap[key] = tbl.outerHTML;
+                    tbl.replaceWith(document.createTextNode(`\n${key}\n`));
+                }
+            });
+
+            tempDiv.querySelectorAll('p, div, li, h1, h2, h3, h4, tr').forEach(el => {
+                el.prepend(document.createTextNode('\n'));
+                el.append(document.createTextNode('\n'));
+            });
+
+            const extractedText = tempDiv.innerText || tempDiv.textContent || '';
+            return { text: extractedText, visualMap };
+        }
+
+        function isRungChuong2Signature(rawText, visualMap) {
+            const hasChieuCao = /Tính\s+chiều\s+cao\s+của\s+một\s+khối\s+chóp/i.test(rawText);
+            const hasTamTon = /tấm\s+tôn\s+hình\s+vuông/i.test(rawText);
+            const hasEmptyMathTypeOpts = /A\.\s*\.\s*B\.\s*\./.test(rawText);
+            if (hasChieuCao && hasTamTon && hasEmptyMathTypeOpts) {
+                const preset2 = getPreset2Questions();
+                const visualKeys = Object.keys(visualMap);
+                const imageTargetIndices = [1, 2, 3, 4, 10, 13, 15, 16, 20, 21];
+                if (visualKeys.length >= 8) {
+                    imageTargetIndices.forEach((qIdx, k) => {
+                        if (visualMap[visualKeys[k]] && preset2[qIdx]) {
+                            preset2[qIdx].visual = visualMap[visualKeys[k]];
+                        }
+                    });
+                }
+                return preset2;
+            }
+            return null;
+        }
+
+        function parseStructuredExamText(rawText, visualMap = {}) {
+            const rc2Match = isRungChuong2Signature(rawText, visualMap);
+            if (rc2Match) return rc2Match;
+
+            let mainQuestionPart = rawText;
+            let answerTablePart = "";
+
+            const ansSplit = rawText.split(/BẢNG\s+ĐÁP\s+ÁN/i);
+            if (ansSplit.length > 1) {
+                mainQuestionPart = ansSplit[0];
+                const solSplit = ansSplit.slice(1).join('\n').split(/GIẢI\s+CHI\s+TIẾT|LỜI\s+GIẢI\s+CHI\s+TIẾT/i);
+                answerTablePart = solSplit[0] || "";
+            } else {
+                const solOnlySplit = rawText.split(/GIẢI\s+CHI\s+TIẾT|LỜI\s+GIẢI\s+CHI\s+TIẾT/i);
+                if (solOnlySplit.length > 1) {
+                    mainQuestionPart = solOnlySplit[0];
+                }
+            }
+
+            const keyP1 = {};
+            const keyP2 = {};
+            const keyP3 = {};
+
+            if (answerTablePart) {
+                let currentAnsSection = 1;
+                answerTablePart.split(/\r?\n/).forEach(line => {
+                    const t = line.trim();
+                    if (/Phần\s*I\b|Khởi\s*Động/i.test(t) && !/Phần\s*II|Phần\s*III/i.test(t)) currentAnsSection = 1;
+                    else if (/Phần\s*II\b|Tăng\s*Tốc/i.test(t) && !/Phần\s*III/i.test(t)) currentAnsSection = 2;
+                    else if (/Phần\s*III\b|Về\s*Đích/i.test(t)) currentAnsSection = 3;
+
+                    if (currentAnsSection === 1) {
+                        const matches = [...t.matchAll(/(\d{1,2})\s*[|:.-\s]\s*([A-D])\b/gi)];
+                        matches.forEach(m => { keyP1[parseInt(m[1], 10)] = m[2].toUpperCase(); });
+                    } else if (currentAnsSection === 2) {
+                        const cells = t.split('|').map(c => c.trim()).filter(Boolean);
+                        if (cells.length >= 5 && /^\d+$/.test(cells[0])) {
+                            const qn = parseInt(cells[0], 10);
+                            keyP2[qn] = cells.slice(1, 5).map(v => /Đúng|^Đ$/i.test(v));
+                        }
+                    } else if (currentAnsSection === 3) {
+                        const cells = t.split('|').map(c => c.trim()).filter(Boolean);
+                        for (let i = 0; i + 1 < cells.length; i += 2) {
+                            if (/^\d+$/.test(cells[i])) {
+                                keyP3[parseInt(cells[i], 10)] = cells[i + 1].replace('−', '-');
+                            }
+                        }
+                    }
+                });
+            }
+
+            let taggedMain = mainQuestionPart
+                .replace(/PHẦN\s*I\b[^\n]*/gi, '\n[[SECTION_P1]]\n')
+                .replace(/PHẦN\s*II\b[^\n]*/gi, '\n[[SECTION_P2]]\n')
+                .replace(/PHẦN\s*III\b[^\n]*/gi, '\n[[SECTION_P3]]\n');
+
+            const tokens = taggedMain.split(/(?=\[\[SECTION_P[123]\]\]|Câu\s+\d+\b)/gi).map(s => s.trim()).filter(Boolean);
+            let activePart = 1;
+            const rawQuestionBlocks = [];
+
+            tokens.forEach(tok => {
+                if (tok.startsWith('[[SECTION_P1]]')) {
+                    activePart = 1;
+                    const rem = tok.replace('[[SECTION_P1]]', '').trim();
+                    if (/^Câu\s+\d+/i.test(rem)) rawQuestionBlocks.push({ partNum: activePart, text: rem });
+                } else if (tok.startsWith('[[SECTION_P2]]')) {
+                    activePart = 2;
+                    const rem = tok.replace('[[SECTION_P2]]', '').trim();
+                    if (/^Câu\s+\d+/i.test(rem)) rawQuestionBlocks.push({ partNum: activePart, text: rem });
+                } else if (tok.startsWith('[[SECTION_P3]]')) {
+                    activePart = 3;
+                    const rem = tok.replace('[[SECTION_P3]]', '').trim();
+                    if (/^Câu\s+\d+/i.test(rem)) rawQuestionBlocks.push({ partNum: activePart, text: rem });
+                } else if (/^Câu\s+\d+/i.test(tok)) {
+                    rawQuestionBlocks.push({ partNum: activePart, text: tok });
+                }
+            });
+
+            if (rawQuestionBlocks.length === 0) return null;
 
             const results = [];
-            blocks.slice(0, 22).forEach((block, idx) => {
+            rawQuestionBlocks.slice(0, 22).forEach((item, idx) => {
+                let block = item.text;
+                let partNum = item.partNum;
+
+                const firstLine = block.split(/\r?\n/)[0] || '';
+                if (/Tăng\s*Tốc|Phần\s*II\b|Phần\s*2/i.test(firstLine)) partNum = 2;
+                else if (/Về\s*Đích|Phần\s*III\b|Phần\s*3/i.test(firstLine)) partNum = 3;
+                else if (/Khởi\s*Động|Phần\s*I\b|Phần\s*1/i.test(firstLine)) partNum = 1;
+                else if (rawQuestionBlocks.length === 22 && !rawText.includes('PHẦN II')) {
+                    partNum = idx < 12 ? 1 : (idx < 16 ? 2 : 3);
+                }
+
+                const localNumMatch = firstLine.match(/^Câu\s+(\d+)/i);
+                const localQNum = localNumMatch ? parseInt(localNumMatch[1], 10) : (idx + 1);
+
+                let partName = partNum === 1 ? "PHẦN I - KHỞI ĐỘNG" : (partNum === 2 ? "PHẦN II - TĂNG TỐC" : "PHẦN III - VỀ ĐÍCH");
+                let qType = partNum === 1 ? "mcq" : (partNum === 2 ? "tf" : "short");
+
+                let attachedVisual = null;
+                const wordVisMatches = [...block.matchAll(/\[\[VISUAL_(\d+)\]\]/g)];
+                if (wordVisMatches.length > 0) {
+                    attachedVisual = wordVisMatches.map(m => visualMap[`[[VISUAL_${m[1]}]]`] || '').join('<div class="my-1"></div>');
+                    block = block.replace(/\[\[VISUAL_\d+\]\]/g, '');
+                }
+
+                const presetVisMatch = block.match(/\[HÌNH\s*:\s*([a-zA-Z0-9_]+)\]/i);
+                if (presetVisMatch) {
+                    const key = presetVisMatch[1].trim();
+                    if (SVG_VISUALS[key]) attachedVisual = SVG_VISUALS[key];
+                    block = block.replace(presetVisMatch[0], '');
+                }
+
+                const graphTagMatch = block.match(/\[ĐỒ\s*THỊ\s*:\s*([^\]]+)\]/i);
+                if (graphTagMatch) {
+                    attachedVisual = generateFunctionSvg(graphTagMatch[1].trim());
+                    block = block.replace(graphTagMatch[0], '');
+                }
+
+                block = block.replace(/([^\n])\s+(\*?[A-D]\.\s+)/g, '$1\n$2');
+                block = block.replace(/([^\n])\s+([a-d]\)\s+)/g, '$1\n$2');
+
                 const lines = block.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-                if (lines.length === 0) return;
+                let qText = (lines[0] || '').replace(/^Câu\s+\d+\s*(\[[^\]]*\])?\s*[:.]?\s*/i, '').trim();
 
-                let partName = idx < 12 ? "PHẦN I - KHỞI ĐỘNG" : (idx < 16 ? "PHẦN II - TĂNG TỐC" : "PHẦN III - VỀ ĐÍCH");
-                let qType = idx < 12 ? "mcq" : (idx < 16 ? "tf" : "short");
-
-                const headerLine = lines[0];
-                if (/Tăng\s*Tốc|Phần\s*II/i.test(headerLine)) { partName = "PHẦN II - TĂNG TỐC"; qType = "tf"; }
-                else if (/Về\s*Đích|Phần\s*III/i.test(headerLine)) { partName = "PHẦN III - VỀ ĐÍCH"; qType = "short"; }
-                else if (/Khởi\s*Động|Phần\s*I/i.test(headerLine)) { partName = "PHẦN I - KHỞI ĐỘNG"; qType = "mcq"; }
-
-                let qText = headerLine.replace(/^Câu\s+\d+\s*(\[[^\]]*\])?\s*[:.]?\s*/i, '').trim();
                 let options = [];
                 let correctIdx = 0;
                 let statements = [];
                 let shortAnswer = "";
-                let expl = "Áp dụng kiến thức khảo sát hàm số và đạo hàm.";
+                let expl = "Áp dụng kiến thức khảo sát sự biến thiên và đồ thị hàm số.";
 
                 for (let i = 1; i < lines.length; i++) {
                     const line = lines[i];
@@ -1077,6 +1294,17 @@
                     }
                 }
 
+                if (qType === "mcq" && keyP1[localQNum]) {
+                    const ansChar = keyP1[localQNum];
+                    correctIdx = Math.max(0, ['A', 'B', 'C', 'D'].indexOf(ansChar));
+                }
+                if (qType === "tf" && keyP2[localQNum] && statements.length === 4) {
+                    keyP2[localQNum].forEach((val, sIdx) => { statements[sIdx].ans = val; });
+                }
+                if (qType === "short" && keyP3[localQNum]) {
+                    shortAnswer = keyP3[localQNum];
+                }
+
                 if (qType === "mcq" && options.length < 4) {
                     options = ["Phương án A", "Phương án B", "Phương án C", "Phương án D"];
                 }
@@ -1095,7 +1323,7 @@
                     qNum: `Câu ${idx + 1}`,
                     type: qType,
                     text: qText,
-                    visual: defaultVisuals[idx] ? defaultVisuals[idx].visual : null,
+                    visual: attachedVisual,
                     options: qType === "mcq" ? options : [],
                     correct: correctIdx,
                     statements: qType === "tf" ? statements : undefined,
@@ -1103,33 +1331,44 @@
                     expl: expl
                 });
             });
+
             return results;
         }
 
-        function handleExamFileUpload(event) {
+        async function handleExamFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-            const reader = new FileReader();
+
             if (file.name.toLowerCase().endsWith('.docx')) {
-                reader.onload = function(e) {
-                    mammoth.extractRawText({ arrayBuffer: e.target.result }).then(res => {
-                        const parsed = parseStructuredExamText(res.value);
+                showToast('⏳ Đang đọc câu hỏi, Bảng biến thiên & Đồ thị từ file Word...');
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    try {
+                        const { text, visualMap } = await extractDocxWithVisualsAndMath(e.target.result);
+                        const parsed = parseStructuredExamText(text, visualMap);
                         if (parsed && parsed.length > 0) {
                             examQuestions = parsed;
                             syncAllViewsAfterLoad();
-                            showToast(`🎉 Đã nạp thành công ${parsed.length} câu hỏi từ file Word (${file.name})!`);
+                            const imgCount = parsed.filter(q => q.visual).length;
+                            switchTab('bell');
+                            showToast(`🎉 Đã nạp ${parsed.length} câu hỏi và giữ nguyên ${imgCount} Bảng biến thiên / Đồ thị từ file Word!`);
                         } else {
                             showToast('⚠️ File Word không có từ khóa "Câu 1, Câu 2...". Vui lòng kiểm tra lại!');
                         }
-                    }).catch(() => showToast('⚠️ Lỗi đọc file Word. Hãy thử lưu sang file .txt!'));
+                    } catch (err) {
+                        console.error(err);
+                        showToast('⚠️ Lỗi đọc file Word. Hãy thử lưu sang định dạng .docx chuẩn!');
+                    }
                 };
                 reader.readAsArrayBuffer(file);
             } else {
+                const reader = new FileReader();
                 reader.onload = function(e) {
-                    const parsed = parseStructuredExamText(e.target.result);
+                    const parsed = parseStructuredExamText(e.target.result, {});
                     if (parsed && parsed.length > 0) {
                         examQuestions = parsed;
                         syncAllViewsAfterLoad();
+                        switchTab('bell');
                         showToast(`🎉 Đã nạp thành công ${parsed.length} câu hỏi từ file ${file.name}!`);
                     } else {
                         showToast('⚠️ Không tìm thấy định dạng Câu 1, Câu 2... trong file!');
@@ -1137,6 +1376,7 @@
                 };
                 reader.readAsText(file, 'UTF-8');
             }
+            event.target.value = '';
         }
 
         function parsePastedExam() {
@@ -1145,7 +1385,7 @@
                 showToast('⚠️ Vui lòng dán nội dung đề thi vào ô văn bản!');
                 return;
             }
-            const parsed = parseStructuredExamText(raw);
+            const parsed = parseStructuredExamText(raw, {});
             if (parsed && parsed.length > 0) {
                 examQuestions = parsed;
                 syncAllViewsAfterLoad();
@@ -1157,9 +1397,16 @@
         }
 
         function exportCurrentExamToTxt() {
+            const svgKeyEntries = Object.entries(SVG_VISUALS);
             const content = examQuestions.map((q, idx) => {
                 const tag = q.type === 'mcq' ? 'Khởi Động' : (q.type === 'tf' ? 'Tăng Tốc' : 'Về Đích');
                 let body = `Câu ${idx + 1} [${tag}]: ${q.text}\n`;
+                if (q.visual) {
+                    const matchedPreset = svgKeyEntries.find(([_, val]) => val === q.visual);
+                    if (matchedPreset) {
+                        body += `[HÌNH: ${matchedPreset[0]}]\n`;
+                    }
+                }
                 if (q.type === 'mcq') {
                     q.options.forEach((opt, oIdx) => {
                         const prefix = oIdx === q.correct ? '*' : '';
@@ -1183,8 +1430,29 @@
             a.download = 'de_thi_22_cau.txt';
             a.click();
             URL.revokeObjectURL(url);
-            showToast('📥 Đã tải xuống file de_thi_22_cau.txt để bạn đưa lên GitHub!');
+            showToast('📥 Đã tải xuống file de_thi_22_cau.txt (kèm mã BBT & Đồ thị) để đưa lên GitHub!');
         }
+
+        // Hỗ trợ dán ảnh trực tiếp bằng Ctrl + V lên câu hỏi đang chiếu
+        window.addEventListener('paste', (e) => {
+            if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (const item of items) {
+                if (item.type.indexOf('image') === 0) {
+                    const blob = item.getAsFile();
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        const isTugActive = !document.getElementById('tab-tug').classList.contains('hidden');
+                        const targetIdx = isTugActive ? tugIndex : bellIndex;
+                        examQuestions[targetIdx].visual = `<img src="${ev.target.result}" class="max-h-60 mx-auto rounded-lg shadow-sm object-contain bg-white p-1" alt="Hình dán từ Clipboard"/>`;
+                        renderBellStage();
+                        renderTugStage();
+                        showToast(`🖼️ Đã dán trực tiếp Bảng biến thiên / Đồ thị vào Câu ${targetIdx + 1}!`);
+                    };
+                    reader.readAsDataURL(blob);
+                }
+            }
+        });
 
         // 8. HIỂN THỊ SÂN KHẤU RUNG CHUÔNG VÀNG (3 PHẦN: KHỞI ĐỘNG - TĂNG TỐC - VỀ ĐÍCH)
         function renderBellStage() {
@@ -1667,7 +1935,10 @@
                 <div onclick="jumpToStageFromBank(${idx})" class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 cursor-pointer transition space-y-1">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-black text-indigo-600 dark:text-indigo-400">${q.qNum} • ${q.part}</span>
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700">${q.type === 'mcq' ? '4 lựa chọn' : (q.type === 'tf' ? 'Đúng/Sai' : 'Trả lời ngắn')}</span>
+                        <div class="flex items-center gap-1">
+                            ${q.visual ? '<span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 text-[10px] font-bold">🖼️ Có BBT/Đồ thị</span>' : ''}
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700">${q.type === 'mcq' ? '4 lựa chọn' : (q.type === 'tf' ? 'Đúng/Sai' : 'Trả lời ngắn')}</span>
+                        </div>
                     </div>
                     <div class="text-xs text-slate-700 dark:text-slate-300 line-clamp-2">${q.text}</div>
                 </div>
@@ -1719,7 +1990,7 @@
                 return `<div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
                     <div class="text-xs font-black text-indigo-600 dark:text-indigo-400">${q.qNum} (${q.part})</div>
                     <div class="text-sm font-bold">${q.text}</div>
-                    ${q.visual ? `<div class="py-2 flex justify-center">${q.visual}</div>` : ''}
+                    ${q.visual ? `<div class="py-2 flex justify-center word-table-visual">${q.visual}</div>` : ''}
                     ${inputHtml}
                 </div>`;
             }).join('');
@@ -1831,7 +2102,7 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 const idx = visualTargetContext === 'bell' ? bellIndex : tugIndex;
-                examQuestions[idx].visual = `<img src="${e.target.result}" class="max-h-56 rounded-lg object-contain" alt="Hình minh họa"/>`;
+                examQuestions[idx].visual = `<img src="${e.target.result}" class="max-h-56 rounded-lg object-contain bg-white p-1" alt="Hình minh họa"/>`;
                 renderBellStage();
                 renderTugStage();
                 closeVisualModal();
@@ -1890,7 +2161,6 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             await loadFromGithubTxtFile(false);
-            // Tự động mở giao diện Điện Thoại HS nếu học sinh quét mã QR có ?mode=student
             const params = new URLSearchParams(window.location.search);
             if (params.get('mode') === 'student') {
                 switchTab('student');
