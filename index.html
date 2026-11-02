@@ -87,6 +87,21 @@
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-200">
 
+    <!-- BỘ ĐỊNH NGHĨA ĐẦU MŨI TÊN SVG TOÀN CỤC (ĐẢM BẢO HIỂN THỊ 100% Ở CẢ RUNG CHUÔNG VÀNG, KÉO CO & LUYỆN THI) -->
+    <svg width="0" height="0" class="fixed pointer-events-none opacity-0" aria-hidden="true">
+        <defs>
+            <marker id="arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+            </marker>
+            <marker id="arr-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#dc2626"/>
+            </marker>
+            <marker id="arr-axis" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+                <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#334155"/>
+            </marker>
+        </defs>
+    </svg>
+
     <!-- CANVAS PHÁO HOA VINH DANH -->
     <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-[10000] hidden"></canvas>
 
@@ -135,19 +150,19 @@
         </div>
     </div>
 
-    <!-- MODAL VINH DANH NHÀ VÔ ĐỊCH RUNG CHUÔNG VÀNG -->
+    <!-- MODAL VINH DANH NHÀ VÔ ĐỊCH -->
     <div id="honor-modal" class="fixed inset-0 z-[9998] hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
         <div class="bg-gradient-to-b from-amber-50 via-white to-amber-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 max-w-2xl w-full rounded-3xl p-6 sm:p-8 border-2 border-amber-400 shadow-2xl text-center relative space-y-5">
             <button onclick="closeHonorModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-rose-500 hover:text-white font-black text-sm transition">✕</button>
             <div class="inline-flex items-center px-4 py-1 rounded-full bg-amber-100 text-amber-800 font-extrabold text-xs uppercase tracking-widest border border-amber-300">
-                🔔 BẢNG VÀNG DANH DỰ - RUNG CHUÔNG VÀNG 2025
+                🔔 BẢNG VÀNG DANH DỰ - ĐẤU TRƯỜNG TOÁN HỌC 2025
             </div>
             <div class="text-6xl sm:text-7xl animate-trophy">🏆</div>
             <h2 class="text-2xl sm:text-3xl font-black bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 bg-clip-text text-transparent">
                 VINH DANH NHÀ VÔ ĐỊCH
             </h2>
             <p id="honor-subtitle" class="text-sm text-slate-600 dark:text-slate-300 font-medium">
-                Chúc mừng các thí sinh xuất sắc nhất đã chinh phục đỉnh cao tri thức Toán học!
+                Chúc mừng các thí sinh & đội thi xuất sắc nhất đã chinh phục đỉnh cao tri thức Toán học!
             </p>
             <div id="honor-winners-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto custom-scroll p-2"></div>
             <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -214,7 +229,7 @@
                     🔔 Rung Chuông Vàng
                 </button>
                 <button onclick="switchTab('tug')" id="tab-btn-tug" class="tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0">
-                    🪢 Kéo Co
+                    🪢 Kéo Co Kiến Thức
                 </button>
                 <button onclick="switchTab('student')" id="tab-btn-student" class="tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0">
                     📲 Điện Thoại HS
@@ -383,25 +398,39 @@
         </section>
 
         <!-- ========================================================= -->
-        <!-- TAB 2: KÉO CO KIẾN THỨC (HOẠT ĐỘNG MƯỢT MÀ TOÀN MÀN HÌNH)  -->
+        <!-- TAB 2: KÉO CO KIẾN THỨC (ĐỒNG BỘ ĐẦY ĐỦ NHƯ RUNG CHUÔNG)   -->
         <!-- ========================================================= -->
         <section id="tab-tug" class="hidden space-y-4">
-            <div id="tug-stage-container" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-4 sm:p-6 space-y-4">
+            <div id="tug-stage-container" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-4 sm:p-6 space-y-4 transition-all">
                 <!-- Thanh tiêu đề Kéo Co -->
                 <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-700 pb-3">
-                    <div class="flex items-center space-x-2">
-                        <span id="tug-part-badge" class="px-3 py-1 rounded-full text-xs font-black bg-rose-100 text-rose-800 border border-rose-300">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="tug-part-badge" class="px-3 py-1 rounded-full text-xs font-black bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-200 border border-rose-300">
                             PHẦN I - KHỞI ĐỘNG
                         </span>
                         <span id="tug-q-counter" class="text-sm font-black">Câu 1 / 22</span>
                     </div>
-                    <div class="flex flex-wrap items-center gap-2">
-                        <button onclick="openQrModal()" class="px-2.5 py-1.5 rounded-lg bg-amber-500 text-white text-xs font-extrabold">📱 Mã QR</button>
-                        <button onclick="switchTab('student')" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-extrabold">📲 Điện Thoại HS</button>
-                        <button onclick="loadFromGithubTxtFile(true)" class="px-2.5 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold">📘 Đề 1 (GitHub)</button>
-                        <button onclick="loadExamPreset2()" class="px-2.5 py-1.5 rounded-lg bg-amber-100 text-amber-800 text-xs font-bold">📙 Đề RUNG_CHUÔNG_2</button>
-                        <button onclick="openVisualModal('tug')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-xs font-bold">🖼️ Sửa Hình</button>
-                        <button onclick="resetTugGame()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-xs font-bold">🔄 Đặt lại dây</button>
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <button onclick="openQrModal()" class="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold shadow">
+                            📱 Mã QR Lớp Học
+                        </button>
+                        <button onclick="switchTab('student')" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow">
+                            📲 Điện Thoại HS
+                        </button>
+                        <button onclick="loadFromGithubTxtFile(true)" class="px-2.5 py-1.5 rounded-lg bg-indigo-50 dark:bg-slate-700 text-indigo-700 dark:text-indigo-300 text-xs font-bold hover:bg-indigo-100">
+                            🔄 Đề GitHub (Đề 1)
+                        </button>
+                        <button onclick="loadExamPreset2()" class="px-2.5 py-1.5 rounded-lg bg-amber-100 text-amber-800 text-xs font-bold hover:bg-amber-200">
+                            📙 Đề RUNG_CHUÔNG_2
+                        </button>
+                        <button onclick="openVisualModal('tug')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-xs font-bold hover:bg-slate-200">
+                            🖼️ Sửa Hình
+                        </button>
+                        <button onclick="adjustStageFontSize(1)" class="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 text-xs font-black">A+</button>
+                        <button onclick="adjustStageFontSize(-1)" class="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 text-xs font-black">A-</button>
+                        <button onclick="resetTugGame()" class="px-2.5 py-1.5 rounded-lg bg-rose-100 text-rose-700 text-xs font-bold">
+                            🔄 Đặt lại dây
+                        </button>
                         <button onclick="toggleStageFullscreen('tug-stage-container')" class="px-3 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-xs font-extrabold shadow">
                             ⛶ Toàn Màn Hình Kéo Co
                         </button>
@@ -437,14 +466,35 @@
                 <!-- Thanh Stepper 22 Câu của Kéo Co -->
                 <div id="tug-stepper" class="flex items-center gap-1 overflow-x-auto custom-scroll py-1"></div>
 
-                <!-- Khung Câu hỏi Kéo Co -->
-                <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 space-y-4">
-                    <div id="tug-question-text" class="stage-question-text text-base sm:text-lg font-bold leading-relaxed"></div>
+                <!-- Khung Câu hỏi Kéo Co (Đầy đủ Đồng hồ 30s, Bảng biến thiên có mũi tên, Tương tác 3 phần) -->
+                <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span id="tug-question-type-hint" class="text-[11px] font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400">
+                            PHẦN I - KHỞI ĐỘNG: Trắc nghiệm 4 lựa chọn (Bấm vào phương án để kiểm tra nhanh)
+                        </span>
+                        <div class="flex items-center space-x-2">
+                            <div class="px-3 py-1 rounded-xl bg-amber-500 text-white font-black text-sm shadow flex items-center space-x-1">
+                                <span>⏱️</span>
+                                <span id="tug-timer-text">30s</span>
+                            </div>
+                            <button type="button" onclick="startTugTimer()" class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold">
+                                ▶ Bắt đầu 30s
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="tug-question-text" class="stage-question-text text-base sm:text-lg font-bold leading-relaxed text-slate-800 dark:text-slate-100"></div>
+
+                    <!-- Khung Bảng Biến Thiên / Đồ Thị của Kéo Co -->
                     <div id="tug-visual-box" class="hidden word-table-visual rounded-xl bg-white dark:bg-slate-800 p-3 border border-slate-200 dark:border-slate-700 flex justify-center items-center overflow-x-auto"></div>
+
+                    <!-- Các phương án tương tác của Kéo Co -->
                     <div id="tug-options-area" class="space-y-3"></div>
-                    <div id="tug-explanation-box" class="hidden p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 text-xs sm:text-sm">
-                        <strong class="text-emerald-700 dark:text-emerald-300">💡 Giải thích:</strong>
-                        <span id="tug-explanation-text"></span>
+
+                    <!-- Lời giải chi tiết Kéo Co -->
+                    <div id="tug-explanation-box" class="hidden p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-700 text-xs sm:text-sm space-y-1">
+                        <div class="font-black text-emerald-800 dark:text-emerald-300">💡 ĐÁP ÁN & LỜI GIẢI CHI TIẾT:</div>
+                        <div id="tug-explanation-text" class="text-slate-700 dark:text-slate-200 leading-relaxed"></div>
                     </div>
                 </div>
 
@@ -464,7 +514,7 @@
                             👈 +1 Kéo Về ĐỘI ĐỎ
                         </button>
                         <button type="button" onclick="revealTugAnswer()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow cursor-pointer">
-                            👁️ Mở Đáp Án
+                            👁️ Mở Đáp Án & Giải Thích
                         </button>
                         <button type="button" onclick="awardTugPoint('blue')" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs shadow cursor-pointer">
                             +1 Kéo Về ĐỘI XANH 👉
@@ -491,7 +541,7 @@
                             <select id="student-remote-select" onchange="renderStudentPhoneUI()" class="flex-1 px-2.5 py-1.5 rounded-xl border bg-white dark:bg-slate-800 dark:border-slate-700 text-xs font-bold"></select>
                         </div>
                         <div class="flex items-center justify-between gap-2">
-                            <label class="text-xs font-extrabold text-slate-600 dark:text-slate-300">Đội Kéo Co:</label>
+                            <label class="text-xs font-extrabold text-slate-600 dark:text-slate-300">Chế độ thi:</label>
                             <select id="student-team-select" class="flex-1 px-2.5 py-1.5 rounded-xl border bg-white dark:bg-slate-800 dark:border-slate-700 text-xs font-bold">
                                 <option value="bell">🔔 Thi Rung Chuông Vàng</option>
                                 <option value="red">🔴 Đội Đỏ (Kéo Co)</option>
@@ -554,7 +604,7 @@
                         <div class="text-4xl">📂</div>
                         <div class="text-sm font-extrabold">Tải File Word (.docx) hoặc File Đề (.txt) từ máy tính</div>
                         <p class="text-xs text-slate-500 max-w-md">
-                            <strong>Đã nâng cấp:</strong> Tự động trích xuất toàn bộ <strong>Hình ảnh Bảng biến thiên, Đồ thị</strong>, Bảng biểu, Công thức OMML và Bảng đáp án cuối file Word!
+                            <strong>Đã nâng cấp:</strong> Tự động trích xuất toàn bộ <strong>Hình ảnh Bảng biến thiên, Đồ thị</strong>, Bảng biểu, Công thức OMML và cập nhật đồng thời cho cả <strong>Rung Chuông Vàng & Kéo Co</strong>!
                         </p>
                         <input type="file" id="exam-file-input" accept=".docx,.txt" onchange="handleExamFileUpload(event)" class="hidden">
                         <label for="exam-file-input" class="cursor-pointer px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md transition">
@@ -568,7 +618,7 @@
                         </label>
                         <textarea id="exam-raw-paste" rows="6" placeholder="Câu 1 [Khởi Động]: Cho hàm số $y = x^3 - 3x + 1$ có đồ thị như hình vẽ...&#10;[ĐỒ THỊ: x^3 - 3*x + 1]&#10;*A. Đáp án đúng&#10;B. Đáp án B..." class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-mono"></textarea>
                         <button onclick="parsePastedExam()" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-extrabold rounded-xl text-xs shadow">
-                            🔍 Phân Tích & Nạp Vào Sân Khấu Ngay
+                            🔍 Phân Tích & Nạp Vào Cả Rung Chuông Vàng + Kéo Co
                         </button>
                     </div>
                 </div>
@@ -577,7 +627,7 @@
                 <div class="space-y-2 pt-2">
                     <div class="flex items-center justify-between">
                         <h3 class="font-extrabold text-sm">Danh sách câu hỏi đang nạp (<span id="bank-total-count">22</span> câu):</h3>
-                        <span class="text-xs text-slate-500">Bấm vào câu bất kỳ để nhảy tới câu đó trên sân khấu</span>
+                        <span class="text-xs text-slate-500">Bấm vào câu bất kỳ để mở trên sân khấu</span>
                     </div>
                     <div id="bank-question-list" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-96 overflow-y-auto custom-scroll pr-1"></div>
                 </div>
@@ -611,7 +661,7 @@
     </main>
 
     <!-- ========================================================= -->
-    <!-- TOÀN BỘ LOGIC JAVASCRIPT & BỘ ĐỌC HÌNH ẢNH WORD (.DOCX)   -->
+    <!-- TOÀN BỘ LOGIC JAVASCRIPT & ĐỒNG BỘ RUNG CHUÔNG - KÉO CO    -->
     <!-- ========================================================= -->
     <script>
         // 1. HÀM HIỂN THỊ CÔNG THỨC TOÁN KATEX
@@ -643,56 +693,44 @@
             window._toastTimer = setTimeout(() => toast.classList.add('hidden'), 3600);
         }
 
-        // 2. KHO ĐỒ THỊ & BẢNG BIẾN THIÊN SVG SẮC NÉT (CÓ ĐẦY ĐỦ ĐẦU MŨI TÊN CHIỀU BIẾN THIÊN & TRỤC TỌA ĐỘ)
-        const SVG_ARROW_DEFS = `<defs>
-            <marker id="arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
-            </marker>
-            <marker id="arr-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#dc2626"/>
-            </marker>
-            <marker id="arr-axis" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
-                <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#334155"/>
-            </marker>
-        </defs>`;
-
+        // 2. KHO ĐỒ THỊ & BẢNG BIẾN THIÊN SVG SẮC NÉT (DÙNG MŨI TÊN TOÀN CỤC #arr-blue, #arr-red, #arr-axis ĐỂ HIỆN RÕ Ở CẢ KÉO CO & RUNG CHUÔNG VÀNG)
         const SVG_VISUALS = {
-            bbt_c1: `<svg viewBox="0 0 520 150" class="w-full max-w-lg h-auto">${SVG_ARROW_DEFS}<rect width="520" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="65" y1="0" x2="65" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="520" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="520" y2="72" stroke="#94a3b8"/><line x1="293" y1="36" x2="293" y2="150" stroke="#dc2626" stroke-width="1.3"/><line x1="297" y1="36" x2="297" y2="150" stroke="#dc2626" stroke-width="1.3"/><text x="32" y="24" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">x</text><text x="32" y="59" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">y'</text><text x="32" y="114" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">y</text><text x="90" y="24" text-anchor="middle" font-size="13">-∞</text><text x="195" y="24" text-anchor="middle" font-weight="bold" font-size="14">-2</text><text x="295" y="24" text-anchor="middle" font-weight="bold" font-size="14">0</text><text x="395" y="24" text-anchor="middle" font-weight="bold" font-size="14">2</text><text x="490" y="24" text-anchor="middle" font-size="13">+∞</text><text x="142" y="58" text-anchor="middle" font-weight="bold" fill="#16a34a" font-size="16">+</text><text x="195" y="58" text-anchor="middle" font-size="14">0</text><text x="245" y="58" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="16">-</text><text x="345" y="58" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="16">-</text><text x="395" y="58" text-anchor="middle" font-size="14">0</text><text x="445" y="58" text-anchor="middle" font-weight="bold" fill="#16a34a" font-size="16">+</text><text x="90" y="140" text-anchor="middle" font-size="12">-∞</text><text x="195" y="89" text-anchor="middle" font-weight="bold" fill="#1e40af" font-size="12">-4</text><text x="275" y="140" text-anchor="middle" font-size="12">-∞</text><text x="315" y="89" text-anchor="middle" font-size="12">+∞</text><text x="395" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="12">4</text><text x="490" y="89" text-anchor="middle" font-size="12">+∞</text><path d="M105 133 L180 93" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M210 93 L265 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M325 93 L380 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M410 133 L475 93" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
+            bbt_c1: `<svg viewBox="0 0 520 150" class="w-full max-w-lg h-auto"><rect width="520" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="65" y1="0" x2="65" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="520" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="520" y2="72" stroke="#94a3b8"/><line x1="293" y1="36" x2="293" y2="150" stroke="#dc2626" stroke-width="1.3"/><line x1="297" y1="36" x2="297" y2="150" stroke="#dc2626" stroke-width="1.3"/><text x="32" y="24" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">x</text><text x="32" y="59" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">y'</text><text x="32" y="114" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">y</text><text x="90" y="24" text-anchor="middle" font-size="13">-∞</text><text x="195" y="24" text-anchor="middle" font-weight="bold" font-size="14">-2</text><text x="295" y="24" text-anchor="middle" font-weight="bold" font-size="14">0</text><text x="395" y="24" text-anchor="middle" font-weight="bold" font-size="14">2</text><text x="490" y="24" text-anchor="middle" font-size="13">+∞</text><text x="142" y="58" text-anchor="middle" font-weight="bold" fill="#16a34a" font-size="16">+</text><text x="195" y="58" text-anchor="middle" font-size="14">0</text><text x="245" y="58" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="16">-</text><text x="345" y="58" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="16">-</text><text x="395" y="58" text-anchor="middle" font-size="14">0</text><text x="445" y="58" text-anchor="middle" font-weight="bold" fill="#16a34a" font-size="16">+</text><text x="90" y="140" text-anchor="middle" font-size="12">-∞</text><text x="195" y="89" text-anchor="middle" font-weight="bold" fill="#1e40af" font-size="12">-4</text><text x="275" y="140" text-anchor="middle" font-size="12">-∞</text><text x="315" y="89" text-anchor="middle" font-size="12">+∞</text><text x="395" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="12">4</text><text x="490" y="89" text-anchor="middle" font-size="12">+∞</text><path d="M105 133 L180 93" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M210 93 L265 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M325 93 L380 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M410 133 L475 93" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
 
-            bbt_c4: `<svg viewBox="0 0 480 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="480" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="480" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="480" y2="72" stroke="#94a3b8"/><text x="30" y="24" text-anchor="middle" font-weight="bold" font-style="italic" font-size="14">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold" font-style="italic" font-size="14">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold" font-style="italic" font-size="14">y</text><text x="90" y="24" text-anchor="middle" font-size="13">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold" font-size="14">0</text><text x="330" y="24" text-anchor="middle" font-weight="bold" font-size="14">3</text><text x="445" y="24" text-anchor="middle" font-size="13">+∞</text><text x="150" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="210" y="58" text-anchor="middle">0</text><text x="270" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="330" y="58" text-anchor="middle">0</text><text x="390" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="88" y="140" text-anchor="middle" font-size="12">-∞</text><text x="210" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">2</text><text x="330" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626">-5</text><text x="448" y="90" text-anchor="middle" font-size="12">+∞</text><path d="M105 132 L192 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M226 92 L312 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M348 132 L432 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
+            bbt_c4: `<svg viewBox="0 0 480 150" class="w-full max-w-md h-auto"><rect width="480" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="480" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="480" y2="72" stroke="#94a3b8"/><text x="30" y="24" text-anchor="middle" font-weight="bold" font-style="italic" font-size="14">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold" font-style="italic" font-size="14">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold" font-style="italic" font-size="14">y</text><text x="90" y="24" text-anchor="middle" font-size="13">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold" font-size="14">0</text><text x="330" y="24" text-anchor="middle" font-weight="bold" font-size="14">3</text><text x="445" y="24" text-anchor="middle" font-size="13">+∞</text><text x="150" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="210" y="58" text-anchor="middle">0</text><text x="270" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="330" y="58" text-anchor="middle">0</text><text x="390" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="88" y="140" text-anchor="middle" font-size="12">-∞</text><text x="210" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">2</text><text x="330" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626">-5</text><text x="448" y="90" text-anchor="middle" font-size="12">+∞</text><path d="M105 132 L192 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M226 92 L312 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M348 132 L432 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
 
-            bbt_c7: `<svg viewBox="0 0 460 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="460" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="460" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="460" y2="72" stroke="#94a3b8"/><line x1="258" y1="36" x2="258" y2="150" stroke="#dc2626" stroke-width="1.5"/><line x1="262" y1="36" x2="262" y2="150" stroke="#dc2626" stroke-width="1.5"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="260" y="24" text-anchor="middle" font-weight="bold">2</text><text x="430" y="24" text-anchor="middle">+∞</text><text x="170" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="345" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="90" y="92" text-anchor="middle" font-weight="bold" fill="#16a34a">3</text><text x="235" y="140" text-anchor="middle">-∞</text><text x="285" y="92" text-anchor="middle">+∞</text><text x="430" y="140" text-anchor="middle" font-weight="bold" fill="#16a34a">3</text><path d="M108 93 L218 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M304 93 L412 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/></svg>`,
+            bbt_c7: `<svg viewBox="0 0 460 150" class="w-full max-w-md h-auto"><rect width="460" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="460" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="460" y2="72" stroke="#94a3b8"/><line x1="258" y1="36" x2="258" y2="150" stroke="#dc2626" stroke-width="1.5"/><line x1="262" y1="36" x2="262" y2="150" stroke="#dc2626" stroke-width="1.5"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="260" y="24" text-anchor="middle" font-weight="bold">2</text><text x="430" y="24" text-anchor="middle">+∞</text><text x="170" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="345" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="90" y="92" text-anchor="middle" font-weight="bold" fill="#16a34a">3</text><text x="235" y="140" text-anchor="middle">-∞</text><text x="285" y="92" text-anchor="middle">+∞</text><text x="430" y="140" text-anchor="middle" font-weight="bold" fill="#16a34a">3</text><path d="M108 93 L218 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M304 93 L412 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/></svg>`,
 
-            bbt_c11: `<svg viewBox="0 0 480 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="480" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="480" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="480" y2="72" stroke="#94a3b8"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold">0</text><text x="330" y="24" text-anchor="middle" font-weight="bold">2</text><text x="445" y="24" text-anchor="middle">+∞</text><text x="150" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="210" y="58" text-anchor="middle">0</text><text x="270" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="330" y="58" text-anchor="middle">0</text><text x="390" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="88" y="140" text-anchor="middle" font-size="12">-∞</text><text x="210" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">2</text><text x="330" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626">-2</text><text x="448" y="90" text-anchor="middle" font-size="12">+∞</text><path d="M105 132 L192 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M226 92 L312 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M348 132 L432 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
+            bbt_c11: `<svg viewBox="0 0 480 150" class="w-full max-w-md h-auto"><rect width="480" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="480" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="480" y2="72" stroke="#94a3b8"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold">0</text><text x="330" y="24" text-anchor="middle" font-weight="bold">2</text><text x="445" y="24" text-anchor="middle">+∞</text><text x="150" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="210" y="58" text-anchor="middle">0</text><text x="270" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="330" y="58" text-anchor="middle">0</text><text x="390" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="88" y="140" text-anchor="middle" font-size="12">-∞</text><text x="210" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">2</text><text x="330" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626">-2</text><text x="448" y="90" text-anchor="middle" font-size="12">+∞</text><path d="M105 132 L192 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M226 92 L312 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M348 132 L432 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
 
-            bbt_p2_c1: `<svg viewBox="0 0 540 150" class="w-full max-w-lg h-auto">${SVG_ARROW_DEFS}<rect width="540" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="540" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="540" y2="72" stroke="#94a3b8"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">f'(x)</text><text x="30" y="114" text-anchor="middle" font-weight="bold">f(x)</text><text x="88" y="24" text-anchor="middle">-∞</text><text x="190" y="24" text-anchor="middle" font-weight="bold">1</text><text x="300" y="24" text-anchor="middle" font-weight="bold">3</text><text x="410" y="24" text-anchor="middle" font-weight="bold">7</text><text x="512" y="24" text-anchor="middle">+∞</text><text x="140" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="190" y="58" text-anchor="middle">0</text><text x="245" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="300" y="58" text-anchor="middle">0</text><text x="355" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="410" y="58" text-anchor="middle">0</text><text x="460" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="88" y="90" text-anchor="middle" font-size="12">+∞</text><text x="190" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">-17</text><text x="300" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af" font-size="12">-13</text><text x="410" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">-18</text><text x="512" y="90" text-anchor="middle" font-size="12">+∞</text><path d="M102 92 L172 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M208 130 L282 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M318 92 L392 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M428 130 L495 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
+            bbt_p2_c1: `<svg viewBox="0 0 540 150" class="w-full max-w-lg h-auto"><rect width="540" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="540" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="540" y2="72" stroke="#94a3b8"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">f'(x)</text><text x="30" y="114" text-anchor="middle" font-weight="bold">f(x)</text><text x="88" y="24" text-anchor="middle">-∞</text><text x="190" y="24" text-anchor="middle" font-weight="bold">1</text><text x="300" y="24" text-anchor="middle" font-weight="bold">3</text><text x="410" y="24" text-anchor="middle" font-weight="bold">7</text><text x="512" y="24" text-anchor="middle">+∞</text><text x="140" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="190" y="58" text-anchor="middle">0</text><text x="245" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="300" y="58" text-anchor="middle">0</text><text x="355" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="410" y="58" text-anchor="middle">0</text><text x="460" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="88" y="90" text-anchor="middle" font-size="12">+∞</text><text x="190" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">-17</text><text x="300" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af" font-size="12">-13</text><text x="410" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">-18</text><text x="512" y="90" text-anchor="middle" font-size="12">+∞</text><path d="M102 92 L172 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M208 130 L282 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M318 92 L392 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M428 130 L495 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
 
-            bbt_p3_c1: `<svg viewBox="0 0 460 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="460" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="460" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="460" y2="72" stroke="#94a3b8"/><line x1="258" y1="36" x2="258" y2="150" stroke="#dc2626" stroke-width="1.5"/><line x1="262" y1="36" x2="262" y2="150" stroke="#dc2626" stroke-width="1.5"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="260" y="24" text-anchor="middle" font-weight="bold">0</text><text x="430" y="24" text-anchor="middle">+∞</text><text x="170" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="345" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="90" y="92" text-anchor="middle" font-weight="bold" fill="#1e40af">1</text><text x="235" y="140" text-anchor="middle">-∞</text><text x="285" y="140" text-anchor="middle">-1</text><text x="430" y="92" text-anchor="middle" font-weight="bold" fill="#1e40af">3</text><path d="M108 93 L218 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M302 132 L412 93" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
+            bbt_p3_c1: `<svg viewBox="0 0 460 150" class="w-full max-w-md h-auto"><rect width="460" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="460" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="460" y2="72" stroke="#94a3b8"/><line x1="258" y1="36" x2="258" y2="150" stroke="#dc2626" stroke-width="1.5"/><line x1="262" y1="36" x2="262" y2="150" stroke="#dc2626" stroke-width="1.5"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="260" y="24" text-anchor="middle" font-weight="bold">0</text><text x="430" y="24" text-anchor="middle">+∞</text><text x="170" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="345" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="90" y="92" text-anchor="middle" font-weight="bold" fill="#1e40af">1</text><text x="235" y="140" text-anchor="middle">-∞</text><text x="285" y="140" text-anchor="middle">-1</text><text x="430" y="92" text-anchor="middle" font-weight="bold" fill="#1e40af">3</text><path d="M108 93 L218 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M302 132 L412 93" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
 
-            bbt_rc2_c2: `<svg viewBox="0 0 480 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="480" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="480" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="480" y2="72" stroke="#94a3b8"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold">-1</text><text x="330" y="24" text-anchor="middle" font-weight="bold">1</text><text x="445" y="24" text-anchor="middle">+∞</text><text x="150" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="210" y="58" text-anchor="middle">0</text><text x="270" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="330" y="58" text-anchor="middle">0</text><text x="390" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="90" y="90" text-anchor="middle">+∞</text><text x="210" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626">-1</text><text x="330" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">3</text><text x="445" y="140" text-anchor="middle">-∞</text><path d="M108 92 L192 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M228 132 L312 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M348 92 L428 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/></svg>`,
+            bbt_rc2_c2: `<svg viewBox="0 0 480 150" class="w-full max-w-md h-auto"><rect width="480" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="480" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="480" y2="72" stroke="#94a3b8"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold">-1</text><text x="330" y="24" text-anchor="middle" font-weight="bold">1</text><text x="445" y="24" text-anchor="middle">+∞</text><text x="150" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="210" y="58" text-anchor="middle">0</text><text x="270" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="330" y="58" text-anchor="middle">0</text><text x="390" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="90" y="90" text-anchor="middle">+∞</text><text x="210" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626">-1</text><text x="330" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">3</text><text x="445" y="140" text-anchor="middle">-∞</text><path d="M108 92 L192 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M228 132 L312 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M348 92 L428 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/></svg>`,
 
-            bbt_rc2_p2c2: `<svg viewBox="0 0 500 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="500" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="500" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="500" y2="72" stroke="#94a3b8"/><line x1="208" y1="36" x2="208" y2="150" stroke="#dc2626" stroke-width="1.5"/><line x1="212" y1="36" x2="212" y2="150" stroke="#dc2626" stroke-width="1.5"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">f'(x)</text><text x="30" y="114" text-anchor="middle" font-weight="bold">f(x)</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold">-1</text><text x="350" y="24" text-anchor="middle" font-weight="bold">1</text><text x="465" y="24" text-anchor="middle">+∞</text><text x="150" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="280" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="350" y="58" text-anchor="middle">0</text><text x="410" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="85" y="140" text-anchor="middle">1</text><text x="190" y="92" text-anchor="middle">2</text><text x="235" y="140" text-anchor="middle">-∞</text><text x="350" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">3</text><text x="465" y="140" text-anchor="middle">-1</text><path d="M102 132 L175 94" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M252 132 L332 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M368 92 L448 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/></svg>`,
+            bbt_rc2_p2c2: `<svg viewBox="0 0 500 150" class="w-full max-w-md h-auto"><rect width="500" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="500" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="500" y2="72" stroke="#94a3b8"/><line x1="208" y1="36" x2="208" y2="150" stroke="#dc2626" stroke-width="1.5"/><line x1="212" y1="36" x2="212" y2="150" stroke="#dc2626" stroke-width="1.5"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">f'(x)</text><text x="30" y="114" text-anchor="middle" font-weight="bold">f(x)</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold">-1</text><text x="350" y="24" text-anchor="middle" font-weight="bold">1</text><text x="465" y="24" text-anchor="middle">+∞</text><text x="150" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="280" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="350" y="58" text-anchor="middle">0</text><text x="410" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="85" y="140" text-anchor="middle">1</text><text x="190" y="92" text-anchor="middle">2</text><text x="235" y="140" text-anchor="middle">-∞</text><text x="350" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">3</text><text x="465" y="140" text-anchor="middle">-1</text><path d="M102 132 L175 94" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M252 132 L332 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M368 92 L448 132" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/></svg>`,
 
-            bbt_rc2_p3c1: `<svg viewBox="0 0 500 150" class="w-full max-w-md h-auto">${SVG_ARROW_DEFS}<rect width="500" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="500" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="500" y2="72" stroke="#94a3b8"/><line x1="338" y1="36" x2="338" y2="150" stroke="#dc2626" stroke-width="1.5"/><line x1="342" y1="36" x2="342" y2="150" stroke="#dc2626" stroke-width="1.5"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold">-1</text><text x="340" y="24" text-anchor="middle" font-weight="bold">1</text><text x="465" y="24" text-anchor="middle">+∞</text><text x="150" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="210" y="58" text-anchor="middle">0</text><text x="275" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="405" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="85" y="92" text-anchor="middle" font-weight="bold" fill="#1e40af">1</text><text x="210" y="140" text-anchor="middle">-√2</text><text x="315" y="92" text-anchor="middle">+∞</text><text x="365" y="140" text-anchor="middle">-∞</text><text x="465" y="92" text-anchor="middle" font-weight="bold" fill="#1e40af">-1</text><path d="M102 92 L188 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M232 130 L302 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M382 130 L448 94" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
+            bbt_rc2_p3c1: `<svg viewBox="0 0 500 150" class="w-full max-w-md h-auto"><rect width="500" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="60" y1="0" x2="60" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="500" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="500" y2="72" stroke="#94a3b8"/><line x1="338" y1="36" x2="338" y2="150" stroke="#dc2626" stroke-width="1.5"/><line x1="342" y1="36" x2="342" y2="150" stroke="#dc2626" stroke-width="1.5"/><text x="30" y="24" text-anchor="middle" font-weight="bold">x</text><text x="30" y="58" text-anchor="middle" font-weight="bold">y'</text><text x="30" y="114" text-anchor="middle" font-weight="bold">y</text><text x="90" y="24" text-anchor="middle">-∞</text><text x="210" y="24" text-anchor="middle" font-weight="bold">-1</text><text x="340" y="24" text-anchor="middle" font-weight="bold">1</text><text x="465" y="24" text-anchor="middle">+∞</text><text x="150" y="58" text-anchor="middle" fill="#dc2626" font-weight="bold">-</text><text x="210" y="58" text-anchor="middle">0</text><text x="275" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="405" y="58" text-anchor="middle" fill="#16a34a" font-weight="bold">+</text><text x="85" y="92" text-anchor="middle" font-weight="bold" fill="#1e40af">1</text><text x="210" y="140" text-anchor="middle">-√2</text><text x="315" y="92" text-anchor="middle">+∞</text><text x="365" y="140" text-anchor="middle">-∞</text><text x="465" y="92" text-anchor="middle" font-weight="bold" fill="#1e40af">-1</text><path d="M102 92 L188 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M232 130 L302 92" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M382 130 L448 94" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
 
-            graph_parabola_c2: `<svg viewBox="0 0 260 180" class="w-48 h-auto">${SVG_ARROW_DEFS}<line x1="15" y1="110" x2="245" y2="110" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="110" y1="170" x2="110" y2="15" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="M 65 25 Q 145 195 225 25" fill="none" stroke="#4f46e5" stroke-width="2.5"/><circle cx="145" cy="110" r="3" fill="#dc2626"/><text x="145" y="128" font-size="12" text-anchor="middle" font-weight="bold">1</text><text x="98" y="126" font-size="12">O</text><text x="240" y="102" font-size="11" font-style="italic">x</text><text x="118" y="22" font-size="11" font-style="italic">y</text></svg>`,
+            graph_parabola_c2: `<svg viewBox="0 0 260 180" class="w-48 h-auto"><line x1="15" y1="110" x2="245" y2="110" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="110" y1="170" x2="110" y2="15" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="M 65 25 Q 145 195 225 25" fill="none" stroke="#4f46e5" stroke-width="2.5"/><circle cx="145" cy="110" r="3" fill="#dc2626"/><text x="145" y="128" font-size="12" text-anchor="middle" font-weight="bold">1</text><text x="98" y="126" font-size="12">O</text><text x="240" y="102" font-size="11" font-style="italic">x</text><text x="118" y="22" font-size="11" font-style="italic">y</text></svg>`,
 
-            graph_quartic_w: `<svg viewBox="0 0 260 180" class="w-52 h-auto">${SVG_ARROW_DEFS}<line x1="15" y1="135" x2="245" y2="135" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="130" y1="170" x2="130" y2="15" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="M 55 160 C 75 20, 100 20, 130 95 C 160 20, 185 20, 205 160" fill="none" stroke="#4f46e5" stroke-width="2.5"/><text x="90" y="152" font-size="11" text-anchor="middle">-1</text><text x="170" y="152" font-size="11" text-anchor="middle">1</text><text x="140" y="45" font-size="11">2</text><text x="140" y="102" font-size="11">1</text><text x="240" y="128" font-size="11" font-style="italic">x</text><text x="138" y="22" font-size="11" font-style="italic">y</text></svg>`,
+            graph_quartic_w: `<svg viewBox="0 0 260 180" class="w-52 h-auto"><line x1="15" y1="135" x2="245" y2="135" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="130" y1="170" x2="130" y2="15" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="M 55 160 C 75 20, 100 20, 130 95 C 160 20, 185 20, 205 160" fill="none" stroke="#4f46e5" stroke-width="2.5"/><text x="90" y="152" font-size="11" text-anchor="middle">-1</text><text x="170" y="152" font-size="11" text-anchor="middle">1</text><text x="140" y="45" font-size="11">2</text><text x="140" y="102" font-size="11">1</text><text x="240" y="128" font-size="11" font-style="italic">x</text><text x="138" y="22" font-size="11" font-style="italic">y</text></svg>`,
 
-            graph_rational_c8: `<svg viewBox="0 0 260 180" class="w-52 h-auto">${SVG_ARROW_DEFS}<line x1="10" y1="105" x2="250" y2="105" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="115" y1="170" x2="115" y2="10" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="145" y1="10" x2="145" y2="170" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3"/><line x1="10" y1="75" x2="250" y2="75" stroke="#eab308" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M 15 68 Q 125 65 138 15" fill="none" stroke="#2563eb" stroke-width="2.2"/><path d="M 152 165 Q 165 82 245 80" fill="none" stroke="#2563eb" stroke-width="2.2"/><text x="152" y="120" font-size="11" font-weight="bold" fill="#dc2626">1</text><text x="102" y="72" font-size="11" font-weight="bold" fill="#ca8a04">1</text><text x="242" y="98" font-size="11" font-style="italic">x</text><text x="122" y="20" font-size="11" font-style="italic">y</text></svg>`,
+            graph_rational_c8: `<svg viewBox="0 0 260 180" class="w-52 h-auto"><line x1="10" y1="105" x2="250" y2="105" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="115" y1="170" x2="115" y2="10" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="145" y1="10" x2="145" y2="170" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3"/><line x1="10" y1="75" x2="250" y2="75" stroke="#eab308" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M 15 68 Q 125 65 138 15" fill="none" stroke="#2563eb" stroke-width="2.2"/><path d="M 152 165 Q 165 82 245 80" fill="none" stroke="#2563eb" stroke-width="2.2"/><text x="152" y="120" font-size="11" font-weight="bold" fill="#dc2626">1</text><text x="102" y="72" font-size="11" font-weight="bold" fill="#ca8a04">1</text><text x="242" y="98" font-size="11" font-style="italic">x</text><text x="122" y="20" font-size="11" font-style="italic">y</text></svg>`,
 
-            graph_p2_c2: `<svg viewBox="0 0 280 200" class="w-56 h-auto">${SVG_ARROW_DEFS}<line x1="10" y1="100" x2="270" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="140" y1="190" x2="140" y2="10" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="4 2" marker-end="url(#arr-axis)"/><line x1="40" y1="185" x2="240" y2="5" stroke="#eab308" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M 152 15 C 162 65, 178 65, 235 18" fill="none" stroke="#2563eb" stroke-width="2.5"/><path d="M 45 182 C 102 125, 118 125, 128 185" fill="none" stroke="#2563eb" stroke-width="2.5"/><text x="176" y="75" font-size="11" font-weight="bold" fill="#1e40af">(2;5)</text><text x="82" y="132" font-size="11" font-weight="bold" fill="#1e40af">(-2;-3)</text><text x="260" y="92" font-size="11" font-style="italic">x</text><text x="148" y="20" font-size="11" font-style="italic">y</text></svg>`,
+            graph_p2_c2: `<svg viewBox="0 0 280 200" class="w-56 h-auto"><line x1="10" y1="100" x2="270" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="140" y1="190" x2="140" y2="10" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="4 2" marker-end="url(#arr-axis)"/><line x1="40" y1="185" x2="240" y2="5" stroke="#eab308" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M 152 15 C 162 65, 178 65, 235 18" fill="none" stroke="#2563eb" stroke-width="2.5"/><path d="M 45 182 C 102 125, 118 125, 128 185" fill="none" stroke="#2563eb" stroke-width="2.5"/><text x="176" y="75" font-size="11" font-weight="bold" fill="#1e40af">(2;5)</text><text x="82" y="132" font-size="11" font-weight="bold" fill="#1e40af">(-2;-3)</text><text x="260" y="92" font-size="11" font-style="italic">x</text><text x="148" y="20" font-size="11" font-style="italic">y</text></svg>`,
 
-            graph_cubic_c12: `<svg viewBox="0 0 260 185" class="w-52 h-auto">${SVG_ARROW_DEFS}<line x1="15" y1="105" x2="245" y2="105" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="130" y1="175" x2="130" y2="15" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="M 65 165 C 92 25, 112 25, 130 85 C 148 145, 168 145, 195 20" fill="none" stroke="#4f46e5" stroke-width="2.5"/><circle cx="130" cy="85" r="3" fill="#dc2626"/><text x="142" y="84" font-size="11" font-weight="bold">1</text><text x="98" y="120" font-size="11">-1</text><text x="162" y="120" font-size="11">1</text><text x="240" y="98" font-size="11" font-style="italic">x</text><text x="138" y="22" font-size="11" font-style="italic">y</text></svg>`,
+            graph_cubic_c12: `<svg viewBox="0 0 260 185" class="w-52 h-auto"><line x1="15" y1="105" x2="245" y2="105" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="130" y1="175" x2="130" y2="15" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="M 65 165 C 92 25, 112 25, 130 85 C 148 145, 168 145, 195 20" fill="none" stroke="#4f46e5" stroke-width="2.5"/><circle cx="130" cy="85" r="3" fill="#dc2626"/><text x="142" y="84" font-size="11" font-weight="bold">1</text><text x="98" y="120" font-size="11">-1</text><text x="162" y="120" font-size="11">1</text><text x="240" y="98" font-size="11" font-style="italic">x</text><text x="138" y="22" font-size="11" font-style="italic">y</text></svg>`,
 
-            graph_rc2_c5: `<svg viewBox="0 0 260 185" class="w-52 h-auto">${SVG_ARROW_DEFS}<line x1="15" y1="85" x2="245" y2="85" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="85" y1="175" x2="85" y2="15" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="M 55 110 Q 85 155 165 30 L 205 165" fill="none" stroke="#2563eb" stroke-width="2.5"/><line x1="85" y1="30" x2="165" y2="30" stroke="#94a3b8" stroke-dasharray="3 2"/><line x1="165" y1="30" x2="165" y2="85" stroke="#94a3b8" stroke-dasharray="3 2"/><line x1="85" y1="165" x2="205" y2="165" stroke="#94a3b8" stroke-dasharray="3 2"/><text x="55" y="78" font-size="11">-1</text><text x="165" y="100" font-size="11">2</text><text x="205" y="78" font-size="11">3</text><text x="72" y="34" font-size="11" font-weight="bold">2</text><text x="66" y="168" font-size="11" font-weight="bold">-3</text><text x="240" y="78" font-size="11" font-style="italic">x</text><text x="93" y="22" font-size="11" font-style="italic">y</text></svg>`,
+            graph_rc2_c5: `<svg viewBox="0 0 260 185" class="w-52 h-auto"><line x1="15" y1="85" x2="245" y2="85" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="85" y1="175" x2="85" y2="15" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="M 55 110 Q 85 155 165 30 L 205 165" fill="none" stroke="#2563eb" stroke-width="2.5"/><line x1="85" y1="30" x2="165" y2="30" stroke="#94a3b8" stroke-dasharray="3 2"/><line x1="165" y1="30" x2="165" y2="85" stroke="#94a3b8" stroke-dasharray="3 2"/><line x1="85" y1="165" x2="205" y2="165" stroke="#94a3b8" stroke-dasharray="3 2"/><text x="55" y="78" font-size="11">-1</text><text x="165" y="100" font-size="11">2</text><text x="205" y="78" font-size="11">3</text><text x="72" y="34" font-size="11" font-weight="bold">2</text><text x="66" y="168" font-size="11" font-weight="bold">-3</text><text x="240" y="78" font-size="11" font-style="italic">x</text><text x="93" y="22" font-size="11" font-style="italic">y</text></svg>`,
 
-            graph_rc2_c11: `<svg viewBox="0 0 260 180" class="w-52 h-auto">${SVG_ARROW_DEFS}<line x1="10" y1="115" x2="250" y2="115" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="135" y1="170" x2="135" y2="10" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="100" y1="10" x2="100" y2="170" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3"/><line x1="10" y1="65" x2="250" y2="65" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M 15 58 Q 85 52 93 15" fill="none" stroke="#2563eb" stroke-width="2.2"/><path d="M 107 165 Q 118 75 245 70" fill="none" stroke="#2563eb" stroke-width="2.2"/><text x="84" y="130" font-size="11" font-weight="bold" fill="#dc2626">-1</text><text x="142" y="62" font-size="11" font-weight="bold" fill="#16a34a">2</text><text x="242" y="108" font-size="11" font-style="italic">x</text><text x="143" y="20" font-size="11" font-style="italic">y</text></svg>`,
+            graph_rc2_c11: `<svg viewBox="0 0 260 180" class="w-52 h-auto"><line x1="10" y1="115" x2="250" y2="115" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="135" y1="170" x2="135" y2="10" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="100" y1="10" x2="100" y2="170" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3"/><line x1="10" y1="65" x2="250" y2="65" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M 15 58 Q 85 52 93 15" fill="none" stroke="#2563eb" stroke-width="2.2"/><path d="M 107 165 Q 118 75 245 70" fill="none" stroke="#2563eb" stroke-width="2.2"/><text x="84" y="130" font-size="11" font-weight="bold" fill="#dc2626">-1</text><text x="142" y="62" font-size="11" font-weight="bold" fill="#16a34a">2</text><text x="242" y="108" font-size="11" font-style="italic">x</text><text x="143" y="20" font-size="11" font-style="italic">y</text></svg>`,
 
             box_cut_c22: `<svg viewBox="0 0 320 140" class="w-60 h-auto"><rect x="20" y="15" width="110" height="110" fill="#f8fafc" stroke="#334155" stroke-width="2"/><rect x="20" y="15" width="24" height="24" fill="#cbd5e1" stroke="#475569" stroke-dasharray="3 2"/><rect x="106" y="15" width="24" height="24" fill="#cbd5e1" stroke="#475569" stroke-dasharray="3 2"/><rect x="20" y="101" width="24" height="24" fill="#cbd5e1" stroke="#475569" stroke-dasharray="3 2"/><rect x="106" y="101" width="24" height="24" fill="#cbd5e1" stroke="#475569" stroke-dasharray="3 2"/><text x="136" y="118" font-size="12" font-style="italic" font-weight="bold">x</text><polygon points="175,85 265,85 295,55 205,55" fill="#e2e8f0" stroke="#334155" stroke-width="1.8"/><polygon points="175,85 175,112 265,112 265,85" fill="#cbd5e1" stroke="#334155" stroke-width="1.8"/><polygon points="265,85 295,55 295,82 265,112" fill="#94a3b8" stroke="#334155" stroke-width="1.8"/></svg>`
         };
 
-        // Hàm tự động vẽ đồ thị SVG từ biểu thức hàm số bất kỳ (có mũi tên trục Oxy)
+        // Hàm tự động vẽ đồ thị SVG từ biểu thức hàm số bất kỳ (dùng mũi tên trục Oxy toàn cục)
         function generateFunctionSvg(exprStr) {
             try {
                 const clean = exprStr.replace(/\^/g, '**');
@@ -715,7 +753,7 @@
                         drawing = false;
                     }
                 }
-                return `<svg viewBox="0 0 ${w} ${h}" class="w-56 h-auto bg-white rounded-lg">${SVG_ARROW_DEFS}<line x1="10" y1="${cy}" x2="${w-10}" y2="${cy}" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="${cx}" y1="${h-10}" x2="${cx}" y2="10" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="${pathD}" fill="none" stroke="#4f46e5" stroke-width="2.5"/><text x="${cx+6}" y="${cy+14}" font-size="11" font-weight="bold">O</text><text x="${w-18}" y="${cy-6}" font-size="11" font-style="italic">x</text><text x="${cx+6}" y="20" font-size="11" font-style="italic">y</text></svg>`;
+                return `<svg viewBox="0 0 ${w} ${h}" class="w-56 h-auto bg-white rounded-lg"><line x1="10" y1="${cy}" x2="${w-10}" y2="${cy}" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-axis)"/><line x1="${cx}" y1="${h-10}" x2="${cx}" y2="10" stroke="#475569" stroke-width="1.5" marker-end="url(#arr-axis)"/><path d="${pathD}" fill="none" stroke="#4f46e5" stroke-width="2.5"/><text x="${cx+6}" y="${cy+14}" font-size="11" font-weight="bold">O</text><text x="${w-18}" y="${cy-6}" font-size="11" font-style="italic">x</text><text x="${cx+6}" y="20" font-size="11" font-style="italic">y</text></svg>`;
             } catch (e) {
                 return null;
             }
@@ -850,7 +888,7 @@
         let studentTfDraft = [true, false, true, false];
         let studentShortDraft = "";
 
-        // Trạng thái Kéo Co
+        // Trạng thái Kéo Co Kiến Thức (Đầy đủ tương tác 3 phần như Rung Chuông Vàng)
         let tugIndex = 0;
         let tugRevealed = false;
         let tugPosition = 0;
@@ -858,6 +896,9 @@
         let tugBlueScore = 0;
         let tugRedInput = "";
         let tugBlueInput = "";
+        let tugTfUserSelections = [null, null, null, null];
+        let tugTimer = null;
+        let tugTimeLeft = 30;
 
         // Trạng thái Phòng Luyện Thi
         let practiceAnswers = {};
@@ -872,7 +913,9 @@
                     handleIncomingStudentSubmission(data.payload);
                 } else if (data.type === 'STAGE_CHANGE') {
                     bellIndex = data.bellIndex;
+                    tugIndex = data.bellIndex;
                     renderBellStage();
+                    renderTugStage();
                     renderStudentPhoneUI();
                 }
             };
@@ -1042,7 +1085,7 @@
                     examQuestions = parsed;
                     syncAllViewsAfterLoad();
                     if (showNotification) {
-                        showToast(`✅ Đã nạp ${examQuestions.length} câu (đầy đủ mũi tên BBT & Đồ thị) từ de_thi_22_cau.txt!`);
+                        showToast(`✅ Đã nạp ${examQuestions.length} câu (đầy đủ mũi tên BBT & Đồ thị) cho cả Rung Chuông Vàng & Kéo Co!`);
                     }
                     return;
                 }
@@ -1052,14 +1095,14 @@
             examQuestions = getPreset1Questions();
             syncAllViewsAfterLoad();
             if (showNotification) {
-                showToast('📘 Đã nạp bộ Đề Chuẩn 22 Câu (Khởi Động - Tăng Tốc - Về Đích)!');
+                showToast('📘 Đã nạp bộ Đề Chuẩn 22 Câu (cập nhật đồng thời cho Rung Chuông Vàng & Kéo Co)!');
             }
         }
 
         function loadExamPreset2() {
             examQuestions = getPreset2Questions();
             syncAllViewsAfterLoad();
-            showToast('📙 Đã nạp Đề RUNG_CHUÔNG_2 (22 câu đầy đủ Bảng biến thiên có mũi tên & Đồ thị)!');
+            showToast('📙 Đã nạp Đề RUNG_CHUÔNG_2 cho cả Rung Chuông Vàng và Kéo Co Kiến Thức!');
         }
 
         function syncAllViewsAfterLoad() {
@@ -1067,6 +1110,7 @@
             tugIndex = 0;
             bellRevealed = false;
             tugRevealed = false;
+            tugTfUserSelections = [null, null, null, null];
             document.getElementById('nav-q-count').innerText = examQuestions.length;
             document.getElementById('bank-total-count').innerText = examQuestions.length;
             renderBellStage();
@@ -1350,8 +1394,7 @@
                             examQuestions = parsed;
                             syncAllViewsAfterLoad();
                             const imgCount = parsed.filter(q => q.visual).length;
-                            switchTab('bell');
-                            showToast(`🎉 Đã nạp ${parsed.length} câu hỏi và giữ nguyên ${imgCount} Bảng biến thiên / Đồ thị từ file Word!`);
+                            showToast(`🎉 Đã nạp ${parsed.length} câu hỏi (${imgCount} BBT/Đồ thị) cho cả Rung Chuông Vàng & Kéo Co!`);
                         } else {
                             showToast('⚠️ File Word không có từ khóa "Câu 1, Câu 2...". Vui lòng kiểm tra lại!');
                         }
@@ -1368,8 +1411,7 @@
                     if (parsed && parsed.length > 0) {
                         examQuestions = parsed;
                         syncAllViewsAfterLoad();
-                        switchTab('bell');
-                        showToast(`🎉 Đã nạp thành công ${parsed.length} câu hỏi từ file ${file.name}!`);
+                        showToast(`🎉 Đã nạp thành công ${parsed.length} câu hỏi cho cả Rung Chuông Vàng & Kéo Co!`);
                     } else {
                         showToast('⚠️ Không tìm thấy định dạng Câu 1, Câu 2... trong file!');
                     }
@@ -1389,8 +1431,7 @@
             if (parsed && parsed.length > 0) {
                 examQuestions = parsed;
                 syncAllViewsAfterLoad();
-                switchTab('bell');
-                showToast(`🎉 Đã phân tích và nạp ${parsed.length} câu hỏi lên sân khấu!`);
+                showToast(`🎉 Đã phân tích và nạp ${parsed.length} câu hỏi vào cả Rung Chuông Vàng & Kéo Co!`);
             } else {
                 showToast('⚠️ Không nhận diện được cấu trúc Câu 1, Câu 2... Hãy kiểm tra lại!');
             }
@@ -1433,7 +1474,7 @@
             showToast('📥 Đã tải xuống file de_thi_22_cau.txt (kèm mã BBT & Đồ thị) để đưa lên GitHub!');
         }
 
-        // Hỗ trợ dán ảnh trực tiếp bằng Ctrl + V lên câu hỏi đang chiếu
+        // Hỗ trợ dán ảnh trực tiếp bằng Ctrl + V lên câu hỏi đang chiếu (cả Rung Chuông Vàng và Kéo Co)
         window.addEventListener('paste', (e) => {
             if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
             const items = (e.clipboardData || e.originalEvent.clipboardData).items;
@@ -1447,7 +1488,7 @@
                         examQuestions[targetIdx].visual = `<img src="${ev.target.result}" class="max-h-60 mx-auto rounded-lg shadow-sm object-contain bg-white p-1" alt="Hình dán từ Clipboard"/>`;
                         renderBellStage();
                         renderTugStage();
-                        showToast(`🖼️ Đã dán trực tiếp Bảng biến thiên / Đồ thị vào Câu ${targetIdx + 1}!`);
+                        showToast(`🖼️ Đã dán trực tiếp Bảng biến thiên / Đồ thị vào Câu ${targetIdx + 1} (cả Rung Chuông & Kéo Co)!`);
                     };
                     reader.readAsDataURL(blob);
                 }
@@ -1544,7 +1585,7 @@
             }
 
             renderBellPlayers();
-            renderAllMath();
+            renderAllMath(document.getElementById('tab-bell'));
         }
 
         function renderBellPlayers() {
@@ -1692,7 +1733,7 @@
             showToast('🔄 Đã làm mới sàn đấu Rung Chuông Vàng!');
         }
 
-        // 9. BẢNG VINH DANH NHÀ VÔ ĐỊCH & PHÁO HOA RUNG CHUÔNG VÀNG
+        // 9. BẢNG VINH DANH NHÀ VÔ ĐỊCH & PHÁO HOA
         function openHonorModal() {
             const modal = document.getElementById('honor-modal');
             const listEl = document.getElementById('honor-winners-list');
@@ -1771,19 +1812,19 @@
             showToast('📊 Đã tải xuống file Excel (.csv) Bảng điểm Rung Chuông Vàng!');
         }
 
-        // 10. LOGIC KÉO CO KIẾN THỨC (HOẠT ĐỘNG 100% CẢ KHI BẬT TOÀN MÀN HÌNH)
+        // 10. LOGIC KÉO CO KIẾN THỨC (ĐỒNG BỘ 100% TÍNH NĂNG, MŨI TÊN BẢNG BIẾN THIÊN & TƯƠNG TÁC 3 PHẦN)
         function renderTugStage() {
             const q = examQuestions[tugIndex];
             if (!q) return;
 
             document.getElementById('tug-part-badge').innerText = q.part;
             document.getElementById('tug-q-counter').innerText = `${q.qNum} / ${examQuestions.length}`;
-            document.getElementById('tug-question-text').innerHTML = `<span class="text-rose-600 font-black mr-1.5">${q.qNum}.</span>${q.text}`;
+            document.getElementById('tug-question-text').innerHTML = `<span class="text-rose-600 dark:text-rose-400 font-black mr-1.5">${q.qNum}.</span>${q.text}`;
 
             const stepper = document.getElementById('tug-stepper');
             stepper.innerHTML = examQuestions.map((_, idx) => {
-                const active = idx === tugIndex ? 'bg-rose-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
-                return `<button type="button" onclick="jumpTugQuestion(${idx})" class="w-7 h-7 rounded-lg text-[11px] font-extrabold shrink-0 cursor-pointer ${active}">${idx + 1}</button>`;
+                const active = idx === tugIndex ? 'bg-rose-600 text-white ring-2 ring-rose-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
+                return `<button type="button" onclick="jumpTugQuestion(${idx})" class="w-7 h-7 rounded-lg text-[11px] font-extrabold shrink-0 transition cursor-pointer ${active}">${idx + 1}</button>`;
             }).join('');
 
             const vBox = document.getElementById('tug-visual-box');
@@ -1796,29 +1837,46 @@
             }
 
             const optArea = document.getElementById('tug-options-area');
+            const hintEl = document.getElementById('tug-question-type-hint');
+
             if (q.type === 'mcq') {
+                hintEl.innerText = 'PHẦN I - KHỞI ĐỘNG: Trắc nghiệm 4 lựa chọn (Bấm vào phương án hoặc chọn cộng điểm cho Đội Đỏ / Đội Xanh)';
                 optArea.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">` +
                     q.options.map((opt, idx) => {
                         const letter = String.fromCharCode(65 + idx);
-                        const highlight = tugRevealed && idx === q.correct
-                            ? 'bg-emerald-100 dark:bg-emerald-900/60 border-emerald-500 ring-2 ring-emerald-400'
-                            : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700';
-                        return `<div class="stage-option-item p-3.5 rounded-xl border-2 font-semibold text-sm flex items-center space-x-3 ${highlight}">
-                            <span class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 font-black text-xs flex items-center justify-center">${letter}</span>
+                        let style = 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-rose-400';
+                        if (tugRevealed) {
+                            style = idx === q.correct
+                                ? 'bg-emerald-100 dark:bg-emerald-900/60 border-emerald-500 text-emerald-900 dark:text-emerald-100 ring-2 ring-emerald-400'
+                                : 'bg-white/60 dark:bg-slate-800/40 opacity-60 border-slate-200';
+                        }
+                        return `<div onclick="selectTugMcqOption(${idx})" class="stage-option-item p-3.5 rounded-xl border-2 font-semibold text-sm flex items-center space-x-3 cursor-pointer transition ${style}">
+                            <span class="w-7 h-7 rounded-lg bg-rose-100 dark:bg-slate-700 text-rose-700 dark:text-rose-300 font-black text-xs flex items-center justify-center shrink-0">${letter}</span>
                             <div class="flex-1">${opt}</div>
                         </div>`;
                     }).join('') + `</div>`;
             } else if (q.type === 'tf') {
-                optArea.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">` +
-                    q.statements.map(st => {
-                        const badge = tugRevealed
-                            ? `<span class="px-2 py-0.5 rounded bg-${st.ans ? 'emerald' : 'rose'}-600 text-white text-xs font-black">${st.ans ? 'ĐÚNG' : 'SAI'}</span>`
-                            : '';
-                        return `<div class="p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2 text-sm font-semibold">
-                            <span>${st.label}</span>${badge}
+                hintEl.innerText = 'PHẦN II - TĂNG TỐC: Xét tính Đúng / Sai cho từng mệnh đề a), b), c), d)';
+                optArea.innerHTML = `<div class="space-y-2.5">` +
+                    q.statements.map((st, idx) => {
+                        const userVal = tugTfUserSelections[idx];
+                        let badgeHtml = '';
+                        if (tugRevealed) {
+                            badgeHtml = st.ans
+                                ? `<span class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-xs font-black">ĐÁP ÁN: ĐÚNG</span>`
+                                : `<span class="px-2.5 py-1 rounded-lg bg-rose-600 text-white text-xs font-black">ĐÁP ÁN: SAI</span>`;
+                        }
+                        return `<div class="p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2">
+                            <div class="text-sm font-semibold flex-1">${st.label}</div>
+                            <div class="flex items-center space-x-1.5">
+                                <button type="button" onclick="toggleTugTfChoice(${idx}, true)" class="px-3 py-1 rounded-lg text-xs font-extrabold border transition ${userVal === true ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 dark:bg-slate-700'}">Đúng</button>
+                                <button type="button" onclick="toggleTugTfChoice(${idx}, false)" class="px-3 py-1 rounded-lg text-xs font-extrabold border transition ${userVal === false ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 dark:bg-slate-700'}">Sai</button>
+                                ${badgeHtml}
+                            </div>
                         </div>`;
                     }).join('') + `</div>`;
             } else {
+                hintEl.innerText = 'PHẦN III - VỀ ĐÍCH: Trả lời ngắn (Nhập đáp số của Đội Đỏ & Đội Xanh để chấm tự động)';
                 optArea.innerHTML = `
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
                         <div class="space-y-1.5">
@@ -1828,6 +1886,11 @@
                         <div class="space-y-1.5">
                             <label class="text-xs font-black text-sky-600">🔵 Đáp số của ĐỘI XANH:</label>
                             <input type="text" value="${tugBlueInput}" oninput="tugBlueInput = this.value" placeholder="Nhập đáp số Đội Xanh..." class="w-full px-3 py-2 rounded-xl border-2 border-sky-300 bg-white dark:bg-slate-900 font-bold text-sm">
+                        </div>
+                        <div class="sm:col-span-2 flex justify-end">
+                            <button type="button" onclick="gradeTugShortAnswer()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow">
+                                ✅ Chấm Đáp Số 2 Đội & Kéo Dây Tự Động
+                            </button>
                         </div>
                         ${tugRevealed ? `
                             <div class="sm:col-span-2 p-3 rounded-xl bg-emerald-600 text-white font-black text-sm flex items-center justify-between">
@@ -1848,7 +1911,56 @@
             }
 
             updateTugRopeUI();
-            renderAllMath();
+            renderAllMath(document.getElementById('tab-tug'));
+        }
+
+        function selectTugMcqOption(idx) {
+            const q = examQuestions[tugIndex];
+            tugRevealed = true;
+            renderTugStage();
+            if (idx === q.correct) {
+                showToast('✅ Chính xác! Phương án đúng là ' + String.fromCharCode(65 + idx) + '. Hãy bấm cộng điểm kéo dây cho đội trả lời đúng!');
+            } else {
+                showToast('❌ Chưa chính xác! Đáp án đúng là ' + String.fromCharCode(65 + q.correct));
+            }
+        }
+
+        function toggleTugTfChoice(idx, val) {
+            tugTfUserSelections[idx] = val;
+            renderTugStage();
+        }
+
+        function gradeTugShortAnswer() {
+            const q = examQuestions[tugIndex];
+            if (!q || q.type !== 'short') return;
+            const cleanKey = String(q.shortAnswer || '').trim().replace(',', '.');
+            const redOk = String(tugRedInput || '').trim().replace(',', '.') === cleanKey;
+            const blueOk = String(tugBlueInput || '').trim().replace(',', '.') === cleanKey;
+
+            tugRevealed = true;
+            if (redOk) awardTugPoint('red');
+            if (blueOk) awardTugPoint('blue');
+            renderTugStage();
+
+            if (redOk && blueOk) showToast('🎉 Cả Đội Đỏ và Đội Xanh đều trả lời đúng đáp số ' + q.shortAnswer + '!');
+            else if (redOk) showToast('🔴 Đội Đỏ trả lời chính xác (' + q.shortAnswer + ') và kéo dây về phía mình!');
+            else if (blueOk) showToast('🔵 Đội Xanh trả lời chính xác (' + q.shortAnswer + ') và kéo dây về phía mình!');
+            else showToast('💡 Chưa đội nào nhập đúng đáp số (' + q.shortAnswer + ')!');
+        }
+
+        function startTugTimer() {
+            clearInterval(tugTimer);
+            tugTimeLeft = 30;
+            const timerEl = document.getElementById('tug-timer-text');
+            timerEl.innerText = tugTimeLeft + 's';
+            tugTimer = setInterval(() => {
+                tugTimeLeft--;
+                timerEl.innerText = tugTimeLeft + 's';
+                if (tugTimeLeft <= 0) {
+                    clearInterval(tugTimer);
+                    showToast('⏰ Hết giờ thảo luận Kéo Co! Mời 2 đội Đỏ & Xanh đưa ra đáp án!');
+                }
+            }, 1000);
         }
 
         function updateTugRopeUI() {
@@ -1888,33 +2000,41 @@
 
         function revealTugAnswer() {
             tugRevealed = true;
+            clearInterval(tugTimer);
+            renderTugStage();
+        }
+
+        function resetTugQuestionState() {
+            tugRevealed = false;
+            tugRedInput = "";
+            tugBlueInput = "";
+            tugTfUserSelections = [null, null, null, null];
+            clearInterval(tugTimer);
+            tugTimeLeft = 30;
+            const timerEl = document.getElementById('tug-timer-text');
+            if (timerEl) timerEl.innerText = '30s';
             renderTugStage();
         }
 
         function prevTugQuestion() {
             if (tugIndex > 0) {
                 tugIndex--;
-                tugRevealed = false;
-                tugRedInput = "";
-                tugBlueInput = "";
-                renderTugStage();
+                resetTugQuestionState();
             }
         }
 
         function nextTugQuestion() {
             if (tugIndex < examQuestions.length - 1) {
                 tugIndex++;
-                tugRevealed = false;
-                tugRedInput = "";
-                tugBlueInput = "";
-                renderTugStage();
+                resetTugQuestionState();
+            } else {
+                openHonorModal();
             }
         }
 
         function jumpTugQuestion(idx) {
             tugIndex = idx;
-            tugRevealed = false;
-            renderTugStage();
+            resetTugQuestionState();
         }
 
         function resetTugGame() {
@@ -1922,8 +2042,7 @@
             tugRedScore = 0;
             tugBlueScore = 0;
             tugIndex = 0;
-            tugRevealed = false;
-            renderTugStage();
+            resetTugQuestionState();
             showToast('🔄 Đã đặt lại trận đấu Kéo Co Kiến Thức!');
         }
 
@@ -1951,6 +2070,7 @@
             tugIndex = idx;
             switchTab('bell');
             renderBellStage();
+            renderTugStage();
         }
 
         function renderPracticeExam() {
@@ -2046,7 +2166,7 @@
             showToast('🔄 Đã làm mới bài luyện thi!');
         }
 
-        // 12. CHẾ ĐỘ TOÀN MÀN HÌNH & SỬA ĐỒ THỊ TRỰC TIẾP
+        // 12. CHẾ ĐỘ TOÀN MÀN HÌNH & SỬA ĐỒ THỊ TRỰC TIẾP CHO CẢ 2 SÂN KHẤU
         function toggleStageFullscreen(containerId) {
             const el = document.getElementById(containerId);
             if (!el) return;
@@ -2068,7 +2188,10 @@
 
         function adjustStageFontSize(delta) {
             stageFontScale = Math.max(0.85, Math.min(1.45, stageFontScale + delta * 0.1));
-            document.getElementById('bell-question-text').style.fontSize = `${stageFontScale * 1.12}rem`;
+            const bellQ = document.getElementById('bell-question-text');
+            const tugQ = document.getElementById('tug-question-text');
+            if (bellQ) bellQ.style.fontSize = `${stageFontScale * 1.12}rem`;
+            if (tugQ) tugQ.style.fontSize = `${stageFontScale * 1.12}rem`;
         }
 
         function openVisualModal(ctx) {
@@ -2093,7 +2216,7 @@
             renderBellStage();
             renderTugStage();
             closeVisualModal();
-            showToast('📈 Đã tự động vẽ đồ thị hàm số cho câu hỏi này!');
+            showToast('📈 Đã tự động vẽ đồ thị hàm số cho câu hỏi này trên cả Rung Chuông Vàng & Kéo Co!');
         }
 
         function uploadVisualImageFile(event) {
@@ -2106,7 +2229,7 @@
                 renderBellStage();
                 renderTugStage();
                 closeVisualModal();
-                showToast('🖼️ Đã chèn hình ảnh vào câu hỏi!');
+                showToast('🖼️ Đã chèn hình ảnh vào câu hỏi trên cả Rung Chuông Vàng & Kéo Co!');
             };
             reader.readAsDataURL(file);
         }
@@ -2120,7 +2243,7 @@
             showToast('🗑️ Đã xóa hình minh họa của câu hỏi này.');
         }
 
-        // 13. CHUYỂN TAB & TỰ ĐỘNG NHẬN DIỆN KHI HỌC SINH QUÉT QR (?mode=student)
+        // 13. CHUYỂN TAB & ĐỒNG BỘ HIỂN THỊ KÉO CO / RUNG CHUÔNG VÀNG
         function switchTab(tabName) {
             ['bell', 'tug', 'student', 'bank', 'practice'].forEach(t => {
                 const sec = document.getElementById(`tab-${t}`);
@@ -2134,7 +2257,11 @@
                     }
                 }
             });
-            if (tabName === 'student') {
+            if (tabName === 'tug') {
+                renderTugStage();
+            } else if (tabName === 'bell') {
+                renderBellStage();
+            } else if (tabName === 'student') {
                 renderStudentPhoneUI();
             }
             renderAllMath();
