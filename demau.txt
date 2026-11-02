@@ -1,0 +1,76 @@
+Câu 1 [Phần 1]: Cho hàm số $y = \frac{x^2 - x + 1}{x - 1}$. Tiệm cận xiên của đồ thị hàm số là:
+*A. $y = x$
+B. $y = x - 1$
+C. $y = x + 1$
+D. $y = 2x$
+Giải thích: Chia đa thức được $y = x + \frac{1}{x-1} \implies$ Tiệm cận xiên là $y = x$.
+
+Câu 2 [Phần 1]: Họ nguyên hàm của hàm số $f(x) = 3x^2 + \cos x$ là:
+*A. $x^3 + \sin x + C$
+B. $x^3 - \sin x + C$
+C. $6x + \sin x + C$
+D. $3x^3 + \sin x + C$
+Giải thích: Áp dụng bảng nguyên hàm cơ bản $\int (3x^2 + \cos x)dx = x^3 + \sin x + C$.
+
+Câu 3 [Phần 1]: Trong không gian $Oxyz$, mặt phẳng $(P): 2x - y + 3z - 5 = 0$ có một vectơ pháp tuyến là:
+*A. $\vec{n} = (2; -1; 3)$
+B. $\vec{n} = (2; 1; 3)$
+C. $\vec{n} = (-1; 3; -5)$
+D. $\vec{n} = (2; -1; -5)$
+Giải thích: Vectơ pháp tuyến đọc từ hệ số của $x, y, z$ là $(2; -1; 3)$.
+
+Câu 4 [Phần 1]: Cho cấp số cộng $(u_n)$ có $u_1 = 3$ và công sai $d = 4$. Số hạng $u_5$ bằng:
+*A. $19$
+B. $15$
+C. $23$
+D. $17$
+Giải thích: $u_5 = u_1 + 4d = 3 + 4 \times 4 = 19$.
+
+Câu 5 [Phần 1]: Nghiệm của phương trình $\log_2(x - 1) = 3$ là:
+*A. $x = 9$
+B. $x = 7$
+C. $x = 8$
+D. $x = 10$
+Giải thích: $x - 1 = 2^3 = 8 \iff x = 9$.
+
+Câu 6 [Phần 1]: Cho hai biến cố $A, B$ có $P(A) = 0{,}4$ và $P(B|A) = 0{,}75$. Xác suất $P(AB)$ bằng:
+*A. $0{,}30$
+B. $0{,}45$
+C. $0{,}15$
+D. $0{,}75$
+Giải thích: Công thức nhân xác suất $P(AB) = P(A)\cdot P(B|A) = 0{,}4 \times 0{,}75 = 0{,}30$.
+
+Câu 7 [Phần 2]: Cho hàm số $f(x) = x^3 - 3x + 2$. Xét 4 mệnh đề: (a) $f'(x)=3x^2-3$; (b) Điểm cực đại $x=-1$; (c) $f(1)=0$; (d) Đồng biến trên $(-1;1)$. Tổ hợp Đúng/Sai là:
+*A. a-Đ, b-Đ, c-Đ, d-S
+B. a-Đ, b-S, c-Đ, d-Đ
+C. a-Đ, b-Đ, c-S, d-S
+D. a-S, b-Đ, c-Đ, d-S
+Giải thích: Trên khoảng $(-1;1)$ đạo hàm $f'(x) < 0$ nên hàm số nghịch biến, mệnh đề (d) Sai.
+
+Câu 8 [Phần 2]: Trong không gian $Oxyz$, cho $M(1;-2;3)$ và $(P): 2x - y + 2z - 9 = 0$. Xét 4 mệnh đề: (a) $\vec{n}=(2;-1;2)$; (b) $A(2;-1;2)\in(P)$; (c) $d(M,(P)) = 1/3$; (d) $(P)$ đi qua gốc $O$. Tổ hợp Đúng/Sai là:
+*A. a-Đ, b-Đ, c-Đ, d-S
+B. a-Đ, b-Đ, c-S, d-S
+C. a-Đ, b-S, c-Đ, d-Đ
+D. a-S, b-Đ, c-Đ, d-S
+Giải thích: Thay $O(0;0;0)$ vào $(P)$ được $-9 \neq 0$ nên mệnh đề (d) Sai.
+
+Câu 9 [Phần 3]: Tính tích phân $I = \int_{0}^{2} (3x^2 - 2x + 1)dx$. Đáp số đúng là:
+*A. 6
+B. 4
+C. 8
+D. 5
+Giải thích: $I = (x^3 - x^2 + x)\Big|_0^2 = 8 - 4 + 2 = 6$.
+
+Câu 10 [Phần 3]: Giá trị cực tiểu của hàm số $y = \frac{x^2 - 2x + 5}{x - 1}$ trên khoảng $(1;+\infty)$ bằng:
+*A. 4
+B. 2
+C. 5
+D. 3
+Giải thích: Với $x > 1$, ta có $y = (x - 1) + \frac{4}{x - 1} \ge 2\sqrt{4} = 4$.
+
+Câu 11 [Phần 3]: Nhà máy có PX1 (chiếm 60%, tỷ lệ chính phẩm 95%) và PX2 (chiếm 40%, tỷ lệ chính phẩm 90%). Chọn ngẫu nhiên 1 chính phẩm, xác suất nó do PX1 sản xuất là bao nhiêu % (làm tròn đến hàng đơn vị)?
+*A. 61
+B. 57
+C. 65
+D. 60
+Giải thích: Áp dụng công thức Bayes: $P = \frac{0{,}6 \times 0{,}95}{0{,}6 \times 0{,}95 + 0{,}4 \times 0{,}90} \approx 61\%$.
