@@ -83,11 +83,30 @@
             50% { transform: scale(1.04); }
         }
         .animate-trophy { animation: pulseGlow 2s infinite ease-in-out; }
+
+        /* Hiệu ứng nhịp kéo co tự nhiên cho 4 học sinh mỗi đội */
+        @keyframes tugPullRhythm {
+            0%, 100% { transform: translateX(0px) translateY(0px); }
+            50% { transform: translateX(-4px) translateY(1.5px); }
+        }
+        @keyframes tugPullRhythmRight {
+            0%, 100% { transform: translateX(0px) translateY(0px); }
+            50% { transform: translateX(4px) translateY(1.5px); }
+        }
+        .student-pull-left {
+            animation: tugPullRhythm 1.15s infinite ease-in-out;
+        }
+        .student-pull-right {
+            animation: tugPullRhythmRight 1.15s infinite ease-in-out;
+        }
+        #tug-svg-teams-group {
+            transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
     </style>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-200">
 
-    <!-- BỘ ĐỊNH NGHĨA ĐẦU MŨI TÊN SVG TOÀN CỤC (ĐẢM BẢO HIỂN THỊ 100% Ở CẢ RUNG CHUÔNG VÀNG, KÉO CO & LUYỆN THI) -->
+    <!-- BỘ ĐỊNH NGHĨA ĐẦU MŨI TÊN & NHÂN VẬT HỌC SINH THPT KÉO CO SVG TOÀN CỤC -->
     <svg width="0" height="0" class="fixed pointer-events-none opacity-0" aria-hidden="true">
         <defs>
             <marker id="arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
@@ -99,6 +118,227 @@
             <marker id="arr-axis" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
                 <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#334155"/>
             </marker>
+
+            <!-- MẪU HỌC SINH NAM THPT ĐỘI ĐỎ (Áo thể dục đỏ 2 sọc trắng, cổ áo thể thao THPT, không đeo khăn quàng) -->
+            <g id="kid-boy-red">
+                <!-- Bóng dưới chân -->
+                <ellipse cx="4" cy="212" rx="34" ry="6" fill="#94a3b8" opacity="0.35"/>
+                <!-- Chân sau & Giày sau -->
+                <path d="M -18 148 L -6 178 L 8 204" stroke="#b91c1c" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -18 148 L -6 178 L 8 204" stroke="#2d1a12" stroke-width="19.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.15"/>
+                <!-- Giày thể thao sau -->
+                <g transform="translate(8, 204)">
+                    <path d="M -12 0 L 16 0 C 20 0 22 6 16 8 L -12 8 C -15 8 -15 2 -12 0 Z" fill="#475569" stroke="#2d1a12" stroke-width="2.2"/>
+                    <path d="M 8 0 C 15 0 20 3 19 7 L 8 7 Z" fill="#ffffff" stroke="#2d1a12" stroke-width="1.5"/>
+                    <line x1="-13" y1="6.5" x2="18" y2="6.5" stroke="#ffffff" stroke-width="2.5"/>
+                </g>
+                <!-- Chân trước & Quần thể dục 2 sọc trắng -->
+                <path d="M -6 146 L 14 176 L 32 204" stroke="#2d1a12" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -6 146 L 14 176 L 32 204" stroke="#dc2626" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -5 148 L 15 176 L 31 201" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none"/>
+                <path d="M -9 150 L 11 178 L 27 202" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none"/>
+                <!-- Giày thể thao trước -->
+                <g transform="translate(32, 204)">
+                    <path d="M -12 0 L 17 0 C 21 0 23 6 17 8 L -12 8 C -15 8 -15 2 -12 0 Z" fill="#334155" stroke="#2d1a12" stroke-width="2.2"/>
+                    <path d="M 9 0 C 16 0 21 3 20 7 L 9 7 Z" fill="#ffffff" stroke="#2d1a12" stroke-width="1.5"/>
+                    <line x1="-13" y1="6.5" x2="19" y2="6.5" stroke="#ffffff" stroke-width="2.5"/>
+                </g>
+                <!-- Tay sau nắm dây -->
+                <path d="M 2 98 L 28 112 L 45 123" stroke="#2d1a12" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M 2 98 L 28 112 L 45 123" stroke="#b91c1c" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <!-- Thân áo khoác thể dục THPT -->
+                <path d="M -22 92 C -14 86 8 88 12 96 L 8 148 C -2 152 -20 150 -24 142 Z" fill="#dc2626" stroke="#2d1a12" stroke-width="2.4" stroke-linejoin="round"/>
+                <!-- Đường khóa kéo & túi áo -->
+                <line x1="3" y1="95" x2="0" y2="147" stroke="#2d1a12" stroke-width="1.6"/>
+                <path d="M -12 128 L -4 136" stroke="#2d1a12" stroke-width="1.8" stroke-linecap="round"/>
+                <!-- Cổ áo thể thao trắng phối đỏ của học sinh THPT -->
+                <path d="M -16 88 C -8 84 4 85 10 91 L 3 98 L -14 95 Z" fill="#ffffff" stroke="#2d1a12" stroke-width="2" stroke-linejoin="round"/>
+                <!-- Tay trước có 2 sọc trắng -->
+                <path d="M -10 100 L 18 116 L 36 125" stroke="#2d1a12" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -10 100 L 18 116 L 36 125" stroke="#ef4444" stroke-width="12.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -9 98 L 19 114 L 34 122" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                <path d="M -11 102 L 17 118 L 32 126" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                <!-- Hai bàn tay nắm dây thừng (tại y=125) -->
+                <circle cx="47" cy="124" r="6" fill="#fed7aa" stroke="#2d1a12" stroke-width="2"/>
+                <circle cx="38" cy="126" r="6.5" fill="#fed7aa" stroke="#2d1a12" stroke-width="2"/>
+                <!-- Đầu & Khuôn mặt học sinh nam -->
+                <g transform="translate(-8, 60)">
+                    <circle cx="0" cy="0" r="24" fill="#ffedd5" stroke="#2d1a12" stroke-width="2.4"/>
+                    <!-- Tai -->
+                    <circle cx="-18" cy="4" r="6" fill="#ffedd5" stroke="#2d1a12" stroke-width="2.2"/>
+                    <path d="M -19 2 Q -16 4 -18 6" stroke="#2d1a12" stroke-width="1.5" fill="none"/>
+                    <!-- Má hồng -->
+                    <ellipse cx="4" cy="8" rx="4.8" ry="2.8" fill="#fb7185" opacity="0.65"/>
+                    <ellipse cx="20" cy="6" rx="3.5" ry="2.2" fill="#fb7185" opacity="0.55"/>
+                    <!-- Mắt, lông mày & miệng cười -->
+                    <ellipse cx="8" cy="-1" rx="2.3" ry="3.2" fill="#2d1a12"/>
+                    <ellipse cx="19" cy="-1" rx="2.1" ry="3" fill="#2d1a12"/>
+                    <path d="M 4 -8 Q 8 -11 11 -8" stroke="#2d1a12" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M 16 -8 Q 19 -11 22 -8" stroke="#2d1a12" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M 14 2 Q 16 4 14 5" stroke="#2d1a12" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+                    <path d="M 8 11 Q 13 15 17 11" stroke="#2d1a12" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <!-- Mái tóc nâu học sinh nam -->
+                    <path d="M -23 6 C -28 -12 -18 -28 2 -28 C 18 -28 28 -18 25 -4 C 21 -8 16 -6 13 -11 C 9 -5 2 -6 -3 -10 C -7 -4 -12 -3 -15 1 C -15 -4 -21 -2 -23 6 Z" fill="#432818" stroke="#2d1a12" stroke-width="2.3" stroke-linejoin="round"/>
+                </g>
+            </g>
+
+            <!-- MẪU HỌC SINH NỮ THPT ĐỘI ĐỎ (Tóc đuôi gà, cổ áo thể thao trắng, áo đỏ 2 sọc trắng, chân váy xếp ly, giày hồng) -->
+            <g id="kid-girl-red">
+                <ellipse cx="4" cy="212" rx="32" ry="6" fill="#94a3b8" opacity="0.35"/>
+                <!-- Chân sau & Giày hồng sau -->
+                <path d="M -14 152 L -2 180 L 10 204" stroke="#2d1a12" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -14 152 L -2 180 L 10 204" stroke="#fed7aa" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <g transform="translate(10, 204)">
+                    <path d="M -11 0 L 15 0 C 19 0 20 6 15 8 L -11 8 C -14 8 -14 2 -11 0 Z" fill="#f472b6" stroke="#2d1a12" stroke-width="2.2"/>
+                    <path d="M 8 0 C 14 0 18 3 17 7 L 8 7 Z" fill="#ffffff" stroke="#2d1a12" stroke-width="1.4"/>
+                    <line x1="-12" y1="6.5" x2="16" y2="6.5" stroke="#ffffff" stroke-width="2.3"/>
+                </g>
+                <!-- Chân trước & Giày hồng trước -->
+                <path d="M -2 150 L 16 178 L 32 204" stroke="#2d1a12" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -2 150 L 16 178 L 32 204" stroke="#ffedd5" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <g transform="translate(32, 204)">
+                    <path d="M -11 0 L 16 0 C 20 0 21 6 16 8 L -11 8 C -14 8 -14 2 -11 0 Z" fill="#ec4899" stroke="#2d1a12" stroke-width="2.2"/>
+                    <path d="M 8 0 C 15 0 19 3 18 7 L 8 7 Z" fill="#ffffff" stroke="#2d1a12" stroke-width="1.4"/>
+                    <line x1="-12" y1="6.5" x2="17" y2="6.5" stroke="#ffffff" stroke-width="2.3"/>
+                </g>
+                <!-- Chân váy xếp ly đỏ -->
+                <path d="M -24 140 L 10 140 L 20 168 L -28 168 Z" fill="#dc2626" stroke="#2d1a12" stroke-width="2.3" stroke-linejoin="round"/>
+                <line x1="-12" y1="142" x2="-15" y2="167" stroke="#2d1a12" stroke-width="1.6"/>
+                <line x1="-1" y1="142" x2="1" y2="167" stroke="#2d1a12" stroke-width="1.6"/>
+                <line x1="7" y1="142" x2="11" y2="167" stroke="#2d1a12" stroke-width="1.6"/>
+                <!-- Tay sau -->
+                <path d="M 2 98 L 28 112 L 45 123" stroke="#2d1a12" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M 2 98 L 28 112 L 45 123" stroke="#b91c1c" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <!-- Thân áo -->
+                <path d="M -21 92 C -13 86 7 88 11 96 L 9 143 L -23 143 Z" fill="#dc2626" stroke="#2d1a12" stroke-width="2.3" stroke-linejoin="round"/>
+                <line x1="2" y1="95" x2="0" y2="142" stroke="#2d1a12" stroke-width="1.5"/>
+                <!-- Cổ áo thể thao trắng THPT -->
+                <path d="M -15 88 C -7 84 4 85 9 91 L 2 98 L -13 95 Z" fill="#ffffff" stroke="#2d1a12" stroke-width="2" stroke-linejoin="round"/>
+                <!-- Tay trước 2 sọc trắng -->
+                <path d="M -9 100 L 18 116 L 36 125" stroke="#2d1a12" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -9 100 L 18 116 L 36 125" stroke="#ef4444" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -8 98 L 19 114 L 34 122" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" fill="none"/>
+                <path d="M -10 102 L 17 118 L 32 126" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" fill="none"/>
+                <!-- Hai bàn tay nắm dây -->
+                <circle cx="47" cy="124" r="5.8" fill="#fed7aa" stroke="#2d1a12" stroke-width="2"/>
+                <circle cx="38" cy="126" r="6.2" fill="#fed7aa" stroke="#2d1a12" stroke-width="2"/>
+                <!-- Đầu & Tóc đuôi gà học sinh nữ -->
+                <g transform="translate(-8, 60)">
+                    <!-- Đuôi tóc buộc phía sau -->
+                    <path d="M -20 -6 C -34 -12 -42 2 -34 18 C -28 12 -24 4 -20 -6 Z" fill="#432818" stroke="#2d1a12" stroke-width="2.3" stroke-linejoin="round"/>
+                    <circle cx="-21" cy="-5" r="4" fill="#ec4899" stroke="#2d1a12" stroke-width="1.6"/>
+                    <circle cx="0" cy="0" r="23.5" fill="#ffedd5" stroke="#2d1a12" stroke-width="2.4"/>
+                    <circle cx="-17" cy="4" r="5.8" fill="#ffedd5" stroke="#2d1a12" stroke-width="2.1"/>
+                    <!-- Má hồng -->
+                    <ellipse cx="4" cy="8" rx="4.8" ry="2.8" fill="#fb7185" opacity="0.65"/>
+                    <ellipse cx="19" cy="6" rx="3.5" ry="2.2" fill="#fb7185" opacity="0.55"/>
+                    <!-- Mắt & Nụ cười -->
+                    <ellipse cx="8" cy="-1" rx="2.2" ry="3.2" fill="#2d1a12"/>
+                    <ellipse cx="19" cy="-1" rx="2" ry="3" fill="#2d1a12"/>
+                    <path d="M 4 -8 Q 8 -11 11 -8" stroke="#2d1a12" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+                    <path d="M 16 -8 Q 19 -11 22 -8" stroke="#2d1a12" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+                    <path d="M 8 11 Q 13 15 17 11" stroke="#2d1a12" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <!-- Tóc mái nữ -->
+                    <path d="M -22 5 C -26 -14 -15 -27 2 -27 C 17 -27 26 -16 24 -3 C 19 -8 14 -6 10 -12 C 6 -5 -2 -5 -7 -11 C -11 -4 -17 -2 -22 5 Z" fill="#432818" stroke="#2d1a12" stroke-width="2.3" stroke-linejoin="round"/>
+                </g>
+            </g>
+
+            <!-- MẪU HỌC SINH NAM THPT ĐỘI XANH (Áo thể dục xanh dương 2 sọc trắng, cổ áo thể thao trắng, không đeo khăn quàng) -->
+            <g id="kid-boy-blue">
+                <ellipse cx="4" cy="212" rx="34" ry="6" fill="#94a3b8" opacity="0.35"/>
+                <path d="M -18 148 L -6 178 L 8 204" stroke="#1d4ed8" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <g transform="translate(8, 204)">
+                    <path d="M -12 0 L 16 0 C 20 0 22 6 16 8 L -12 8 C -15 8 -15 2 -12 0 Z" fill="#475569" stroke="#2d1a12" stroke-width="2.2"/>
+                    <path d="M 8 0 C 15 0 20 3 19 7 L 8 7 Z" fill="#ffffff" stroke="#2d1a12" stroke-width="1.5"/>
+                    <line x1="-13" y1="6.5" x2="18" y2="6.5" stroke="#ffffff" stroke-width="2.5"/>
+                </g>
+                <path d="M -6 146 L 14 176 L 32 204" stroke="#2d1a12" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -6 146 L 14 176 L 32 204" stroke="#2563eb" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -5 148 L 15 176 L 31 201" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none"/>
+                <path d="M -9 150 L 11 178 L 27 202" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none"/>
+                <g transform="translate(32, 204)">
+                    <path d="M -12 0 L 17 0 C 21 0 23 6 17 8 L -12 8 C -15 8 -15 2 -12 0 Z" fill="#334155" stroke="#2d1a12" stroke-width="2.2"/>
+                    <path d="M 9 0 C 16 0 21 3 20 7 L 9 7 Z" fill="#ffffff" stroke="#2d1a12" stroke-width="1.5"/>
+                    <line x1="-13" y1="6.5" x2="19" y2="6.5" stroke="#ffffff" stroke-width="2.5"/>
+                </g>
+                <path d="M 2 98 L 28 112 L 45 123" stroke="#2d1a12" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M 2 98 L 28 112 L 45 123" stroke="#1d4ed8" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -22 92 C -14 86 8 88 12 96 L 8 148 C -2 152 -20 150 -24 142 Z" fill="#2563eb" stroke="#2d1a12" stroke-width="2.4" stroke-linejoin="round"/>
+                <line x1="3" y1="95" x2="0" y2="147" stroke="#2d1a12" stroke-width="1.6"/>
+                <path d="M -12 128 L -4 136" stroke="#2d1a12" stroke-width="1.8" stroke-linecap="round"/>
+                <!-- Cổ áo thể thao trắng THPT -->
+                <path d="M -16 88 C -8 84 4 85 10 91 L 3 98 L -14 95 Z" fill="#ffffff" stroke="#2d1a12" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M -10 100 L 18 116 L 36 125" stroke="#2d1a12" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -10 100 L 18 116 L 36 125" stroke="#3b82f6" stroke-width="12.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -9 98 L 19 114 L 34 122" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                <path d="M -11 102 L 17 118 L 32 126" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                <circle cx="47" cy="124" r="6" fill="#fed7aa" stroke="#2d1a12" stroke-width="2"/>
+                <circle cx="38" cy="126" r="6.5" fill="#fed7aa" stroke="#2d1a12" stroke-width="2"/>
+                <g transform="translate(-8, 60)">
+                    <circle cx="0" cy="0" r="24" fill="#ffedd5" stroke="#2d1a12" stroke-width="2.4"/>
+                    <circle cx="-18" cy="4" r="6" fill="#ffedd5" stroke="#2d1a12" stroke-width="2.2"/>
+                    <path d="M -19 2 Q -16 4 -18 6" stroke="#2d1a12" stroke-width="1.5" fill="none"/>
+                    <ellipse cx="4" cy="8" rx="4.8" ry="2.8" fill="#fb7185" opacity="0.65"/>
+                    <ellipse cx="20" cy="6" rx="3.5" ry="2.2" fill="#fb7185" opacity="0.55"/>
+                    <ellipse cx="8" cy="-1" rx="2.3" ry="3.2" fill="#2d1a12"/>
+                    <ellipse cx="19" cy="-1" rx="2.1" ry="3" fill="#2d1a12"/>
+                    <path d="M 4 -8 Q 8 -11 11 -8" stroke="#2d1a12" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M 16 -8 Q 19 -11 22 -8" stroke="#2d1a12" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M 14 2 Q 16 4 14 5" stroke="#2d1a12" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+                    <path d="M 8 11 Q 13 15 17 11" stroke="#2d1a12" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M -23 6 C -28 -12 -18 -28 2 -28 C 18 -28 28 -18 25 -4 C 21 -8 16 -6 13 -11 C 9 -5 2 -6 -3 -10 C -7 -4 -12 -3 -15 1 C -15 -4 -21 -2 -23 6 Z" fill="#432818" stroke="#2d1a12" stroke-width="2.3" stroke-linejoin="round"/>
+                </g>
+            </g>
+
+            <!-- MẪU HỌC SINH NỮ THPT ĐỘI XANH (Áo xanh dương 2 sọc trắng, chân váy xếp ly xanh, cổ áo thể thao trắng, giày hồng) -->
+            <g id="kid-girl-blue">
+                <ellipse cx="4" cy="212" rx="32" ry="6" fill="#94a3b8" opacity="0.35"/>
+                <path d="M -14 152 L -2 180 L 10 204" stroke="#2d1a12" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -14 152 L -2 180 L 10 204" stroke="#fed7aa" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <g transform="translate(10, 204)">
+                    <path d="M -11 0 L 15 0 C 19 0 20 6 15 8 L -11 8 C -14 8 -14 2 -11 0 Z" fill="#f472b6" stroke="#2d1a12" stroke-width="2.2"/>
+                    <path d="M 8 0 C 14 0 18 3 17 7 L 8 7 Z" fill="#ffffff" stroke="#2d1a12" stroke-width="1.4"/>
+                    <line x1="-12" y1="6.5" x2="16" y2="6.5" stroke="#ffffff" stroke-width="2.3"/>
+                </g>
+                <path d="M -2 150 L 16 178 L 32 204" stroke="#2d1a12" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -2 150 L 16 178 L 32 204" stroke="#ffedd5" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <g transform="translate(32, 204)">
+                    <path d="M -11 0 L 16 0 C 20 0 21 6 16 8 L -11 8 C -14 8 -14 2 -11 0 Z" fill="#ec4899" stroke="#2d1a12" stroke-width="2.2"/>
+                    <path d="M 8 0 C 15 0 19 3 18 7 L 8 7 Z" fill="#ffffff" stroke="#2d1a12" stroke-width="1.4"/>
+                    <line x1="-12" y1="6.5" x2="17" y2="6.5" stroke="#ffffff" stroke-width="2.3"/>
+                </g>
+                <!-- Chân váy xếp ly xanh -->
+                <path d="M -24 140 L 10 140 L 20 168 L -28 168 Z" fill="#2563eb" stroke="#2d1a12" stroke-width="2.3" stroke-linejoin="round"/>
+                <line x1="-12" y1="142" x2="-15" y2="167" stroke="#2d1a12" stroke-width="1.6"/>
+                <line x1="-1" y1="142" x2="1" y2="167" stroke="#2d1a12" stroke-width="1.6"/>
+                <line x1="7" y1="142" x2="11" y2="167" stroke="#2d1a12" stroke-width="1.6"/>
+                <path d="M 2 98 L 28 112 L 45 123" stroke="#2d1a12" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M 2 98 L 28 112 L 45 123" stroke="#1d4ed8" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -21 92 C -13 86 7 88 11 96 L 9 143 L -23 143 Z" fill="#2563eb" stroke="#2d1a12" stroke-width="2.3" stroke-linejoin="round"/>
+                <line x1="2" y1="95" x2="0" y2="142" stroke="#2d1a12" stroke-width="1.5"/>
+                <!-- Cổ áo thể thao trắng THPT -->
+                <path d="M -15 88 C -7 84 4 85 9 91 L 2 98 L -13 95 Z" fill="#ffffff" stroke="#2d1a12" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M -9 100 L 18 116 L 36 125" stroke="#2d1a12" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -9 100 L 18 116 L 36 125" stroke="#3b82f6" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M -8 98 L 19 114 L 34 122" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" fill="none"/>
+                <path d="M -10 102 L 17 118 L 32 126" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" fill="none"/>
+                <circle cx="47" cy="124" r="5.8" fill="#fed7aa" stroke="#2d1a12" stroke-width="2"/>
+                <circle cx="38" cy="126" r="6.2" fill="#fed7aa" stroke="#2d1a12" stroke-width="2"/>
+                <g transform="translate(-8, 60)">
+                    <path d="M -20 -6 C -34 -12 -42 2 -34 18 C -28 12 -24 4 -20 -6 Z" fill="#432818" stroke="#2d1a12" stroke-width="2.3" stroke-linejoin="round"/>
+                    <circle cx="-21" cy="-5" r="4" fill="#ec4899" stroke="#2d1a12" stroke-width="1.6"/>
+                    <circle cx="0" cy="0" r="23.5" fill="#ffedd5" stroke="#2d1a12" stroke-width="2.4"/>
+                    <circle cx="-17" cy="4" r="5.8" fill="#ffedd5" stroke="#2d1a12" stroke-width="2.1"/>
+                    <ellipse cx="4" cy="8" rx="4.8" ry="2.8" fill="#fb7185" opacity="0.65"/>
+                    <ellipse cx="19" cy="6" rx="3.5" ry="2.2" fill="#fb7185" opacity="0.55"/>
+                    <ellipse cx="8" cy="-1" rx="2.2" ry="3.2" fill="#2d1a12"/>
+                    <ellipse cx="19" cy="-1" rx="2" ry="3" fill="#2d1a12"/>
+                    <path d="M 4 -8 Q 8 -11 11 -8" stroke="#2d1a12" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+                    <path d="M 16 -8 Q 19 -11 22 -8" stroke="#2d1a12" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+                    <path d="M 8 11 Q 13 15 17 11" stroke="#2d1a12" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M -22 5 C -26 -14 -15 -27 2 -27 C 17 -27 26 -16 24 -3 C 19 -8 14 -6 10 -12 C 6 -5 -2 -5 -7 -11 C -11 -4 -17 -2 -22 5 Z" fill="#432818" stroke="#2d1a12" stroke-width="2.3" stroke-linejoin="round"/>
+                </g>
+            </g>
         </defs>
     </svg>
 
@@ -437,29 +677,108 @@
                     </div>
                 </div>
 
-                <!-- Mô phỏng Dây Kéo Co 2 Đội Đỏ - Xanh -->
-                <div class="p-4 rounded-2xl bg-gradient-to-r from-rose-50 via-slate-50 to-sky-50 dark:from-rose-950/30 dark:via-slate-900 dark:to-sky-950/30 border border-slate-200 dark:border-slate-700 space-y-2">
-                    <div class="flex items-center justify-between font-black text-sm sm:text-base">
-                        <div class="text-rose-600 flex items-center space-x-2">
-                            <span>🔴 ĐỘI ĐỎ</span>
-                            <span id="tug-score-red" class="px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-xs">0 điểm</span>
+                <!-- SÂN ĐẤU KÉO CO 4 ĐẤU 4 TRỰC QUAN SỐNG ĐỘNG -->
+                <div class="p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-sky-100 via-indigo-50/40 to-emerald-100 dark:from-slate-900 dark:via-slate-800 dark:to-emerald-950/40 border-2 border-slate-200 dark:border-slate-700 shadow-inner space-y-2">
+                    <!-- Bảng tỷ số 2 đội Đỏ - Xanh trên sân -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 px-2">
+                        <div class="flex items-center space-x-2 bg-rose-600 text-white px-3.5 py-1.5 rounded-2xl shadow-md border-2 border-white/60">
+                            <span class="text-base">🔴</span>
+                            <div>
+                                <div class="text-[10px] font-bold uppercase opacity-90 leading-none">ĐỘI ĐỎ (4 Học Sinh THPT)</div>
+                                <div id="tug-score-red" class="text-sm sm:text-base font-black leading-tight">0 điểm</div>
+                            </div>
+                            <button type="button" onclick="awardTugPoint('red')" class="ml-1 px-2 py-0.5 rounded-lg bg-white text-rose-700 font-black text-xs hover:bg-rose-50 transition" title="Cộng 1 lực kéo cho Đội Đỏ">+1</button>
                         </div>
-                        <div id="tug-status-banner" class="text-xs font-extrabold uppercase tracking-wider text-amber-600">
-                            ⚡ HAI ĐỘI ĐANG CÂN SỨC ⚡
+
+                        <div id="tug-status-banner" class="px-4 py-1.5 rounded-full bg-amber-400/90 text-slate-900 font-black text-xs sm:text-sm uppercase tracking-wider shadow border-2 border-white">
+                            ⚡ HAI ĐỘI ĐANG CÂN SỨC - HÒ DÔ TA NÀO! ⚡
                         </div>
-                        <div class="text-sky-600 flex items-center space-x-2">
-                            <span id="tug-score-blue" class="px-2.5 py-0.5 rounded-full bg-sky-600 text-white text-xs">0 điểm</span>
-                            <span>ĐỘI XANH 🔵</span>
+
+                        <div class="flex items-center space-x-2 bg-sky-600 text-white px-3.5 py-1.5 rounded-2xl shadow-md border-2 border-white/60">
+                            <button type="button" onclick="awardTugPoint('blue')" class="mr-1 px-2 py-0.5 rounded-lg bg-white text-sky-700 font-black text-xs hover:bg-sky-50 transition" title="Cộng 1 lực kéo cho Đội Xanh">+1</button>
+                            <div class="text-right">
+                                <div class="text-[10px] font-bold uppercase opacity-90 leading-none">ĐỘI XANH (4 Học Sinh THPT)</div>
+                                <div id="tug-score-blue" class="text-sm sm:text-base font-black leading-tight">0 điểm</div>
+                            </div>
+                            <span class="text-base">🔵</span>
                         </div>
                     </div>
 
-                    <!-- Thanh dây thừng kéo co -->
-                    <div class="relative h-7 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden border-2 border-slate-300 dark:border-slate-600">
+                    <!-- Sân đấu Kéo Co Hoạt Hình 4 Học Sinh THPT Đỏ vs 4 Học Sinh THPT Xanh (Đồng phục thể thao cấp 3, không khăn quàng đỏ) -->
+                    <div class="relative w-full overflow-hidden rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-900 shadow-sm">
+                        <svg viewBox="0 0 1000 228" class="w-full h-44 sm:h-56 block select-none">
+                            <!-- Mặt đất nhẹ phía dưới -->
+                            <rect x="0" y="198" width="1000" height="30" fill="#e2e8f0" opacity="0.55"/>
+
+                            <!-- Vạch đích 2 biên -->
+                            <line x1="250" y1="12" x2="250" y2="220" stroke="#fda4af" stroke-width="2" stroke-dasharray="6 6"/>
+                            <line x1="750" y1="12" x2="750" y2="220" stroke="#7dd3fc" stroke-width="2" stroke-dasharray="6 6"/>
+
+                            <!-- Vạch chuẩn đứt nét màu xanh lá cây ở chính giữa sân -->
+                            <line x1="500" y1="4" x2="500" y2="224" stroke="#22c55e" stroke-width="6" stroke-dasharray="14 11" stroke-linecap="round"/>
+
+                            <!-- NHÓM DI CHUYỂN THEO ĐIỂM SỐ: DÂY THỪNG + NƠ ĐỎ + 4 HỌC SINH ĐỘI ĐỎ + 4 HỌC SINH ĐỘI XANH -->
+                            <g id="tug-svg-teams-group" transform="translate(0, 0)">
+
+                                <!-- Dây thừng kéo co chạy ngang qua tay học sinh -->
+                                <line x1="55" y1="125" x2="945" y2="125" stroke="#27272a" stroke-width="6.5" stroke-linecap="round"/>
+                                <line x1="55" y1="125" x2="945" y2="125" stroke="#52525b" stroke-width="2" stroke-dasharray="8 6" stroke-linecap="round"/>
+
+                                <!-- ================= BÊN TRÁI: 4 HỌC SINH THPT ĐỘI ĐỎ (NAM - NỮ XEN KẼ) ================= -->
+                                <g class="student-pull-left">
+                                    <!-- Học sinh số 4 (Nam - cuối dây bên trái) -->
+                                    <use href="#kid-boy-red" x="95" y="0" />
+                                    <!-- Học sinh số 3 (Nữ tóc đuôi gà) -->
+                                    <use href="#kid-girl-red" x="188" y="0" />
+                                    <!-- Học sinh số 2 (Nam) -->
+                                    <use href="#kid-boy-red" x="282" y="0" />
+                                    <!-- Học sinh số 1 (Nữ tiên phong gần nơ đỏ) -->
+                                    <use href="#kid-girl-red" x="376" y="0" />
+                                </g>
+
+                                <!-- ================= BÊN PHẢI: 4 HỌC SINH THPT ĐỘI XANH (ĐỐI XỨNG QUA VẠCH GIỮA) ================= -->
+                                <g class="student-pull-right">
+                                    <!-- Học sinh số 1 (Nam tiên phong gần nơ đỏ) -->
+                                    <g transform="translate(624, 0) scale(-1, 1)">
+                                        <use href="#kid-boy-blue" x="0" y="0" />
+                                    </g>
+                                    <!-- Học sinh số 2 (Nữ tóc đuôi gà) -->
+                                    <g transform="translate(718, 0) scale(-1, 1)">
+                                        <use href="#kid-girl-blue" x="0" y="0" />
+                                    </g>
+                                    <!-- Học sinh số 3 (Nam) -->
+                                    <g transform="translate(812, 0) scale(-1, 1)">
+                                        <use href="#kid-boy-blue" x="0" y="0" />
+                                    </g>
+                                    <!-- Học sinh số 4 (Nữ - cuối dây bên phải) -->
+                                    <g transform="translate(905, 0) scale(-1, 1)">
+                                        <use href="#kid-girl-blue" x="0" y="0" />
+                                    </g>
+                                </g>
+
+                                <!-- ================= CHIẾC NƠ ĐỎ THẮT GIỮA DÂY THỪNG (TẠI X = 500, Y = 125) ================= -->
+                                <g transform="translate(500, 125)">
+                                    <!-- Hai dải đuôi nơ rủ xuống -->
+                                    <path d="M -4 4 L -16 34 L -8 29 L -2 36 L 0 6 Z" fill="#dc2626" stroke="#2d1a12" stroke-width="2" stroke-linejoin="round"/>
+                                    <path d="M 4 4 L 16 34 L 8 29 L 2 36 L 0 6 Z" fill="#dc2626" stroke="#2d1a12" stroke-width="2" stroke-linejoin="round"/>
+                                    <!-- Hai cánh nơ phồng hai bên -->
+                                    <path d="M -3 0 C -22 -18 -30 -4 -25 8 C -19 14 -8 8 -3 2 Z" fill="#ef4444" stroke="#2d1a12" stroke-width="2.2" stroke-linejoin="round"/>
+                                    <path d="M 3 0 C 22 -18 30 -4 25 8 C 19 14 8 8 3 2 Z" fill="#ef4444" stroke="#2d1a12" stroke-width="2.2" stroke-linejoin="round"/>
+                                    <!-- Nếp gấp trong cánh nơ -->
+                                    <path d="M -7 -1 L -17 -4 M -7 2 L -16 4" stroke="#991b1b" stroke-width="1.6" stroke-linecap="round"/>
+                                    <path d="M 7 -1 L 17 -4 M 7 2 L 16 4" stroke="#991b1b" stroke-width="1.6" stroke-linecap="round"/>
+                                    <!-- Nút thắt giữa nơ -->
+                                    <rect x="-5.5" y="-6" width="11" height="12" rx="4" fill="#dc2626" stroke="#2d1a12" stroke-width="2.2"/>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <!-- Thanh chỉ báo tiến độ phụ trợ -->
+                    <div class="relative h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden border border-slate-300 dark:border-slate-600">
                         <div class="absolute inset-y-0 left-1/2 w-0.5 bg-slate-900 dark:bg-white z-10"></div>
                         <div id="tug-rope-bar" class="h-full bg-gradient-to-r from-rose-500 via-amber-400 to-sky-500 transition-all duration-500" style="width: 100%;"></div>
-                        <div id="tug-knot" class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-amber-400 border-4 border-white shadow-lg flex items-center justify-center text-sm font-black transition-all duration-500 z-20" style="left: 50%;">
-                            🎀
-                        </div>
+                        <div id="tug-knot" class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-amber-400 border-2 border-white shadow transition-all duration-500 z-20" style="left: 50%;"></div>
                     </div>
                 </div>
 
@@ -693,7 +1012,7 @@
             window._toastTimer = setTimeout(() => toast.classList.add('hidden'), 3600);
         }
 
-        // 2. KHO ĐỒ THỊ & BẢNG BIẾN THIÊN SVG SẮC NÉT (DÙNG MŨI TÊN TOÀN CỤC #arr-blue, #arr-red, #arr-axis ĐỂ HIỆN RÕ Ở CẢ KÉO CO & RUNG CHUÔNG VÀNG)
+        // 2. KHO ĐỒ THỊ & BẢNG BIẾN THIÊN SVG SẮC NÉT (DÙNG MŨI TÊN TOÀN CỤC #arr-blue, #arr-red, #arr-axis)
         const SVG_VISUALS = {
             bbt_c1: `<svg viewBox="0 0 520 150" class="w-full max-w-lg h-auto"><rect width="520" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/><line x1="65" y1="0" x2="65" y2="150" stroke="#94a3b8"/><line x1="0" y1="36" x2="520" y2="36" stroke="#94a3b8"/><line x1="0" y1="72" x2="520" y2="72" stroke="#94a3b8"/><line x1="293" y1="36" x2="293" y2="150" stroke="#dc2626" stroke-width="1.3"/><line x1="297" y1="36" x2="297" y2="150" stroke="#dc2626" stroke-width="1.3"/><text x="32" y="24" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">x</text><text x="32" y="59" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">y'</text><text x="32" y="114" text-anchor="middle" font-weight="bold" font-style="italic" font-size="15">y</text><text x="90" y="24" text-anchor="middle" font-size="13">-∞</text><text x="195" y="24" text-anchor="middle" font-weight="bold" font-size="14">-2</text><text x="295" y="24" text-anchor="middle" font-weight="bold" font-size="14">0</text><text x="395" y="24" text-anchor="middle" font-weight="bold" font-size="14">2</text><text x="490" y="24" text-anchor="middle" font-size="13">+∞</text><text x="142" y="58" text-anchor="middle" font-weight="bold" fill="#16a34a" font-size="16">+</text><text x="195" y="58" text-anchor="middle" font-size="14">0</text><text x="245" y="58" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="16">-</text><text x="345" y="58" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="16">-</text><text x="395" y="58" text-anchor="middle" font-size="14">0</text><text x="445" y="58" text-anchor="middle" font-weight="bold" fill="#16a34a" font-size="16">+</text><text x="90" y="140" text-anchor="middle" font-size="12">-∞</text><text x="195" y="89" text-anchor="middle" font-weight="bold" fill="#1e40af" font-size="12">-4</text><text x="275" y="140" text-anchor="middle" font-size="12">-∞</text><text x="315" y="89" text-anchor="middle" font-size="12">+∞</text><text x="395" y="140" text-anchor="middle" font-weight="bold" fill="#dc2626" font-size="12">4</text><text x="490" y="89" text-anchor="middle" font-size="12">+∞</text><path d="M105 133 L180 93" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/><path d="M210 93 L265 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M325 93 L380 130" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arr-red)"/><path d="M410 133 L475 93" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arr-blue)"/></svg>`,
 
@@ -730,7 +1049,7 @@
             box_cut_c22: `<svg viewBox="0 0 320 140" class="w-60 h-auto"><rect x="20" y="15" width="110" height="110" fill="#f8fafc" stroke="#334155" stroke-width="2"/><rect x="20" y="15" width="24" height="24" fill="#cbd5e1" stroke="#475569" stroke-dasharray="3 2"/><rect x="106" y="15" width="24" height="24" fill="#cbd5e1" stroke="#475569" stroke-dasharray="3 2"/><rect x="20" y="101" width="24" height="24" fill="#cbd5e1" stroke="#475569" stroke-dasharray="3 2"/><rect x="106" y="101" width="24" height="24" fill="#cbd5e1" stroke="#475569" stroke-dasharray="3 2"/><text x="136" y="118" font-size="12" font-style="italic" font-weight="bold">x</text><polygon points="175,85 265,85 295,55 205,55" fill="#e2e8f0" stroke="#334155" stroke-width="1.8"/><polygon points="175,85 175,112 265,112 265,85" fill="#cbd5e1" stroke="#334155" stroke-width="1.8"/><polygon points="265,85 295,55 295,82 265,112" fill="#94a3b8" stroke="#334155" stroke-width="1.8"/></svg>`
         };
 
-        // Hàm tự động vẽ đồ thị SVG từ biểu thức hàm số bất kỳ (dùng mũi tên trục Oxy toàn cục)
+        // Hàm tự động vẽ đồ thị SVG từ biểu thức hàm số bất kỳ
         function generateFunctionSvg(exprStr) {
             try {
                 const clean = exprStr.replace(/\^/g, '**');
@@ -759,7 +1078,7 @@
             }
         }
 
-        // 3. BỘ DỮ LIỆU MẶC ĐỊNH 22 CÂU (ĐỀ 1 & ĐỀ 2 RUNG_CHUÔNG_2 ĐẦY ĐỦ BẢNG BIẾN THIÊN CÓ MŨI TÊN, ĐỒ THỊ)
+        // 3. BỘ DỮ LIỆU MẶC ĐỊNH 22 CÂU
         function getPreset1Questions() {
             return [
                 // PHẦN I - KHỞI ĐỘNG (12 CÂU)
@@ -814,7 +1133,7 @@
 
         function getPreset2Questions() {
             return [
-                // ĐỀ 2: RUNG_CHUÔNG_2.DOCX (ĐẦY ĐỦ 100% BẢNG BIẾN THIÊN CÓ MŨI TÊN & ĐỒ THỊ)
+                // ĐỀ 2: RUNG_CHUÔNG_2.DOCX
                 { id: 1, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 1", type: "mcq", text: "Tính chiều cao $h$ của một khối chóp có thể tích $V = 12a^3$ và diện tích đáy bằng $9a^2$.", options: ["$h = \\dfrac{4a}{3}$.", "$h = 2a$.", "$h = 4a$.", "$h = \\dfrac{a}{3}$."], correct: 2, expl: "Từ $V = \\dfrac{1}{3}Bh \\implies h = \\dfrac{3V}{B} = \\dfrac{3 \\cdot 12a^3}{9a^2} = 4a$." },
                 { id: 2, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 2", type: "mcq", text: "Cho hàm số $y = f(x)$ liên tục trên $\\mathbb{R}$ có bảng biến thiên như hình dưới đây. Mệnh đề nào đúng?", visual: SVG_VISUALS.bbt_rc2_c2, options: ["Hàm số nghịch biến trên $(-1; 3)$.", "Hàm số nghịch biến trên $(-1; 1)$.", "Hàm số nghịch biến trên $(1; +\\infty)$.", "Hàm số nghịch biến trên $(-\\infty; 1)$."], correct: 2, expl: "Từ bảng biến thiên, mũi tên đi xuống ($y' < 0$) trên $(1; +\\infty)$ nên hàm số nghịch biến trên $(1; +\\infty)$." },
                 { id: 3, part: "PHẦN I - KHỞI ĐỘNG", qNum: "Câu 3", type: "mcq", text: "Đường cong trong hình vẽ dưới đây là đồ thị của hàm số nào?", visual: generateFunctionSvg("-x^3 + 3*x + 1"), options: ["$y = x^3 - 3x + 1$.", "$y = -x^3 + 3x + 1$.", "$y = x^4 - 2x^2 + 1$.", "$y = -x^3 - 3x + 1$."], correct: 1, expl: "Nhánh phải đi xuống nên hệ số $a < 0$, có 2 cực trị tại $x=\\pm 1$ nên là $y = -x^3 + 3x + 1$." },
@@ -888,7 +1207,7 @@
         let studentTfDraft = [true, false, true, false];
         let studentShortDraft = "";
 
-        // Trạng thái Kéo Co Kiến Thức (Đầy đủ tương tác 3 phần như Rung Chuông Vàng)
+        // Trạng thái Kéo Co Kiến Thức
         let tugIndex = 0;
         let tugRevealed = false;
         let tugPosition = 0;
@@ -1228,1072 +1547,3 @@
                         for (let i = 0; i + 1 < cells.length; i += 2) {
                             if (/^\d+$/.test(cells[i])) {
                                 keyP3[parseInt(cells[i], 10)] = cells[i + 1].replace('−', '-');
-                            }
-                        }
-                    }
-                });
-            }
-
-            let taggedMain = mainQuestionPart
-                .replace(/PHẦN\s*I\b[^\n]*/gi, '\n[[SECTION_P1]]\n')
-                .replace(/PHẦN\s*II\b[^\n]*/gi, '\n[[SECTION_P2]]\n')
-                .replace(/PHẦN\s*III\b[^\n]*/gi, '\n[[SECTION_P3]]\n');
-
-            const tokens = taggedMain.split(/(?=\[\[SECTION_P[123]\]\]|Câu\s+\d+\b)/gi).map(s => s.trim()).filter(Boolean);
-            let activePart = 1;
-            const rawQuestionBlocks = [];
-
-            tokens.forEach(tok => {
-                if (tok.startsWith('[[SECTION_P1]]')) {
-                    activePart = 1;
-                    const rem = tok.replace('[[SECTION_P1]]', '').trim();
-                    if (/^Câu\s+\d+/i.test(rem)) rawQuestionBlocks.push({ partNum: activePart, text: rem });
-                } else if (tok.startsWith('[[SECTION_P2]]')) {
-                    activePart = 2;
-                    const rem = tok.replace('[[SECTION_P2]]', '').trim();
-                    if (/^Câu\s+\d+/i.test(rem)) rawQuestionBlocks.push({ partNum: activePart, text: rem });
-                } else if (tok.startsWith('[[SECTION_P3]]')) {
-                    activePart = 3;
-                    const rem = tok.replace('[[SECTION_P3]]', '').trim();
-                    if (/^Câu\s+\d+/i.test(rem)) rawQuestionBlocks.push({ partNum: activePart, text: rem });
-                } else if (/^Câu\s+\d+/i.test(tok)) {
-                    rawQuestionBlocks.push({ partNum: activePart, text: tok });
-                }
-            });
-
-            if (rawQuestionBlocks.length === 0) return null;
-
-            const results = [];
-            rawQuestionBlocks.slice(0, 22).forEach((item, idx) => {
-                let block = item.text;
-                let partNum = item.partNum;
-
-                const firstLine = block.split(/\r?\n/)[0] || '';
-                if (/Tăng\s*Tốc|Phần\s*II\b|Phần\s*2/i.test(firstLine)) partNum = 2;
-                else if (/Về\s*Đích|Phần\s*III\b|Phần\s*3/i.test(firstLine)) partNum = 3;
-                else if (/Khởi\s*Động|Phần\s*I\b|Phần\s*1/i.test(firstLine)) partNum = 1;
-                else if (rawQuestionBlocks.length === 22 && !rawText.includes('PHẦN II')) {
-                    partNum = idx < 12 ? 1 : (idx < 16 ? 2 : 3);
-                }
-
-                const localNumMatch = firstLine.match(/^Câu\s+(\d+)/i);
-                const localQNum = localNumMatch ? parseInt(localNumMatch[1], 10) : (idx + 1);
-
-                let partName = partNum === 1 ? "PHẦN I - KHỞI ĐỘNG" : (partNum === 2 ? "PHẦN II - TĂNG TỐC" : "PHẦN III - VỀ ĐÍCH");
-                let qType = partNum === 1 ? "mcq" : (partNum === 2 ? "tf" : "short");
-
-                let attachedVisual = null;
-                const wordVisMatches = [...block.matchAll(/\[\[VISUAL_(\d+)\]\]/g)];
-                if (wordVisMatches.length > 0) {
-                    attachedVisual = wordVisMatches.map(m => visualMap[`[[VISUAL_${m[1]}]]`] || '').join('<div class="my-1"></div>');
-                    block = block.replace(/\[\[VISUAL_\d+\]\]/g, '');
-                }
-
-                const presetVisMatch = block.match(/\[HÌNH\s*:\s*([a-zA-Z0-9_]+)\]/i);
-                if (presetVisMatch) {
-                    const key = presetVisMatch[1].trim();
-                    if (SVG_VISUALS[key]) attachedVisual = SVG_VISUALS[key];
-                    block = block.replace(presetVisMatch[0], '');
-                }
-
-                const graphTagMatch = block.match(/\[ĐỒ\s*THỊ\s*:\s*([^\]]+)\]/i);
-                if (graphTagMatch) {
-                    attachedVisual = generateFunctionSvg(graphTagMatch[1].trim());
-                    block = block.replace(graphTagMatch[0], '');
-                }
-
-                block = block.replace(/([^\n])\s+(\*?[A-D]\.\s+)/g, '$1\n$2');
-                block = block.replace(/([^\n])\s+([a-d]\)\s+)/g, '$1\n$2');
-
-                const lines = block.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-                let qText = (lines[0] || '').replace(/^Câu\s+\d+\s*(\[[^\]]*\])?\s*[:.]?\s*/i, '').trim();
-
-                let options = [];
-                let correctIdx = 0;
-                let statements = [];
-                let shortAnswer = "";
-                let expl = "Áp dụng kiến thức khảo sát sự biến thiên và đồ thị hàm số.";
-
-                for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i];
-                    if (/^Giải\s*thích\s*[:.]/i.test(line)) {
-                        expl = line.replace(/^Giải\s*thích\s*[:.]\s*/i, '').trim();
-                    } else if (/^Đáp\s*số\s*[:.]/i.test(line)) {
-                        qType = "short";
-                        partName = "PHẦN III - VỀ ĐÍCH";
-                        shortAnswer = line.replace(/^Đáp\s*số\s*[:.]\s*/i, '').trim();
-                    } else if (/^\*?[A-D]\./.test(line)) {
-                        const isCorrect = line.startsWith('*');
-                        const cleanOpt = line.replace(/^\*?[A-D]\.\s*/, '').trim();
-                        if (isCorrect) correctIdx = options.length;
-                        options.push(cleanOpt);
-                    } else if (/^[a-d]\)/i.test(line)) {
-                        qType = "tf";
-                        partName = "PHẦN II - TĂNG TỐC";
-                        const isTrue = /\(\s*Đúng\s*\)/i.test(line);
-                        const cleanStmt = line.replace(/\(\s*(Đúng|Sai)\s*\)/gi, '').trim();
-                        statements.push({ label: cleanStmt, ans: isTrue });
-                    } else if (options.length === 0 && statements.length === 0 && !shortAnswer) {
-                        qText += " " + line;
-                    }
-                }
-
-                if (qType === "mcq" && keyP1[localQNum]) {
-                    const ansChar = keyP1[localQNum];
-                    correctIdx = Math.max(0, ['A', 'B', 'C', 'D'].indexOf(ansChar));
-                }
-                if (qType === "tf" && keyP2[localQNum] && statements.length === 4) {
-                    keyP2[localQNum].forEach((val, sIdx) => { statements[sIdx].ans = val; });
-                }
-                if (qType === "short" && keyP3[localQNum]) {
-                    shortAnswer = keyP3[localQNum];
-                }
-
-                if (qType === "mcq" && options.length < 4) {
-                    options = ["Phương án A", "Phương án B", "Phương án C", "Phương án D"];
-                }
-                if (qType === "tf" && statements.length < 4) {
-                    statements = [
-                        { label: "a) Mệnh đề a", ans: true },
-                        { label: "b) Mệnh đề b", ans: false },
-                        { label: "c) Mệnh đề c", ans: true },
-                        { label: "d) Mệnh đề d", ans: false }
-                    ];
-                }
-
-                results.push({
-                    id: idx + 1,
-                    part: partName,
-                    qNum: `Câu ${idx + 1}`,
-                    type: qType,
-                    text: qText,
-                    visual: attachedVisual,
-                    options: qType === "mcq" ? options : [],
-                    correct: correctIdx,
-                    statements: qType === "tf" ? statements : undefined,
-                    shortAnswer: qType === "short" ? (shortAnswer || "1") : undefined,
-                    expl: expl
-                });
-            });
-
-            return results;
-        }
-
-        async function handleExamFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (file.name.toLowerCase().endsWith('.docx')) {
-                showToast('⏳ Đang đọc câu hỏi, Bảng biến thiên & Đồ thị từ file Word...');
-                const reader = new FileReader();
-                reader.onload = async function(e) {
-                    try {
-                        const { text, visualMap } = await extractDocxWithVisualsAndMath(e.target.result);
-                        const parsed = parseStructuredExamText(text, visualMap);
-                        if (parsed && parsed.length > 0) {
-                            examQuestions = parsed;
-                            syncAllViewsAfterLoad();
-                            const imgCount = parsed.filter(q => q.visual).length;
-                            showToast(`🎉 Đã nạp ${parsed.length} câu hỏi (${imgCount} BBT/Đồ thị) cho cả Rung Chuông Vàng & Kéo Co!`);
-                        } else {
-                            showToast('⚠️ File Word không có từ khóa "Câu 1, Câu 2...". Vui lòng kiểm tra lại!');
-                        }
-                    } catch (err) {
-                        console.error(err);
-                        showToast('⚠️ Lỗi đọc file Word. Hãy thử lưu sang định dạng .docx chuẩn!');
-                    }
-                };
-                reader.readAsArrayBuffer(file);
-            } else {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const parsed = parseStructuredExamText(e.target.result, {});
-                    if (parsed && parsed.length > 0) {
-                        examQuestions = parsed;
-                        syncAllViewsAfterLoad();
-                        showToast(`🎉 Đã nạp thành công ${parsed.length} câu hỏi cho cả Rung Chuông Vàng & Kéo Co!`);
-                    } else {
-                        showToast('⚠️ Không tìm thấy định dạng Câu 1, Câu 2... trong file!');
-                    }
-                };
-                reader.readAsText(file, 'UTF-8');
-            }
-            event.target.value = '';
-        }
-
-        function parsePastedExam() {
-            const raw = document.getElementById('exam-raw-paste').value.trim();
-            if (!raw) {
-                showToast('⚠️ Vui lòng dán nội dung đề thi vào ô văn bản!');
-                return;
-            }
-            const parsed = parseStructuredExamText(raw, {});
-            if (parsed && parsed.length > 0) {
-                examQuestions = parsed;
-                syncAllViewsAfterLoad();
-                showToast(`🎉 Đã phân tích và nạp ${parsed.length} câu hỏi vào cả Rung Chuông Vàng & Kéo Co!`);
-            } else {
-                showToast('⚠️ Không nhận diện được cấu trúc Câu 1, Câu 2... Hãy kiểm tra lại!');
-            }
-        }
-
-        function exportCurrentExamToTxt() {
-            const svgKeyEntries = Object.entries(SVG_VISUALS);
-            const content = examQuestions.map((q, idx) => {
-                const tag = q.type === 'mcq' ? 'Khởi Động' : (q.type === 'tf' ? 'Tăng Tốc' : 'Về Đích');
-                let body = `Câu ${idx + 1} [${tag}]: ${q.text}\n`;
-                if (q.visual) {
-                    const matchedPreset = svgKeyEntries.find(([_, val]) => val === q.visual);
-                    if (matchedPreset) {
-                        body += `[HÌNH: ${matchedPreset[0]}]\n`;
-                    }
-                }
-                if (q.type === 'mcq') {
-                    q.options.forEach((opt, oIdx) => {
-                        const prefix = oIdx === q.correct ? '*' : '';
-                        body += `${prefix}${String.fromCharCode(65 + oIdx)}. ${opt}\n`;
-                    });
-                } else if (q.type === 'tf' && q.statements) {
-                    q.statements.forEach(st => {
-                        body += `${st.label} (${st.ans ? 'Đúng' : 'Sai'})\n`;
-                    });
-                } else if (q.type === 'short') {
-                    body += `Đáp số: ${q.shortAnswer}\n`;
-                }
-                body += `Giải thích: ${q.expl}`;
-                return body;
-            }).join('\n\n');
-
-            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'de_thi_22_cau.txt';
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('📥 Đã tải xuống file de_thi_22_cau.txt (kèm mã BBT & Đồ thị) để đưa lên GitHub!');
-        }
-
-        // Hỗ trợ dán ảnh trực tiếp bằng Ctrl + V lên câu hỏi đang chiếu (cả Rung Chuông Vàng và Kéo Co)
-        window.addEventListener('paste', (e) => {
-            if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
-            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-            for (const item of items) {
-                if (item.type.indexOf('image') === 0) {
-                    const blob = item.getAsFile();
-                    const reader = new FileReader();
-                    reader.onload = function(ev) {
-                        const isTugActive = !document.getElementById('tab-tug').classList.contains('hidden');
-                        const targetIdx = isTugActive ? tugIndex : bellIndex;
-                        examQuestions[targetIdx].visual = `<img src="${ev.target.result}" class="max-h-60 mx-auto rounded-lg shadow-sm object-contain bg-white p-1" alt="Hình dán từ Clipboard"/>`;
-                        renderBellStage();
-                        renderTugStage();
-                        showToast(`🖼️ Đã dán trực tiếp Bảng biến thiên / Đồ thị vào Câu ${targetIdx + 1} (cả Rung Chuông & Kéo Co)!`);
-                    };
-                    reader.readAsDataURL(blob);
-                }
-            }
-        });
-
-        // 8. HIỂN THỊ SÂN KHẤU RUNG CHUÔNG VÀNG (3 PHẦN: KHỞI ĐỘNG - TĂNG TỐC - VỀ ĐÍCH)
-        function renderBellStage() {
-            const q = examQuestions[bellIndex];
-            if (!q) return;
-
-            document.getElementById('bell-part-badge').innerText = q.part;
-            document.getElementById('bell-q-counter').innerText = `${q.qNum} / ${examQuestions.length}`;
-            document.getElementById('bell-question-text').innerHTML = `<span class="text-indigo-600 dark:text-indigo-400 font-black mr-1.5">${q.qNum}.</span>${q.text}`;
-
-            const stepper = document.getElementById('bell-stepper');
-            stepper.innerHTML = examQuestions.map((item, idx) => {
-                const active = idx === bellIndex ? 'bg-indigo-600 text-white ring-2 ring-indigo-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
-                return `<button onclick="jumpBellQuestion(${idx})" class="w-7 h-7 rounded-lg text-[11px] font-extrabold shrink-0 transition ${active}">${idx + 1}</button>`;
-            }).join('');
-
-            const vBox = document.getElementById('bell-visual-box');
-            if (q.visual) {
-                vBox.classList.remove('hidden');
-                vBox.innerHTML = q.visual;
-            } else {
-                vBox.classList.add('hidden');
-                vBox.innerHTML = '';
-            }
-
-            const optArea = document.getElementById('bell-options-area');
-            const hintEl = document.getElementById('bell-question-type-hint');
-
-            if (q.type === 'mcq') {
-                hintEl.innerText = 'PHẦN I - KHỞI ĐỘNG: Trắc nghiệm 4 phương án (Chọn 1 đáp án đúng)';
-                optArea.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">` +
-                    q.options.map((opt, idx) => {
-                        const letter = String.fromCharCode(65 + idx);
-                        let style = 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-indigo-400';
-                        if (bellRevealed) {
-                            style = idx === q.correct
-                                ? 'bg-emerald-100 dark:bg-emerald-900/60 border-emerald-500 text-emerald-900 dark:text-emerald-100 ring-2 ring-emerald-400'
-                                : 'bg-white/60 dark:bg-slate-800/40 opacity-60 border-slate-200';
-                        }
-                        return `<div onclick="selectBellMcqOption(${idx})" class="stage-option-item p-3.5 rounded-xl border-2 font-semibold text-sm flex items-center space-x-3 cursor-pointer transition ${style}">
-                            <span class="w-7 h-7 rounded-lg bg-indigo-100 dark:bg-slate-700 text-indigo-700 dark:text-indigo-300 font-black text-xs flex items-center justify-center shrink-0">${letter}</span>
-                            <div class="flex-1">${opt}</div>
-                        </div>`;
-                    }).join('') + `</div>`;
-            } else if (q.type === 'tf') {
-                hintEl.innerText = 'PHẦN II - TĂNG TỐC: Xét tính Đúng / Sai cho từng mệnh đề a), b), c), d)';
-                optArea.innerHTML = `<div class="space-y-2.5">` +
-                    q.statements.map((st, idx) => {
-                        const userVal = bellTfUserSelections[idx];
-                        let badgeHtml = '';
-                        if (bellRevealed) {
-                            badgeHtml = st.ans
-                                ? `<span class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-xs font-black">ĐÁP ÁN: ĐÚNG</span>`
-                                : `<span class="px-2.5 py-1 rounded-lg bg-rose-600 text-white text-xs font-black">ĐÁP ÁN: SAI</span>`;
-                        }
-                        return `<div class="p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2">
-                            <div class="text-sm font-semibold flex-1">${st.label}</div>
-                            <div class="flex items-center space-x-1.5">
-                                <button onclick="toggleBellTfChoice(${idx}, true)" class="px-3 py-1 rounded-lg text-xs font-extrabold border transition ${userVal === true ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 dark:bg-slate-700'}">Đúng</button>
-                                <button onclick="toggleBellTfChoice(${idx}, false)" class="px-3 py-1 rounded-lg text-xs font-extrabold border transition ${userVal === false ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 dark:bg-slate-700'}">Sai</button>
-                                ${badgeHtml}
-                            </div>
-                        </div>`;
-                    }).join('') + `</div>`;
-            } else {
-                hintEl.innerText = 'PHẦN III - VỀ ĐÍCH: Câu hỏi Trả lời ngắn (Thí sinh ghi đáp số vào bảng hoặc Điện thoại)';
-                optArea.innerHTML = `
-                    <div class="p-4 rounded-2xl bg-indigo-50/70 dark:bg-slate-800/90 border-2 border-indigo-200 dark:border-indigo-700 space-y-3">
-                        <div class="flex flex-wrap items-center gap-3">
-                            <span class="text-xs font-extrabold uppercase text-indigo-700 dark:text-indigo-300">✍️ Nhập đáp số trả lời ngắn:</span>
-                            <input id="bell-short-input" type="text" value="${bellShortUserInput}" oninput="bellShortUserInput = this.value" placeholder="Nhập kết quả (VD: 3, 24, 2.67, 1024...)" class="flex-1 min-w-[200px] px-4 py-2.5 rounded-xl border-2 border-indigo-300 dark:border-slate-600 bg-white dark:bg-slate-900 font-black text-base text-indigo-700 dark:text-indigo-300 focus:outline-none focus:border-indigo-600">
-                        </div>
-                        ${bellRevealed ? `
-                            <div class="p-3 rounded-xl bg-emerald-600 text-white font-black text-sm flex items-center justify-between">
-                                <span>🎯 ĐÁP SỐ CHÍNH XÁC:</span>
-                                <span class="text-lg tracking-wider px-3 py-0.5 rounded-lg bg-white text-emerald-700">${q.shortAnswer}</span>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }
-
-            const explBox = document.getElementById('bell-explanation-box');
-            if (bellRevealed) {
-                explBox.classList.remove('hidden');
-                document.getElementById('bell-explanation-text').innerHTML = q.expl;
-            } else {
-                explBox.classList.add('hidden');
-            }
-
-            renderBellPlayers();
-            renderAllMath(document.getElementById('tab-bell'));
-        }
-
-        function renderBellPlayers() {
-            const aliveCount = bellPlayers.filter(p => p.alive).length;
-            document.getElementById('bell-alive-count').innerText = aliveCount;
-            document.getElementById('bell-total-players').innerText = bellPlayers.length;
-
-            const grid = document.getElementById('bell-players-grid');
-            grid.innerHTML = bellPlayers.map((p, idx) => {
-                const statusClass = p.alive
-                    ? 'bg-white dark:bg-slate-800 border-emerald-400 text-slate-800 dark:text-slate-100'
-                    : 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-300 text-slate-400 line-through opacity-65';
-                const choiceTag = p.lastChoice ? `<span class="ml-1 px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700 text-[10px] font-black">${p.lastChoice}</span>` : '';
-                return `<div onclick="togglePlayerAlive(${idx})" class="p-2.5 rounded-xl border-2 cursor-pointer transition flex items-center justify-between text-xs font-bold ${statusClass}">
-                    <div class="truncate pr-1">
-                        <span class="mr-1">${p.alive ? '🟢' : '🔴'}</span>${p.name}${choiceTag}
-                    </div>
-                    <span class="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-slate-700 text-amber-800 dark:text-amber-300 font-black text-[11px]">${p.score}đ</span>
-                </div>`;
-            }).join('');
-        }
-
-        function togglePlayerAlive(idx) {
-            bellPlayers[idx].alive = !bellPlayers[idx].alive;
-            renderBellPlayers();
-        }
-
-        function simulateStudentAnswers() {
-            const q = examQuestions[bellIndex];
-            bellPlayers.forEach(p => {
-                if (!p.alive) return;
-                const isRight = Math.random() < 0.8;
-                if (isRight) {
-                    p.score += (q.type === 'mcq' ? 10 : (q.type === 'tf' ? 20 : 30));
-                    p.lastChoice = q.type === 'mcq' ? String.fromCharCode(65 + q.correct) : (q.type === 'tf' ? '4/4' : q.shortAnswer);
-                } else {
-                    p.alive = false;
-                    p.lastChoice = 'Sai';
-                }
-            });
-            renderBellPlayers();
-            const remaining = bellPlayers.filter(p => p.alive).length;
-            showToast(`🎲 Đã chấm câu trả lời của học sinh! Còn ${remaining} em trên sàn.`);
-        }
-
-        function selectBellMcqOption(idx) {
-            const q = examQuestions[bellIndex];
-            bellRevealed = true;
-            renderBellStage();
-            if (idx === q.correct) {
-                showToast('✅ Chính xác! Chúc mừng các thí sinh chọn phương án ' + String.fromCharCode(65 + idx));
-            } else {
-                showToast('❌ Chưa chính xác! Đáp án đúng là ' + String.fromCharCode(65 + q.correct));
-            }
-        }
-
-        function toggleBellTfChoice(idx, val) {
-            bellTfUserSelections[idx] = val;
-            renderBellStage();
-        }
-
-        function revealBellAnswer() {
-            bellRevealed = true;
-            clearInterval(bellTimer);
-            renderBellStage();
-        }
-
-        function prevBellQuestion() {
-            if (bellIndex > 0) {
-                bellIndex--;
-                resetBellQuestionState();
-            }
-        }
-
-        function nextBellQuestion() {
-            if (bellIndex < examQuestions.length - 1) {
-                bellIndex++;
-                resetBellQuestionState();
-            } else {
-                openHonorModal();
-            }
-        }
-
-        function jumpBellQuestion(idx) {
-            bellIndex = idx;
-            resetBellQuestionState();
-        }
-
-        function resetBellQuestionState() {
-            bellRevealed = false;
-            bellShortUserInput = "";
-            bellTfUserSelections = [null, null, null, null];
-            clearInterval(bellTimer);
-            bellTimeLeft = 30;
-            document.getElementById('bell-timer-text').innerText = '30s';
-            renderBellStage();
-            renderStudentPhoneUI();
-            if (syncChannel) {
-                syncChannel.postMessage({ type: 'STAGE_CHANGE', bellIndex });
-            }
-        }
-
-        function startBellTimer() {
-            clearInterval(bellTimer);
-            bellTimeLeft = 30;
-            const timerEl = document.getElementById('bell-timer-text');
-            timerEl.innerText = bellTimeLeft + 's';
-            bellTimer = setInterval(() => {
-                bellTimeLeft--;
-                timerEl.innerText = bellTimeLeft + 's';
-                if (bellTimeLeft <= 0) {
-                    clearInterval(bellTimer);
-                    showToast('⏰ Hết giờ suy nghĩ! Mời các thí sinh giơ bảng đáp án!');
-                }
-            }, 1000);
-        }
-
-        function rescueBellPlayers() {
-            let rescued = 0;
-            bellPlayers.forEach(p => {
-                if (!p.alive) {
-                    p.alive = true;
-                    rescued++;
-                }
-            });
-            renderBellPlayers();
-            showToast(`🛟 Cứu trợ thành công! Đã đưa ${rescued || 'toàn bộ'} học sinh trở lại sàn thi đấu!`);
-        }
-
-        function addBellPlayer() {
-            const inp = document.getElementById('new-player-name');
-            const name = inp.value.trim();
-            if (!name) return;
-            bellPlayers.push({ id: bellPlayers.length + 1, name, alive: true, score: 0, lastChoice: null });
-            inp.value = '';
-            renderBellPlayers();
-            populateStudentDropdown();
-            showToast(`➕ Đã thêm thí sinh "${name}" vào sàn thi đấu!`);
-        }
-
-        function resetBellGame() {
-            bellPlayers.forEach(p => { p.alive = true; p.score = 0; p.lastChoice = null; });
-            bellIndex = 0;
-            resetBellQuestionState();
-            showToast('🔄 Đã làm mới sàn đấu Rung Chuông Vàng!');
-        }
-
-        // 9. BẢNG VINH DANH NHÀ VÔ ĐỊCH & PHÁO HOA
-        function openHonorModal() {
-            const modal = document.getElementById('honor-modal');
-            const listEl = document.getElementById('honor-winners-list');
-            const sorted = [...bellPlayers].sort((a, b) => (b.alive - a.alive) || (b.score - a.score));
-            const topWinners = sorted.slice(0, 6);
-
-            listEl.innerHTML = topWinners.map((p, idx) => {
-                const medal = idx === 0 ? '🥇 QUÁN QUÂN' : (idx === 1 ? '🥈 Á QUÂN' : (idx === 2 ? '🥉 HẠNG BA' : `🎖️ TOP ${idx + 1}`));
-                const bg = idx === 0
-                    ? 'bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-200 border-amber-500 text-amber-950'
-                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700';
-                return `<div class="p-3.5 rounded-2xl border-2 flex items-center justify-between shadow-sm ${bg}">
-                    <div class="text-left">
-                        <div class="text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-400">${medal}</div>
-                        <div class="font-extrabold text-sm">${p.name}</div>
-                    </div>
-                    <div class="px-3 py-1 rounded-xl bg-amber-500 text-white font-black text-xs">${p.score} điểm</div>
-                </div>`;
-            }).join('');
-
-            modal.classList.remove('hidden');
-            launchFireworks(4000);
-        }
-
-        function closeHonorModal() {
-            document.getElementById('honor-modal').classList.add('hidden');
-        }
-
-        function launchFireworks(duration = 3500) {
-            const canvas = document.getElementById('confetti-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            canvas.classList.remove('hidden');
-
-            const particles = Array.from({ length: 110 }, () => ({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height - canvas.height,
-                size: Math.random() * 7 + 4,
-                speedY: Math.random() * 4 + 2.5,
-                speedX: (Math.random() - 0.5) * 3,
-                color: ['#f59e0b', '#10b981', '#6366f1', '#ec4899', '#ef4444', '#06b6d4'][Math.floor(Math.random() * 6)]
-            }));
-
-            let active = true;
-            setTimeout(() => { active = false; canvas.classList.add('hidden'); }, duration);
-
-            function draw() {
-                if (!active) return;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => {
-                    p.y += p.speedY;
-                    p.x += p.speedX;
-                    if (p.y > canvas.height) p.y = -10;
-                    ctx.fillStyle = p.color;
-                    ctx.fillRect(p.x, p.y, p.size, p.size);
-                });
-                requestAnimationFrame(draw);
-            }
-            draw();
-        }
-
-        function exportBellScoresCSV() {
-            let csv = "\uFEFFHạng,Họ Tên Học Sinh,Trạng Thái,Điểm Số\n";
-            const sorted = [...bellPlayers].sort((a, b) => b.score - a.score);
-            sorted.forEach((p, idx) => {
-                csv += `${idx + 1},"${p.name}",${p.alive ? "Còn trên sàn" : "Đã loại"},${p.score}\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'bang_diem_rung_chuong_vang.csv';
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('📊 Đã tải xuống file Excel (.csv) Bảng điểm Rung Chuông Vàng!');
-        }
-
-        // 10. LOGIC KÉO CO KIẾN THỨC (ĐỒNG BỘ 100% TÍNH NĂNG, MŨI TÊN BẢNG BIẾN THIÊN & TƯƠNG TÁC 3 PHẦN)
-        function renderTugStage() {
-            const q = examQuestions[tugIndex];
-            if (!q) return;
-
-            document.getElementById('tug-part-badge').innerText = q.part;
-            document.getElementById('tug-q-counter').innerText = `${q.qNum} / ${examQuestions.length}`;
-            document.getElementById('tug-question-text').innerHTML = `<span class="text-rose-600 dark:text-rose-400 font-black mr-1.5">${q.qNum}.</span>${q.text}`;
-
-            const stepper = document.getElementById('tug-stepper');
-            stepper.innerHTML = examQuestions.map((_, idx) => {
-                const active = idx === tugIndex ? 'bg-rose-600 text-white ring-2 ring-rose-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
-                return `<button type="button" onclick="jumpTugQuestion(${idx})" class="w-7 h-7 rounded-lg text-[11px] font-extrabold shrink-0 transition cursor-pointer ${active}">${idx + 1}</button>`;
-            }).join('');
-
-            const vBox = document.getElementById('tug-visual-box');
-            if (q.visual) {
-                vBox.classList.remove('hidden');
-                vBox.innerHTML = q.visual;
-            } else {
-                vBox.classList.add('hidden');
-                vBox.innerHTML = '';
-            }
-
-            const optArea = document.getElementById('tug-options-area');
-            const hintEl = document.getElementById('tug-question-type-hint');
-
-            if (q.type === 'mcq') {
-                hintEl.innerText = 'PHẦN I - KHỞI ĐỘNG: Trắc nghiệm 4 lựa chọn (Bấm vào phương án hoặc chọn cộng điểm cho Đội Đỏ / Đội Xanh)';
-                optArea.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">` +
-                    q.options.map((opt, idx) => {
-                        const letter = String.fromCharCode(65 + idx);
-                        let style = 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-rose-400';
-                        if (tugRevealed) {
-                            style = idx === q.correct
-                                ? 'bg-emerald-100 dark:bg-emerald-900/60 border-emerald-500 text-emerald-900 dark:text-emerald-100 ring-2 ring-emerald-400'
-                                : 'bg-white/60 dark:bg-slate-800/40 opacity-60 border-slate-200';
-                        }
-                        return `<div onclick="selectTugMcqOption(${idx})" class="stage-option-item p-3.5 rounded-xl border-2 font-semibold text-sm flex items-center space-x-3 cursor-pointer transition ${style}">
-                            <span class="w-7 h-7 rounded-lg bg-rose-100 dark:bg-slate-700 text-rose-700 dark:text-rose-300 font-black text-xs flex items-center justify-center shrink-0">${letter}</span>
-                            <div class="flex-1">${opt}</div>
-                        </div>`;
-                    }).join('') + `</div>`;
-            } else if (q.type === 'tf') {
-                hintEl.innerText = 'PHẦN II - TĂNG TỐC: Xét tính Đúng / Sai cho từng mệnh đề a), b), c), d)';
-                optArea.innerHTML = `<div class="space-y-2.5">` +
-                    q.statements.map((st, idx) => {
-                        const userVal = tugTfUserSelections[idx];
-                        let badgeHtml = '';
-                        if (tugRevealed) {
-                            badgeHtml = st.ans
-                                ? `<span class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-xs font-black">ĐÁP ÁN: ĐÚNG</span>`
-                                : `<span class="px-2.5 py-1 rounded-lg bg-rose-600 text-white text-xs font-black">ĐÁP ÁN: SAI</span>`;
-                        }
-                        return `<div class="p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2">
-                            <div class="text-sm font-semibold flex-1">${st.label}</div>
-                            <div class="flex items-center space-x-1.5">
-                                <button type="button" onclick="toggleTugTfChoice(${idx}, true)" class="px-3 py-1 rounded-lg text-xs font-extrabold border transition ${userVal === true ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 dark:bg-slate-700'}">Đúng</button>
-                                <button type="button" onclick="toggleTugTfChoice(${idx}, false)" class="px-3 py-1 rounded-lg text-xs font-extrabold border transition ${userVal === false ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 dark:bg-slate-700'}">Sai</button>
-                                ${badgeHtml}
-                            </div>
-                        </div>`;
-                    }).join('') + `</div>`;
-            } else {
-                hintEl.innerText = 'PHẦN III - VỀ ĐÍCH: Trả lời ngắn (Nhập đáp số của Đội Đỏ & Đội Xanh để chấm tự động)';
-                optArea.innerHTML = `
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-black text-rose-600">🔴 Đáp số của ĐỘI ĐỎ:</label>
-                            <input type="text" value="${tugRedInput}" oninput="tugRedInput = this.value" placeholder="Nhập đáp số Đội Đỏ..." class="w-full px-3 py-2 rounded-xl border-2 border-rose-300 bg-white dark:bg-slate-900 font-bold text-sm">
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-black text-sky-600">🔵 Đáp số của ĐỘI XANH:</label>
-                            <input type="text" value="${tugBlueInput}" oninput="tugBlueInput = this.value" placeholder="Nhập đáp số Đội Xanh..." class="w-full px-3 py-2 rounded-xl border-2 border-sky-300 bg-white dark:bg-slate-900 font-bold text-sm">
-                        </div>
-                        <div class="sm:col-span-2 flex justify-end">
-                            <button type="button" onclick="gradeTugShortAnswer()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow">
-                                ✅ Chấm Đáp Số 2 Đội & Kéo Dây Tự Động
-                            </button>
-                        </div>
-                        ${tugRevealed ? `
-                            <div class="sm:col-span-2 p-3 rounded-xl bg-emerald-600 text-white font-black text-sm flex items-center justify-between">
-                                <span>🎯 ĐÁP SỐ ĐÚNG CỦA CÂU NÀY:</span>
-                                <span class="px-3 py-0.5 rounded bg-white text-emerald-700 text-base">${q.shortAnswer}</span>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }
-
-            const explBox = document.getElementById('tug-explanation-box');
-            if (tugRevealed) {
-                explBox.classList.remove('hidden');
-                document.getElementById('tug-explanation-text').innerHTML = q.expl;
-            } else {
-                explBox.classList.add('hidden');
-            }
-
-            updateTugRopeUI();
-            renderAllMath(document.getElementById('tab-tug'));
-        }
-
-        function selectTugMcqOption(idx) {
-            const q = examQuestions[tugIndex];
-            tugRevealed = true;
-            renderTugStage();
-            if (idx === q.correct) {
-                showToast('✅ Chính xác! Phương án đúng là ' + String.fromCharCode(65 + idx) + '. Hãy bấm cộng điểm kéo dây cho đội trả lời đúng!');
-            } else {
-                showToast('❌ Chưa chính xác! Đáp án đúng là ' + String.fromCharCode(65 + q.correct));
-            }
-        }
-
-        function toggleTugTfChoice(idx, val) {
-            tugTfUserSelections[idx] = val;
-            renderTugStage();
-        }
-
-        function gradeTugShortAnswer() {
-            const q = examQuestions[tugIndex];
-            if (!q || q.type !== 'short') return;
-            const cleanKey = String(q.shortAnswer || '').trim().replace(',', '.');
-            const redOk = String(tugRedInput || '').trim().replace(',', '.') === cleanKey;
-            const blueOk = String(tugBlueInput || '').trim().replace(',', '.') === cleanKey;
-
-            tugRevealed = true;
-            if (redOk) awardTugPoint('red');
-            if (blueOk) awardTugPoint('blue');
-            renderTugStage();
-
-            if (redOk && blueOk) showToast('🎉 Cả Đội Đỏ và Đội Xanh đều trả lời đúng đáp số ' + q.shortAnswer + '!');
-            else if (redOk) showToast('🔴 Đội Đỏ trả lời chính xác (' + q.shortAnswer + ') và kéo dây về phía mình!');
-            else if (blueOk) showToast('🔵 Đội Xanh trả lời chính xác (' + q.shortAnswer + ') và kéo dây về phía mình!');
-            else showToast('💡 Chưa đội nào nhập đúng đáp số (' + q.shortAnswer + ')!');
-        }
-
-        function startTugTimer() {
-            clearInterval(tugTimer);
-            tugTimeLeft = 30;
-            const timerEl = document.getElementById('tug-timer-text');
-            timerEl.innerText = tugTimeLeft + 's';
-            tugTimer = setInterval(() => {
-                tugTimeLeft--;
-                timerEl.innerText = tugTimeLeft + 's';
-                if (tugTimeLeft <= 0) {
-                    clearInterval(tugTimer);
-                    showToast('⏰ Hết giờ thảo luận Kéo Co! Mời 2 đội Đỏ & Xanh đưa ra đáp án!');
-                }
-            }, 1000);
-        }
-
-        function updateTugRopeUI() {
-            const percent = Math.max(10, Math.min(90, 50 + tugPosition * 8));
-            document.getElementById('tug-knot').style.left = percent + '%';
-            document.getElementById('tug-score-red').innerText = `${tugRedScore} điểm`;
-            document.getElementById('tug-score-blue').innerText = `${tugBlueScore} điểm`;
-
-            const banner = document.getElementById('tug-status-banner');
-            if (tugPosition <= -5) {
-                banner.innerText = '🏆 ĐỘI ĐỎ CHIẾN THẮNG TUYỆT ĐỐI! 🏆';
-                launchFireworks(3500);
-            } else if (tugPosition >= 5) {
-                banner.innerText = '🏆 ĐỘI XANH CHIẾN THẮNG TUYỆT ĐỐI! 🏆';
-                launchFireworks(3500);
-            } else if (tugPosition < 0) {
-                banner.innerText = '🔥 ĐỘI ĐỎ ĐANG CHIẾM ƯU THẾ!';
-            } else if (tugPosition > 0) {
-                banner.innerText = '🌊 ĐỘI XANH ĐANG CHIẾM ƯU THẾ!';
-            } else {
-                banner.innerText = '⚡ HAI ĐỘI ĐANG CÂN SỨC ⚡';
-            }
-        }
-
-        function awardTugPoint(team) {
-            if (team === 'red') {
-                tugPosition = Math.max(-5, tugPosition - 1);
-                tugRedScore += 10;
-                showToast('🔴 Đội Đỏ vừa ghi điểm và kéo dây về phía mình!');
-            } else {
-                tugPosition = Math.min(5, tugPosition + 1);
-                tugBlueScore += 10;
-                showToast('🔵 Đội Xanh vừa ghi điểm và kéo dây về phía mình!');
-            }
-            updateTugRopeUI();
-        }
-
-        function revealTugAnswer() {
-            tugRevealed = true;
-            clearInterval(tugTimer);
-            renderTugStage();
-        }
-
-        function resetTugQuestionState() {
-            tugRevealed = false;
-            tugRedInput = "";
-            tugBlueInput = "";
-            tugTfUserSelections = [null, null, null, null];
-            clearInterval(tugTimer);
-            tugTimeLeft = 30;
-            const timerEl = document.getElementById('tug-timer-text');
-            if (timerEl) timerEl.innerText = '30s';
-            renderTugStage();
-        }
-
-        function prevTugQuestion() {
-            if (tugIndex > 0) {
-                tugIndex--;
-                resetTugQuestionState();
-            }
-        }
-
-        function nextTugQuestion() {
-            if (tugIndex < examQuestions.length - 1) {
-                tugIndex++;
-                resetTugQuestionState();
-            } else {
-                openHonorModal();
-            }
-        }
-
-        function jumpTugQuestion(idx) {
-            tugIndex = idx;
-            resetTugQuestionState();
-        }
-
-        function resetTugGame() {
-            tugPosition = 0;
-            tugRedScore = 0;
-            tugBlueScore = 0;
-            tugIndex = 0;
-            resetTugQuestionState();
-            showToast('🔄 Đã đặt lại trận đấu Kéo Co Kiến Thức!');
-        }
-
-        // 11. NGÂN HÀNG ĐỀ & PHÒNG LUYỆN THI 22 CÂU
-        function renderBankList() {
-            const list = document.getElementById('bank-question-list');
-            if (!list) return;
-            list.innerHTML = examQuestions.map((q, idx) => `
-                <div onclick="jumpToStageFromBank(${idx})" class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 cursor-pointer transition space-y-1">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-black text-indigo-600 dark:text-indigo-400">${q.qNum} • ${q.part}</span>
-                        <div class="flex items-center gap-1">
-                            ${q.visual ? '<span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 text-[10px] font-bold">🖼️ Có BBT/Đồ thị</span>' : ''}
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700">${q.type === 'mcq' ? '4 lựa chọn' : (q.type === 'tf' ? 'Đúng/Sai' : 'Trả lời ngắn')}</span>
-                        </div>
-                    </div>
-                    <div class="text-xs text-slate-700 dark:text-slate-300 line-clamp-2">${q.text}</div>
-                </div>
-            `).join('');
-            renderAllMath(list);
-        }
-
-        function jumpToStageFromBank(idx) {
-            bellIndex = idx;
-            tugIndex = idx;
-            switchTab('bell');
-            renderBellStage();
-            renderTugStage();
-        }
-
-        function renderPracticeExam() {
-            const container = document.getElementById('practice-questions-container');
-            if (!container) return;
-            container.innerHTML = examQuestions.map((q) => {
-                let inputHtml = '';
-                if (q.type === 'mcq') {
-                    inputHtml = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-2">` +
-                        q.options.map((opt, oIdx) => {
-                            const checked = practiceAnswers[q.id] === oIdx ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/50' : 'border-slate-200 dark:border-slate-700';
-                            return `<div onclick="setPracticeMcq(${q.id}, ${oIdx})" class="p-3 rounded-xl border-2 cursor-pointer text-xs font-semibold flex items-center space-x-2 ${checked}">
-                                <span class="font-black">${String.fromCharCode(65 + oIdx)}.</span>
-                                <span>${opt}</span>
-                            </div>`;
-                        }).join('') + `</div>`;
-                } else if (q.type === 'tf') {
-                    const tfAns = practiceAnswers[q.id] || [null, null, null, null];
-                    inputHtml = `<div class="space-y-2 mt-2">` +
-                        q.statements.map((st, sIdx) => `
-                            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
-                                <span class="font-medium">${st.label}</span>
-                                <div class="flex gap-1.5">
-                                    <button onclick="setPracticeTf(${q.id}, ${sIdx}, true)" class="px-2.5 py-1 rounded font-bold ${tfAns[sIdx] === true ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-700'}">Đúng</button>
-                                    <button onclick="setPracticeTf(${q.id}, ${sIdx}, false)" class="px-2.5 py-1 rounded font-bold ${tfAns[sIdx] === false ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-700'}">Sai</button>
-                                </div>
-                            </div>
-                        `).join('') + `</div>`;
-                } else {
-                    const val = practiceAnswers[q.id] || '';
-                    inputHtml = `<div class="mt-2 flex items-center gap-2">
-                        <span class="text-xs font-bold text-indigo-600">Đáp số của bạn:</span>
-                        <input type="text" value="${val}" oninput="practiceAnswers[${q.id}] = this.value" placeholder="Điền kết quả..." class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-xs font-bold">
-                    </div>`;
-                }
-
-                return `<div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
-                    <div class="text-xs font-black text-indigo-600 dark:text-indigo-400">${q.qNum} (${q.part})</div>
-                    <div class="text-sm font-bold">${q.text}</div>
-                    ${q.visual ? `<div class="py-2 flex justify-center word-table-visual">${q.visual}</div>` : ''}
-                    ${inputHtml}
-                </div>`;
-            }).join('');
-            renderAllMath(container);
-        }
-
-        function setPracticeMcq(qId, oIdx) {
-            practiceAnswers[qId] = oIdx;
-            renderPracticeExam();
-        }
-
-        function setPracticeTf(qId, sIdx, val) {
-            if (!Array.isArray(practiceAnswers[qId])) {
-                practiceAnswers[qId] = [null, null, null, null];
-            }
-            practiceAnswers[qId][sIdx] = val;
-            renderPracticeExam();
-        }
-
-        function submitPracticeExam() {
-            let totalScore = 0;
-            examQuestions.forEach(q => {
-                const ans = practiceAnswers[q.id];
-                if (q.type === 'mcq' && ans === q.correct) {
-                    totalScore += 0.25;
-                } else if (q.type === 'tf' && Array.isArray(ans)) {
-                    let match = 0;
-                    q.statements.forEach((st, idx) => {
-                        if (ans[idx] === st.ans) match++;
-                    });
-                    if (match === 1) totalScore += 0.1;
-                    else if (match === 2) totalScore += 0.25;
-                    else if (match === 3) totalScore += 0.5;
-                    else if (match === 4) totalScore += 1.0;
-                } else if (q.type === 'short' && ans !== undefined) {
-                    const cleanUser = String(ans).trim().replace(',', '.');
-                    const cleanKey = String(q.shortAnswer).trim().replace(',', '.');
-                    if (cleanUser === cleanKey) totalScore += 0.5;
-                }
-            });
-
-            const badge = document.getElementById('practice-score-badge');
-            badge.classList.remove('hidden');
-            badge.innerText = `Điểm số: ${totalScore.toFixed(2)} / 10`;
-            showToast(`🎓 Đã chấm xong! Điểm bài thi của bạn là ${totalScore.toFixed(2)} / 10 điểm.`);
-            if (totalScore >= 8) launchFireworks(3500);
-        }
-
-        function resetPracticeExam() {
-            practiceAnswers = {};
-            document.getElementById('practice-score-badge').classList.add('hidden');
-            renderPracticeExam();
-            showToast('🔄 Đã làm mới bài luyện thi!');
-        }
-
-        // 12. CHẾ ĐỘ TOÀN MÀN HÌNH & SỬA ĐỒ THỊ TRỰC TIẾP CHO CẢ 2 SÂN KHẤU
-        function toggleStageFullscreen(containerId) {
-            const el = document.getElementById(containerId);
-            if (!el) return;
-            const isFull = el.classList.toggle('fullscreen-stage');
-            const tugControls = document.getElementById('tug-bottom-controls');
-            if (containerId === 'tug-stage-container' && tugControls) {
-                tugControls.classList.toggle('floating-bottom-dock', isFull);
-            }
-            showToast(isFull ? '⛶ Đã bật Toàn màn hình Sân khấu (Bấm ESC hoặc nút Toàn màn hình để thu nhỏ)' : 'Đã thu nhỏ Sân khấu về mặc định');
-        }
-
-        function toggleBrowserFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(() => {});
-            } else {
-                document.exitFullscreen().catch(() => {});
-            }
-        }
-
-        function adjustStageFontSize(delta) {
-            stageFontScale = Math.max(0.85, Math.min(1.45, stageFontScale + delta * 0.1));
-            const bellQ = document.getElementById('bell-question-text');
-            const tugQ = document.getElementById('tug-question-text');
-            if (bellQ) bellQ.style.fontSize = `${stageFontScale * 1.12}rem`;
-            if (tugQ) tugQ.style.fontSize = `${stageFontScale * 1.12}rem`;
-        }
-
-        function openVisualModal(ctx) {
-            visualTargetContext = ctx;
-            document.getElementById('visual-editor-modal').classList.remove('hidden');
-        }
-
-        function closeVisualModal() {
-            document.getElementById('visual-editor-modal').classList.add('hidden');
-        }
-
-        function applyAutoFunctionGraph() {
-            const expr = document.getElementById('visual-func-input').value.trim();
-            if (!expr) return;
-            const svg = generateFunctionSvg(expr);
-            if (!svg) {
-                showToast('⚠️ Biểu thức hàm số chưa hợp lệ. Ví dụ: x^3 - 3*x + 1');
-                return;
-            }
-            const idx = visualTargetContext === 'bell' ? bellIndex : tugIndex;
-            examQuestions[idx].visual = svg;
-            renderBellStage();
-            renderTugStage();
-            closeVisualModal();
-            showToast('📈 Đã tự động vẽ đồ thị hàm số cho câu hỏi này trên cả Rung Chuông Vàng & Kéo Co!');
-        }
-
-        function uploadVisualImageFile(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const idx = visualTargetContext === 'bell' ? bellIndex : tugIndex;
-                examQuestions[idx].visual = `<img src="${e.target.result}" class="max-h-56 rounded-lg object-contain bg-white p-1" alt="Hình minh họa"/>`;
-                renderBellStage();
-                renderTugStage();
-                closeVisualModal();
-                showToast('🖼️ Đã chèn hình ảnh vào câu hỏi trên cả Rung Chuông Vàng & Kéo Co!');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function removeCurrentVisual() {
-            const idx = visualTargetContext === 'bell' ? bellIndex : tugIndex;
-            examQuestions[idx].visual = null;
-            renderBellStage();
-            renderTugStage();
-            closeVisualModal();
-            showToast('🗑️ Đã xóa hình minh họa của câu hỏi này.');
-        }
-
-        // 13. CHUYỂN TAB & ĐỒNG BỘ HIỂN THỊ KÉO CO / RUNG CHUÔNG VÀNG
-        function switchTab(tabName) {
-            ['bell', 'tug', 'student', 'bank', 'practice'].forEach(t => {
-                const sec = document.getElementById(`tab-${t}`);
-                if (sec) sec.classList.toggle('hidden', t !== tabName);
-                const btn = document.getElementById(`tab-btn-${t}`);
-                if (btn) {
-                    if (t === tabName) {
-                        btn.className = 'tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-indigo-600 text-white shadow shrink-0';
-                    } else {
-                        btn.className = 'tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0';
-                    }
-                }
-            });
-            if (tabName === 'tug') {
-                renderTugStage();
-            } else if (tabName === 'bell') {
-                renderBellStage();
-            } else if (tabName === 'student') {
-                renderStudentPhoneUI();
-            }
-            renderAllMath();
-        }
-
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-
-        window.addEventListener('keydown', (e) => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
-            if (e.key === 'ArrowRight') {
-                if (!document.getElementById('tab-bell').classList.contains('hidden')) nextBellQuestion();
-                else if (!document.getElementById('tab-tug').classList.contains('hidden')) nextTugQuestion();
-            } else if (e.key === 'ArrowLeft') {
-                if (!document.getElementById('tab-bell').classList.contains('hidden')) prevBellQuestion();
-                else if (!document.getElementById('tab-tug').classList.contains('hidden')) prevTugQuestion();
-            } else if (e.key === 'Escape') {
-                document.getElementById('bell-stage-container').classList.remove('fullscreen-stage');
-                document.getElementById('tug-stage-container').classList.remove('fullscreen-stage');
-                document.getElementById('tug-bottom-controls').classList.remove('floating-bottom-dock');
-            }
-        });
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            await loadFromGithubTxtFile(false);
-            const params = new URLSearchParams(window.location.search);
-            if (params.get('mode') === 'student') {
-                switchTab('student');
-                showToast('📲 Đã kết nối chế độ Điện Thoại Học Sinh (Mã phòng: 2025)!');
-            }
-        });
-    </script>
-</body>
-</html>
