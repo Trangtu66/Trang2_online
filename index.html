@@ -83,6 +83,46 @@
         <span id="app-toast-text">Thông báo hệ thống</span>
     </div>
 
+    <!-- MODAL MÃ QR CHO HỌC SINH QUÉT THAM GIA -->
+    <div id="qr-modal" class="fixed inset-0 z-[9998] hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 max-w-md w-full rounded-3xl p-6 border-2 border-indigo-500 shadow-2xl text-center relative space-y-4">
+            <button onclick="closeQrModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-700 hover:bg-rose-500 hover:text-white font-black text-sm transition">✕</button>
+            <div class="inline-flex items-center px-3.5 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-extrabold text-xs">
+                📱 KẾT NỐI ĐIỆN THOẠI HỌC SINH
+            </div>
+            <h3 class="text-xl font-black text-slate-800 dark:text-white">Quét Mã QR Để Vào Phòng Thi</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Học sinh dùng Camera hoặc Zalo quét mã QR dưới đây để mở giao diện bấm đáp án trên điện thoại</p>
+
+            <!-- Khung hiển thị ảnh QR -->
+            <div class="mx-auto w-56 h-56 p-3 rounded-2xl bg-white border-2 border-slate-200 shadow-inner flex items-center justify-center">
+                <img id="qr-code-img" src="" alt="QR Code Phòng Thi" class="w-48 h-48 object-contain" />
+            </div>
+
+            <div class="flex items-center justify-center gap-3">
+                <div class="px-4 py-2 rounded-xl bg-amber-100 text-amber-900 font-black text-sm border border-amber-300">
+                    MÃ PHÒNG (PIN): <span id="qr-room-pin" class="text-lg tracking-widest">2025</span>
+                </div>
+            </div>
+
+            <div class="text-left space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-500">Đường dẫn trực tiếp cho học sinh:</label>
+                <div class="flex gap-1.5">
+                    <input id="qr-student-url" type="text" readonly class="flex-1 px-3 py-2 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:border-slate-700 text-[11px] font-mono">
+                    <button onclick="copyStudentLink()" class="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs">Copy</button>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-2 pt-2 border-t dark:border-slate-700">
+                <button onclick="closeQrModal(); switchTab('student');" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow">
+                    📲 Mở Giao Diện Điện Thoại HS Ngay
+                </button>
+                <button onclick="closeQrModal()" class="px-4 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-700 font-bold text-xs">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL VINH DANH NHÀ VÔ ĐỊCH RUNG CHUÔNG VÀNG -->
     <div id="honor-modal" class="fixed inset-0 z-[9998] hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
         <div class="bg-gradient-to-b from-amber-50 via-white to-amber-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 max-w-2xl w-full rounded-3xl p-6 sm:p-8 border-2 border-amber-400 shadow-2xl text-center relative space-y-5">
@@ -142,37 +182,48 @@
     <!-- HEADER ĐIỀU HƯỚNG CHÍNH -->
     <header class="bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40 shadow-sm">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
-            <div class="flex items-center space-x-2.5">
+            <div class="flex items-center space-x-2.5 shrink-0">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-amber-500 flex items-center justify-center text-white font-black text-xl shadow-md">M</div>
                 <div>
                     <div class="flex items-center space-x-1.5">
-                        <h1 class="text-base sm:text-lg font-black bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">MathLab THPT 2025</h1>
-                        <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-black bg-amber-100 text-amber-800 rounded-full">22 CÂU</span>
+                        <h1 class="text-sm sm:text-base font-black bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">MathLab THPT 2025</h1>
+                        <span class="hidden xl:inline-block px-2 py-0.5 text-[10px] font-black bg-amber-100 text-amber-800 rounded-full">22 CÂU</span>
                     </div>
-                    <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">Khởi Động (12) • Tăng Tốc (4) • Về Đích (6)</p>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block">Khởi Động • Tăng Tốc • Về Đích</p>
                 </div>
             </div>
 
             <!-- NAVIGATION TABS -->
-            <nav class="flex items-center bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-700 overflow-x-auto">
-                <button onclick="switchTab('bell')" id="tab-btn-bell" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-indigo-600 text-white shadow">
+            <nav class="flex items-center bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-700 overflow-x-auto custom-scroll">
+                <button onclick="switchTab('bell')" id="tab-btn-bell" class="tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-indigo-600 text-white shadow shrink-0">
                     🔔 Rung Chuông Vàng
                 </button>
-                <button onclick="switchTab('tug')" id="tab-btn-tug" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-indigo-600">
-                    🪢 Kéo Co Kiến Thức
+                <button onclick="switchTab('tug')" id="tab-btn-tug" class="tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0">
+                    🪢 Kéo Co
                 </button>
-                <button onclick="switchTab('bank')" id="tab-btn-bank" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-indigo-600">
+                <button onclick="switchTab('student')" id="tab-btn-student" class="tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0">
+                    📲 Điện Thoại HS
+                </button>
+                <button onclick="switchTab('bank')" id="tab-btn-bank" class="tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0">
                     📝 Ngân Hàng Đề (<span id="nav-q-count">22</span>)
                 </button>
-                <button onclick="switchTab('practice')" id="tab-btn-practice" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-indigo-600">
+                <button onclick="switchTab('practice')" id="tab-btn-practice" class="tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0">
                     🎓 Luyện Thi
                 </button>
             </nav>
 
-            <!-- NÚT TIỆN ÍCH -->
-            <div class="flex items-center space-x-1.5">
+            <!-- NÚT MÃ QR & TIỆN ÍCH -->
+            <div class="flex items-center space-x-1.5 shrink-0">
+                <button onclick="openQrModal()" class="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold shadow flex items-center space-x-1" title="Hiện Mã QR cho học sinh quét">
+                    <span>📱</span>
+                    <span class="hidden md:inline">Mã QR</span>
+                </button>
+                <button onclick="switchTab('student')" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow hidden lg:flex items-center space-x-1" title="Mở màn hình Điện Thoại Học Sinh">
+                    <span>📲</span>
+                    <span>Máy HS</span>
+                </button>
                 <button onclick="toggleBrowserFullscreen()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-indigo-100 text-xs font-bold" title="Toàn màn hình (Phím F)">
-                    ⛶ <span class="hidden md:inline">Toàn Màn Hình</span>
+                    ⛶ <span class="hidden xl:inline">Toàn Màn Hình</span>
                 </button>
                 <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-xs font-bold" title="Đổi giao diện Sáng/Tối">
                     🌓
@@ -204,6 +255,12 @@
                     </div>
 
                     <div class="flex flex-wrap items-center gap-1.5">
+                        <button onclick="openQrModal()" class="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold shadow">
+                            📱 Mã QR Lớp Học
+                        </button>
+                        <button onclick="switchTab('student')" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow">
+                            📲 Điện Thoại HS
+                        </button>
                         <button onclick="loadFromGithubTxtFile(true)" class="px-2.5 py-1.5 rounded-lg bg-indigo-50 dark:bg-slate-700 text-indigo-700 dark:text-indigo-300 text-xs font-bold hover:bg-indigo-100" title="Tải đề từ file de_thi_22_cau.txt trên GitHub">
                             🔄 Đề GitHub (Đề 1)
                         </button>
@@ -296,7 +353,7 @@
                                     🎲 Giả lập HS trả lời
                                 </button>
                             </div>
-                            <p class="text-[11px] text-slate-500">Bấm vào tên học sinh để loại/hồi sinh thủ công hoặc bấm "Giả lập HS trả lời" để thử nghiệm.</p>
+                            <p class="text-[11px] text-slate-500">Học sinh gửi đáp án từ tab <strong>📲 Điện Thoại HS</strong> hoặc bấm trực tiếp vào tên học sinh để loại/cứu.</p>
                             <div id="bell-players-grid" class="grid grid-cols-2 sm:grid-cols-2 gap-2 max-h-[360px] overflow-y-auto custom-scroll pr-1"></div>
                         </div>
 
@@ -324,6 +381,8 @@
                         <span id="tug-q-counter" class="text-sm font-black">Câu 1 / 22</span>
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="openQrModal()" class="px-2.5 py-1.5 rounded-lg bg-amber-500 text-white text-xs font-extrabold">📱 Mã QR</button>
+                        <button onclick="switchTab('student')" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-extrabold">📲 Điện Thoại HS</button>
                         <button onclick="loadFromGithubTxtFile(true)" class="px-2.5 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold">📘 Đề 1 (GitHub)</button>
                         <button onclick="loadExamPreset2()" class="px-2.5 py-1.5 rounded-lg bg-amber-100 text-amber-800 text-xs font-bold">📙 Đề RUNG_CHUÔNG_2</button>
                         <button onclick="resetTugGame()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-xs font-bold">🔄 Đặt lại dây</button>
@@ -400,7 +459,64 @@
         </section>
 
         <!-- ========================================================= -->
-        <!-- TAB 3: NGÂN HÀNG ĐỀ & NẠP FILE TỪ GITHUB / WORD (.DOCX)    -->
+        <!-- TAB 3: GIAO DIỆN ĐIỆN THOẠI HỌC SINH (REMOTE CONTROLLER)  -->
+        <!-- ========================================================= -->
+        <section id="tab-student" class="hidden space-y-5">
+            <div class="max-w-md mx-auto bg-white dark:bg-slate-800 rounded-[2.25rem] border-4 border-slate-800 dark:border-slate-600 shadow-2xl overflow-hidden">
+                <!-- Tai thỏ điện thoại -->
+                <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between text-xs">
+                    <span class="font-bold">📲 Máy Học Sinh • PIN: 2025</span>
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold text-[10px]">● Trực tuyến</span>
+                </div>
+
+                <div class="p-5 space-y-4">
+                    <!-- Chọn học sinh / Nhập tên & Chọn chế độ thi đấu -->
+                    <div class="grid grid-cols-1 gap-2.5 bg-slate-50 dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center justify-between gap-2">
+                            <label class="text-xs font-extrabold text-slate-600 dark:text-slate-300">Thí sinh:</label>
+                            <select id="student-remote-select" onchange="renderStudentPhoneUI()" class="flex-1 px-2.5 py-1.5 rounded-xl border bg-white dark:bg-slate-800 dark:border-slate-700 text-xs font-bold"></select>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <label class="text-xs font-extrabold text-slate-600 dark:text-slate-300">Đội Kéo Co:</label>
+                            <select id="student-team-select" class="flex-1 px-2.5 py-1.5 rounded-xl border bg-white dark:bg-slate-800 dark:border-slate-700 text-xs font-bold">
+                                <option value="bell">🔔 Thi Rung Chuông Vàng</option>
+                                <option value="red">🔴 Đội Đỏ (Kéo Co)</option>
+                                <option value="blue">🔵 Đội Xanh (Kéo Co)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin câu hỏi đang chiếu trên màn hình chính -->
+                    <div class="p-3.5 rounded-2xl bg-indigo-50/70 dark:bg-slate-900 border border-indigo-200 dark:border-slate-700 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span id="student-part-badge" class="px-2.5 py-0.5 rounded-full bg-indigo-600 text-white font-black text-[10px]">
+                                PHẦN I - KHỞI ĐỘNG
+                            </span>
+                            <div class="flex items-center gap-1">
+                                <button onclick="prevBellQuestion(); renderStudentPhoneUI();" class="px-2 py-0.5 rounded bg-white dark:bg-slate-800 border text-[11px] font-bold">⬅</button>
+                                <span id="student-q-number" class="text-xs font-black text-indigo-700 dark:text-indigo-300">Câu 1 / 22</span>
+                                <button onclick="nextBellQuestion(); renderStudentPhoneUI();" class="px-2 py-0.5 rounded bg-white dark:bg-slate-800 border text-[11px] font-bold">➡</button>
+                            </div>
+                        </div>
+                        <div id="student-q-preview" class="text-xs font-semibold text-slate-700 dark:text-slate-200 leading-relaxed"></div>
+                    </div>
+
+                    <!-- Bàn phím bấm đáp án trên điện thoại học sinh (Tự động đổi theo 3 phần) -->
+                    <div id="student-remote-pad" class="space-y-3"></div>
+
+                    <!-- Trạng thái gửi đáp án -->
+                    <div id="student-submit-feedback" class="hidden p-3 rounded-xl bg-emerald-100 text-emerald-800 text-center text-xs font-black border border-emerald-300"></div>
+
+                    <div class="pt-2 border-t dark:border-slate-700 flex items-center justify-between text-[11px] text-slate-400">
+                        <button onclick="openQrModal()" class="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">📱 Mở lại Mã QR</button>
+                        <button onclick="switchTab('bell')" class="text-slate-600 dark:text-slate-300 font-bold hover:underline">🖥 Về Màn Chiếu Giáo Viên</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- TAB 4: NGÂN HÀNG ĐỀ & NẠP FILE TỪ GITHUB / WORD (.DOCX)    -->
         <!-- ========================================================= -->
         <section id="tab-bank" class="hidden space-y-6">
             <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
@@ -459,7 +575,7 @@
         </section>
 
         <!-- ========================================================= -->
-        <!-- TAB 4: PHÒNG LUYỆN THI 22 CÂU CHẤM ĐIỂM TỰ ĐỘNG            -->
+        <!-- TAB 5: PHÒNG LUYỆN THI 22 CÂU CHẤM ĐIỂM TỰ ĐỘNG            -->
         <!-- ========================================================= -->
         <section id="tab-practice" class="hidden space-y-5">
             <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-wrap items-center justify-between gap-4">
@@ -681,6 +797,10 @@
             lastChoice: null
         }));
 
+        // Trạng thái Điện Thoại Học Sinh (Remote)
+        let studentTfDraft = [true, false, true, false];
+        let studentShortDraft = "";
+
         // Trạng thái Kéo Co
         let tugIndex = 0;
         let tugRevealed = false;
@@ -693,7 +813,176 @@
         // Trạng thái Phòng Luyện Thi
         let practiceAnswers = {};
 
-        // 5. TỰ ĐỘNG NẠP FILE `de_thi_22_cau.txt` TỪ GITHUB KHI MỞ TRANG
+        // Kênh đồng bộ thời gian thực giữa Tab Giáo viên và Tab Điện thoại HS
+        const syncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('mathlab_2025_sync') : null;
+        if (syncChannel) {
+            syncChannel.onmessage = (ev) => {
+                const data = ev.data;
+                if (!data) return;
+                if (data.type === 'STUDENT_SUBMIT') {
+                    handleIncomingStudentSubmission(data.payload);
+                } else if (data.type === 'STAGE_CHANGE') {
+                    bellIndex = data.bellIndex;
+                    renderBellStage();
+                    renderStudentPhoneUI();
+                }
+            };
+        }
+
+        // 5. MÃ QR LỚP HỌC & GIAO DIỆN ĐIỆN THOẠI HỌC SINH
+        function openQrModal() {
+            const modal = document.getElementById('qr-modal');
+            const baseUrl = window.location.href.split('?')[0];
+            const studentUrl = `${baseUrl}?mode=student&pin=2025`;
+            document.getElementById('qr-student-url').value = studentUrl;
+
+            const qrImg = document.getElementById('qr-code-img');
+            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(studentUrl)}`;
+            modal.classList.remove('hidden');
+        }
+
+        function closeQrModal() {
+            document.getElementById('qr-modal').classList.add('hidden');
+        }
+
+        function copyStudentLink() {
+            const inp = document.getElementById('qr-student-url');
+            inp.select();
+            navigator.clipboard.writeText(inp.value).catch(() => {});
+            showToast('📋 Đã sao chép đường link Điện Thoại Học Sinh!');
+        }
+
+        function populateStudentDropdown() {
+            const sel = document.getElementById('student-remote-select');
+            if (!sel) return;
+            const currentVal = sel.value || "0";
+            sel.innerHTML = bellPlayers.map((p, idx) =>
+                `<option value="${idx}">${p.name} (${p.alive ? '🟢 Trên sàn' : '🔴 Đã loại'} - ${p.score}đ)</option>`
+            ).join('');
+            sel.value = currentVal;
+        }
+
+        function renderStudentPhoneUI() {
+            populateStudentDropdown();
+            const q = examQuestions[bellIndex];
+            if (!q) return;
+
+            document.getElementById('student-part-badge').innerText = q.part;
+            document.getElementById('student-q-number').innerText = `${q.qNum} / ${examQuestions.length}`;
+            document.getElementById('student-q-preview').innerHTML = q.text;
+
+            const pad = document.getElementById('student-remote-pad');
+            const fb = document.getElementById('student-submit-feedback');
+            fb.classList.add('hidden');
+
+            if (q.type === 'mcq') {
+                const colors = [
+                    'bg-rose-600 hover:bg-rose-700',
+                    'bg-sky-600 hover:bg-sky-700',
+                    'bg-amber-500 hover:bg-amber-600',
+                    'bg-emerald-600 hover:bg-emerald-700'
+                ];
+                pad.innerHTML = `
+                    <div class="text-xs font-extrabold text-center text-slate-500">Chạm vào 1 phương án để gửi lên sân khấu:</div>
+                    <div class="grid grid-cols-2 gap-3">
+                        ${['A', 'B', 'C', 'D'].map((letter, idx) => `
+                            <button onclick="submitFromStudentPhone('mcq', ${idx})" class="${colors[idx]} text-white rounded-2xl py-5 px-3 font-black text-xl shadow-lg active:scale-95 transition flex flex-col items-center justify-center space-y-1">
+                                <span>${letter}</span>
+                                <span class="text-[11px] font-semibold opacity-90 line-clamp-1">${q.options[idx] || ''}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (q.type === 'tf') {
+                pad.innerHTML = `
+                    <div class="text-xs font-extrabold text-center text-slate-500">Chọn Đúng / Sai cho cả 4 ý a, b, c, d:</div>
+                    <div class="space-y-2">
+                        ${q.statements.map((st, idx) => `
+                            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2">
+                                <span class="text-xs font-bold flex-1">${st.label}</span>
+                                <div class="flex gap-1">
+                                    <button onclick="studentTfDraft[${idx}]=true; renderStudentPhoneUI();" class="px-3 py-1 rounded-lg text-xs font-black ${studentTfDraft[idx] === true ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-700'}">Đúng</button>
+                                    <button onclick="studentTfDraft[${idx}]=false; renderStudentPhoneUI();" class="px-3 py-1 rounded-lg text-xs font-black ${studentTfDraft[idx] === false ? 'bg-rose-600 text-white' : 'bg-slate-200 dark:bg-slate-700'}">Sai</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="submitFromStudentPhone('tf', studentTfDraft)" class="w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm shadow-lg">
+                        🚀 Gửi Tổ Hợp Đúng/Sai Lên Sân Khấu
+                    </button>
+                `;
+            } else {
+                pad.innerHTML = `
+                    <div class="space-y-2.5">
+                        <label class="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 block">✍️ Nhập đáp số trả lời ngắn của em:</label>
+                        <input id="student-short-ans-inp" type="text" value="${studentShortDraft}" oninput="studentShortDraft = this.value" placeholder="VD: 3, 24, 2.67, 1024..." class="w-full px-4 py-3 rounded-2xl border-2 border-indigo-400 bg-slate-50 dark:bg-slate-900 font-black text-center text-lg text-indigo-700 dark:text-indigo-300">
+                        <button onclick="submitFromStudentPhone('short', document.getElementById('student-short-ans-inp').value)" class="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-lg">
+                            🚀 Gửi Đáp Số Về Đích
+                        </button>
+                    </div>
+                `;
+            }
+            renderAllMath(document.getElementById('tab-student'));
+        }
+
+        function submitFromStudentPhone(qType, answerValue) {
+            const pIdx = parseInt(document.getElementById('student-remote-select').value || "0", 10);
+            const teamMode = document.getElementById('student-team-select').value;
+            const q = examQuestions[bellIndex];
+            if (!q) return;
+
+            let isCorrect = false;
+            let displayChoice = "";
+
+            if (qType === 'mcq') {
+                isCorrect = (answerValue === q.correct);
+                displayChoice = String.fromCharCode(65 + answerValue);
+            } else if (qType === 'tf') {
+                let match = 0;
+                q.statements.forEach((st, i) => { if (answerValue[i] === st.ans) match++; });
+                isCorrect = (match === 4);
+                displayChoice = `${match}/4 ý đúng`;
+            } else {
+                const cleanU = String(answerValue || '').trim().replace(',', '.');
+                const cleanK = String(q.shortAnswer || '').trim().replace(',', '.');
+                isCorrect = (cleanU !== '' && cleanU === cleanK);
+                displayChoice = cleanU || '(Trống)';
+            }
+
+            const payload = { playerIdx: pIdx, teamMode, isCorrect, displayChoice, qType };
+            handleIncomingStudentSubmission(payload);
+            if (syncChannel) {
+                syncChannel.postMessage({ type: 'STUDENT_SUBMIT', payload });
+            }
+
+            const fb = document.getElementById('student-submit-feedback');
+            fb.classList.remove('hidden');
+            fb.innerText = isCorrect
+                ? `🎉 Đã gửi đáp án [${displayChoice}] - CHÍNH XÁC! Điểm đã cộng lên sân khấu!`
+                : `📨 Đã gửi đáp án [${displayChoice}] lên màn chiếu giáo viên!`;
+        }
+
+        function handleIncomingStudentSubmission(payload) {
+            const { playerIdx, teamMode, isCorrect, displayChoice, qType } = payload;
+            const player = bellPlayers[playerIdx];
+            if (player) {
+                player.lastChoice = displayChoice;
+                if (isCorrect) {
+                    player.alive = true;
+                    player.score += (qType === 'mcq' ? 10 : (qType === 'tf' ? 20 : 30));
+                } else if (teamMode === 'bell') {
+                    player.alive = false;
+                }
+            }
+            if (teamMode === 'red' && isCorrect) awardTugPoint('red');
+            if (teamMode === 'blue' && isCorrect) awardTugPoint('blue');
+
+            renderBellPlayers();
+            populateStudentDropdown();
+            showToast(`📲 ${player ? player.name : 'Học sinh'} vừa gửi đáp án: ${displayChoice}`);
+        }
+
+        // 6. TỰ ĐỘNG NẠP FILE `de_thi_22_cau.txt` TỪ GITHUB KHI MỞ TRANG
         async function loadFromGithubTxtFile(showNotification = false) {
             try {
                 const response = await fetch('./de_thi_22_cau.txt', { cache: 'no-store' });
@@ -733,11 +1022,12 @@
             document.getElementById('bank-total-count').innerText = examQuestions.length;
             renderBellStage();
             renderTugStage();
+            renderStudentPhoneUI();
             renderBankList();
             renderPracticeExam();
         }
 
-        // 6. BỘ PHÂN TÍCH ĐỀ THI THÔNG MINH (ĐỌC CẢ `de_thi_22_cau.txt` VÀ WORD `.DOCX`)
+        // 7. BỘ PHÂN TÍCH ĐỀ THI THÔNG MINH (ĐỌC CẢ `de_thi_22_cau.txt` VÀ WORD `.DOCX`)
         function parseStructuredExamText(rawText) {
             const defaultVisuals = getPreset1Questions();
             const blocks = rawText.split(/(?=Câu\s+\d+)/gi).map(s => s.trim()).filter(Boolean);
@@ -748,7 +1038,6 @@
                 const lines = block.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
                 if (lines.length === 0) return;
 
-                // Xác định Phần thi: Khởi Động (1-12), Tăng Tốc (13-16), Về Đích (17-22)
                 let partName = idx < 12 ? "PHẦN I - KHỞI ĐỘNG" : (idx < 16 ? "PHẦN II - TĂNG TỐC" : "PHẦN III - VỀ ĐÍCH");
                 let qType = idx < 12 ? "mcq" : (idx < 16 ? "tf" : "short");
 
@@ -817,7 +1106,6 @@
             return results;
         }
 
-        // Xử lý khi giáo viên tải file .docx hoặc .txt lên
         function handleExamFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -898,7 +1186,7 @@
             showToast('📥 Đã tải xuống file de_thi_22_cau.txt để bạn đưa lên GitHub!');
         }
 
-        // 7. HIỂN THỊ SÂN KHẤU RUNG CHUÔNG VÀNG (3 PHẦN: KHỞI ĐỘNG - TĂNG TỐC - VỀ ĐÍCH)
+        // 8. HIỂN THỊ SÂN KHẤU RUNG CHUÔNG VÀNG (3 PHẦN: KHỞI ĐỘNG - TĂNG TỐC - VỀ ĐÍCH)
         function renderBellStage() {
             const q = examQuestions[bellIndex];
             if (!q) return;
@@ -907,14 +1195,12 @@
             document.getElementById('bell-q-counter').innerText = `${q.qNum} / ${examQuestions.length}`;
             document.getElementById('bell-question-text').innerHTML = `<span class="text-indigo-600 dark:text-indigo-400 font-black mr-1.5">${q.qNum}.</span>${q.text}`;
 
-            // Render Stepper 22 câu
             const stepper = document.getElementById('bell-stepper');
             stepper.innerHTML = examQuestions.map((item, idx) => {
                 const active = idx === bellIndex ? 'bg-indigo-600 text-white ring-2 ring-indigo-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
                 return `<button onclick="jumpBellQuestion(${idx})" class="w-7 h-7 rounded-lg text-[11px] font-extrabold shrink-0 transition ${active}">${idx + 1}</button>`;
             }).join('');
 
-            // Render Hình vẽ / Đồ thị SVG
             const vBox = document.getElementById('bell-visual-box');
             if (q.visual) {
                 vBox.classList.remove('hidden');
@@ -924,7 +1210,6 @@
                 vBox.innerHTML = '';
             }
 
-            // Render Khu vực trả lời theo đúng từng phần (KHÔNG hiển thị 4 đáp án ở phần Trả lời ngắn)
             const optArea = document.getElementById('bell-options-area');
             const hintEl = document.getElementById('bell-question-type-hint');
 
@@ -965,8 +1250,7 @@
                         </div>`;
                     }).join('') + `</div>`;
             } else {
-                // PHẦN III - VỀ ĐÍCH: Ô NHẬP ĐÁP SỐ TRẢ LỜI NGẮN (KHÔNG CÓ 4 LỰA CHỌN A,B,C,D)
-                hintEl.innerText = 'PHẦN III - VỀ ĐÍCH: Câu hỏi Trả lời ngắn (Thí sinh ghi đáp số vào bảng con)';
+                hintEl.innerText = 'PHẦN III - VỀ ĐÍCH: Câu hỏi Trả lời ngắn (Thí sinh ghi đáp số vào bảng hoặc Điện thoại)';
                 optArea.innerHTML = `
                     <div class="p-4 rounded-2xl bg-indigo-50/70 dark:bg-slate-800/90 border-2 border-indigo-200 dark:border-indigo-700 space-y-3">
                         <div class="flex flex-wrap items-center gap-3">
@@ -983,7 +1267,6 @@
                 `;
             }
 
-            // Lời giải
             const explBox = document.getElementById('bell-explanation-box');
             if (bellRevealed) {
                 explBox.classList.remove('hidden');
@@ -1006,9 +1289,10 @@
                 const statusClass = p.alive
                     ? 'bg-white dark:bg-slate-800 border-emerald-400 text-slate-800 dark:text-slate-100'
                     : 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-300 text-slate-400 line-through opacity-65';
+                const choiceTag = p.lastChoice ? `<span class="ml-1 px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700 text-[10px] font-black">${p.lastChoice}</span>` : '';
                 return `<div onclick="togglePlayerAlive(${idx})" class="p-2.5 rounded-xl border-2 cursor-pointer transition flex items-center justify-between text-xs font-bold ${statusClass}">
                     <div class="truncate pr-1">
-                        <span class="mr-1">${p.alive ? '🟢' : '🔴'}</span>${p.name}
+                        <span class="mr-1">${p.alive ? '🟢' : '🔴'}</span>${p.name}${choiceTag}
                     </div>
                     <span class="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-slate-700 text-amber-800 dark:text-amber-300 font-black text-[11px]">${p.score}đ</span>
                 </div>`;
@@ -1024,12 +1308,13 @@
             const q = examQuestions[bellIndex];
             bellPlayers.forEach(p => {
                 if (!p.alive) return;
-                // 80% cơ hội trả lời đúng khi mô phỏng
                 const isRight = Math.random() < 0.8;
                 if (isRight) {
                     p.score += (q.type === 'mcq' ? 10 : (q.type === 'tf' ? 20 : 30));
+                    p.lastChoice = q.type === 'mcq' ? String.fromCharCode(65 + q.correct) : (q.type === 'tf' ? '4/4' : q.shortAnswer);
                 } else {
                     p.alive = false;
+                    p.lastChoice = 'Sai';
                 }
             });
             renderBellPlayers();
@@ -1088,6 +1373,10 @@
             bellTimeLeft = 30;
             document.getElementById('bell-timer-text').innerText = '30s';
             renderBellStage();
+            renderStudentPhoneUI();
+            if (syncChannel) {
+                syncChannel.postMessage({ type: 'STAGE_CHANGE', bellIndex });
+            }
         }
 
         function startBellTimer() {
@@ -1105,7 +1394,6 @@
             }, 1000);
         }
 
-        // NÚT CỨU TRỢ RUNG CHUÔNG VÀNG
         function rescueBellPlayers() {
             let rescued = 0;
             bellPlayers.forEach(p => {
@@ -1122,20 +1410,21 @@
             const inp = document.getElementById('new-player-name');
             const name = inp.value.trim();
             if (!name) return;
-            bellPlayers.push({ id: bellPlayers.length + 1, name, alive: true, score: 0 });
+            bellPlayers.push({ id: bellPlayers.length + 1, name, alive: true, score: 0, lastChoice: null });
             inp.value = '';
             renderBellPlayers();
+            populateStudentDropdown();
             showToast(`➕ Đã thêm thí sinh "${name}" vào sàn thi đấu!`);
         }
 
         function resetBellGame() {
-            bellPlayers.forEach(p => { p.alive = true; p.score = 0; });
+            bellPlayers.forEach(p => { p.alive = true; p.score = 0; p.lastChoice = null; });
             bellIndex = 0;
             resetBellQuestionState();
             showToast('🔄 Đã làm mới sàn đấu Rung Chuông Vàng!');
         }
 
-        // 8. BẢNG VINH DANH NHÀ VÔ ĐỊCH & PHÁO HOA RUNG CHUÔNG VÀNG
+        // 9. BẢNG VINH DANH NHÀ VÔ ĐỊCH & PHÁO HOA RUNG CHUÔNG VÀNG
         function openHonorModal() {
             const modal = document.getElementById('honor-modal');
             const listEl = document.getElementById('honor-winners-list');
@@ -1214,7 +1503,7 @@
             showToast('📊 Đã tải xuống file Excel (.csv) Bảng điểm Rung Chuông Vàng!');
         }
 
-        // 9. LOGIC KÉO CO KIẾN THỨC (HOẠT ĐỘNG 100% CẢ KHI BẬT TOÀN MÀN HÌNH)
+        // 10. LOGIC KÉO CO KIẾN THỨC (HOẠT ĐỘNG 100% CẢ KHI BẬT TOÀN MÀN HÌNH)
         function renderTugStage() {
             const q = examQuestions[tugIndex];
             if (!q) return;
@@ -1223,14 +1512,12 @@
             document.getElementById('tug-q-counter').innerText = `${q.qNum} / ${examQuestions.length}`;
             document.getElementById('tug-question-text').innerHTML = `<span class="text-rose-600 font-black mr-1.5">${q.qNum}.</span>${q.text}`;
 
-            // Stepper Kéo Co
             const stepper = document.getElementById('tug-stepper');
             stepper.innerHTML = examQuestions.map((_, idx) => {
                 const active = idx === tugIndex ? 'bg-rose-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
                 return `<button type="button" onclick="jumpTugQuestion(${idx})" class="w-7 h-7 rounded-lg text-[11px] font-extrabold shrink-0 cursor-pointer ${active}">${idx + 1}</button>`;
             }).join('');
 
-            // Hình vẽ Kéo Co
             const vBox = document.getElementById('tug-visual-box');
             if (q.visual) {
                 vBox.classList.remove('hidden');
@@ -1240,7 +1527,6 @@
                 vBox.innerHTML = '';
             }
 
-            // Hiển thị phương án theo đúng 3 phần
             const optArea = document.getElementById('tug-options-area');
             if (q.type === 'mcq') {
                 optArea.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">` +
@@ -1265,7 +1551,6 @@
                         </div>`;
                     }).join('') + `</div>`;
             } else {
-                // Phần III Về Đích: Ô nhập đáp số cho Đội Đỏ & Đội Xanh
                 optArea.innerHTML = `
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
                         <div class="space-y-1.5">
@@ -1374,7 +1659,7 @@
             showToast('🔄 Đã đặt lại trận đấu Kéo Co Kiến Thức!');
         }
 
-        // 10. NGÂN HÀNG ĐỀ & PHÒNG LUYỆN THI 22 CÂU
+        // 11. NGÂN HÀNG ĐỀ & PHÒNG LUYỆN THI 22 CÂU
         function renderBankList() {
             const list = document.getElementById('bank-question-list');
             if (!list) return;
@@ -1400,7 +1685,7 @@
         function renderPracticeExam() {
             const container = document.getElementById('practice-questions-container');
             if (!container) return;
-            container.innerHTML = examQuestions.map((q, idx) => {
+            container.innerHTML = examQuestions.map((q) => {
                 let inputHtml = '';
                 if (q.type === 'mcq') {
                     inputHtml = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-2">` +
@@ -1490,7 +1775,7 @@
             showToast('🔄 Đã làm mới bài luyện thi!');
         }
 
-        // 11. CHẾ ĐỘ TOÀN MÀN HÌNH & SỬA ĐỒ THỊ TRỰC TIẾP
+        // 12. CHẾ ĐỘ TOÀN MÀN HÌNH & SỬA ĐỒ THỊ TRỰC TIẾP
         function toggleStageFullscreen(containerId) {
             const el = document.getElementById(containerId);
             if (!el) return;
@@ -1564,17 +1849,23 @@
             showToast('🗑️ Đã xóa hình minh họa của câu hỏi này.');
         }
 
-        // 12. CHUYỂN TAB & PHÍM TẮT TRÌNH CHIẾU
+        // 13. CHUYỂN TAB & TỰ ĐỘNG NHẬN DIỆN KHI HỌC SINH QUÉT QR (?mode=student)
         function switchTab(tabName) {
-            ['bell', 'tug', 'bank', 'practice'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tabName);
+            ['bell', 'tug', 'student', 'bank', 'practice'].forEach(t => {
+                const sec = document.getElementById(`tab-${t}`);
+                if (sec) sec.classList.toggle('hidden', t !== tabName);
                 const btn = document.getElementById(`tab-btn-${t}`);
-                if (t === tabName) {
-                    btn.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-indigo-600 text-white shadow';
-                } else {
-                    btn.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-indigo-600';
+                if (btn) {
+                    if (t === tabName) {
+                        btn.className = 'tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-indigo-600 text-white shadow shrink-0';
+                    } else {
+                        btn.className = 'tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0';
+                    }
                 }
             });
+            if (tabName === 'student') {
+                renderStudentPhoneUI();
+            }
             renderAllMath();
         }
 
@@ -1583,7 +1874,7 @@
         }
 
         window.addEventListener('keydown', (e) => {
-            if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
             if (e.key === 'ArrowRight') {
                 if (!document.getElementById('tab-bell').classList.contains('hidden')) nextBellQuestion();
                 else if (!document.getElementById('tab-tug').classList.contains('hidden')) nextTugQuestion();
@@ -1597,8 +1888,14 @@
             }
         });
 
-        window.addEventListener('DOMContentLoaded', () => {
-            loadFromGithubTxtFile(false);
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadFromGithubTxtFile(false);
+            // Tự động mở giao diện Điện Thoại HS nếu học sinh quét mã QR có ?mode=student
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('mode') === 'student') {
+                switchTab('student');
+                showToast('📲 Đã kết nối chế độ Điện Thoại Học Sinh (Mã phòng: 2025)!');
+            }
         });
     </script>
 </body>
