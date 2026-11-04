@@ -1924,14 +1924,19 @@
         let studentSubmittedForQuestion = {};
 
         // Trạng thái Kéo Co Kiến Thức
+        let activeGameMode = 'bell'; // 'bell' | 'tug'
         let tugIndex = 0;
         let tugRevealed = false;
         let tugPosition = 0;
         let tugRedScore = 0;
         let tugBlueScore = 0;
+        let tugRedChoiceMcq = null;
+        let tugBlueChoiceMcq = null;
         let tugRedInput = "";
         let tugBlueInput = "";
         let tugTfUserSelections = [null, null, null, null];
+        let tugRedTfSelections = [null, null, null, null];
+        let tugBlueTfSelections = [null, null, null, null];
         let tugTimer = null;
         let tugTimeLeft = 20;
 
@@ -2606,16 +2611,20 @@
             }
         }
 
-        function gradeSinglePlayerSubmission(player) {
+        function gradeSinglePlayerSubmission(player, idx = -1) {
             if (!player || player.pendingChoice === undefined || player.pendingChoice === null) return;
             player.lastChoice = player.pendingChoice;
             const qType = player.pendingQType || 'mcq';
+            const isTugMode = (activeGameMode === 'tug') || !document.getElementById('tab-tug').classList.contains('hidden');
+            const effTeam = getEffectiveTugTeam(player, idx >= 0 ? idx : bellPlayers.indexOf(player));
+
             if (player.pendingCorrect) {
                 player.alive = true;
                 player.score += (qType === 'mcq' ? 10 : (qType === 'tf' ? 20 : 30));
-                if (player.teamMode === 'red') awardTugPoint('red');
-                if (player.teamMode === 'blue') awardTugPoint('blue');
-            } else if ((player.teamMode || 'bell') === 'bell') {
+                if (isTugMode || player.teamMode === 'red' || player.teamMode === 'blue') {
+                    awardTugPoint(effTeam, true);
+                }
+            } else if (!isTugMode && (player.teamMode || 'bell') === 'bell') {
                 player.alive = false;
             }
             player.pendingChoice = null;
@@ -2625,23 +2634,43 @@
             let correctCount = 0;
             let submittedCount = 0;
             let noAnswerEliminatedCount = 0;
-            bellPlayers.forEach(p => {
+            let redCorrect = 0;
+            let blueCorrect = 0;
+            const isTugMode = (activeGameMode === 'tug') || !document.getElementById('tab-tug').classList.contains('hidden');
+
+            bellPlayers.forEach((p, idx) => {
                 if (p.pendingChoice !== undefined && p.pendingChoice !== null) {
                     submittedCount++;
-                    if (p.pendingCorrect) correctCount++;
-                    gradeSinglePlayerSubmission(p);
-                } else if (p.alive && (p.teamMode || 'bell') === 'bell') {
-                    // Học sinh đang trên sàn nhưng không trả lời câu hỏi này -> Bị loại khỏi sàn!
+                    if (p.pendingCorrect) {
+                        correctCount++;
+                        const effTeam = getEffectiveTugTeam(p, idx);
+                        if (effTeam === 'red') redCorrect++;
+                        else blueCorrect++;
+                    }
+                    gradeSinglePlayerSubmission(p, idx);
+                } else if (!isTugMode && p.alive && (p.teamMode || 'bell') === 'bell') {
+                    // Chế độ Rung Chuông Vàng: Học sinh đang trên sàn nhưng không trả lời -> Bị loại khỏi sàn!
                     p.alive = false;
                     p.lastChoice = 'Không trả lời';
                     noAnswerEliminatedCount++;
                 }
             });
+
             savePlayersToStorage();
             renderBellPlayers();
             populateStudentDropdown();
             renderStudentPhoneUI();
             broadcastRoomEvent({ type: 'PLAYERS_LIST_SYNC', players: bellPlayers });
+
+            if (isTugMode) {
+                if (submittedCount > 0) {
+                    if (correctCount > 0) playCorrectSound();
+                    else playWrongSound();
+                    showToast(`🪢 Chấm Kéo Co: Đội Đỏ đúng ${redCorrect} HS • Đội Xanh đúng ${blueCorrect} HS!`);
+                }
+                return;
+            }
+
             const remainingAlive = bellPlayers.filter(p => p.alive).length;
             if (submittedCount > 0 || noAnswerEliminatedCount > 0) {
                 if (correctCount > 0) playCorrectSound();
@@ -3639,6 +3668,24 @@
         }
 
         // Hiển thị danh sách học sinh ở Sảnh Chờ "ĐẤU TRƯỜNG KIẾN THỨC" VÀ cột Học sinh còn lại sau mỗi câu
+        function getEffectiveTugTeam(player, idx = 0) {
+            if (!player) return 'red';
+            if (player.teamMode === 'red' || player.teamMode === 'blue') return player.teamMode;
+            const pIdx = idx >= 0 ? idx : bellPlayers.indexOf(player);
+            return (pIdx % 2 === 0) ? 'red' : 'blue';
+        }
+
+        function togglePlayerTugTeam(idx) {
+            const p = bellPlayers[idx];
+            if (!p) return;
+            const cur = getEffectiveTugTeam(p, idx);
+            p.teamMode = (cur === 'red') ? 'blue' : 'red';
+            savePlayersToStorage();
+            renderBellPlayers();
+            broadcastRoomEvent({ type: 'PLAYERS_LIST_SYNC', players: bellPlayers });
+            showToast(`🔄 Đã chuyển "${p.name}" sang ${p.teamMode === 'red' ? '🔴 Đội Đỏ' : '🔵 Đội Xanh'}!`);
+        }
+
         function renderTugTeamRosters() {
             const redListEl = document.getElementById('tug-red-players-list');
             const blueListEl = document.getElementById('tug-blue-players-list');
@@ -3649,27 +3696,26 @@
             const redPlayers = [];
             const bluePlayers = [];
             bellPlayers.forEach((p, idx) => {
-                if (p.teamMode === 'red') redPlayers.push(p);
-                else if (p.teamMode === 'blue') bluePlayers.push(p);
-                else if (idx % 2 === 0) redPlayers.push(p);
-                else bluePlayers.push(p);
+                const effTeam = getEffectiveTugTeam(p, idx);
+                if (effTeam === 'red') redPlayers.push({ p, idx });
+                else bluePlayers.push({ p, idx });
             });
 
             if (redCountEl) redCountEl.innerText = redPlayers.length;
             if (blueCountEl) blueCountEl.innerText = bluePlayers.length;
 
             redListEl.innerHTML = redPlayers.length === 0
-                ? `<span class="text-[11px] text-slate-400 italic">Chưa có học sinh báo danh Đội Đỏ...</span>`
-                : redPlayers.map(p => {
+                ? `<span class="text-[11px] text-slate-400 italic">Chưa có học sinh Đội Đỏ (Quét QR hoặc bấm + Thêm)...</span>`
+                : redPlayers.map(({ p, idx }) => {
                     const subBadge = (!tugRevealed && p.pendingChoice) ? ' 📩' : (p.lastChoice ? ` [${p.lastChoice}]` : '');
-                    return `<span class="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-800 border border-rose-300 text-rose-700 dark:text-rose-300 font-bold text-[11px] shadow-sm">🔴 ${p.name}${subBadge}</span>`;
+                    return `<span onclick="togglePlayerTugTeam(${idx})" title="Bấm để đổi sang Đội Xanh" class="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-rose-300 hover:border-rose-500 text-rose-700 dark:text-rose-300 font-bold text-xs shadow-sm transition">🔴 ${p.name}${subBadge}</span>`;
                 }).join('');
 
             blueListEl.innerHTML = bluePlayers.length === 0
-                ? `<span class="text-[11px] text-slate-400 italic">Chưa có học sinh báo danh Đội Xanh...</span>`
-                : bluePlayers.map(p => {
+                ? `<span class="text-[11px] text-slate-400 italic">Chưa có học sinh Đội Xanh (Quét QR hoặc bấm + Thêm)...</span>`
+                : bluePlayers.map(({ p, idx }) => {
                     const subBadge = (!tugRevealed && p.pendingChoice) ? ' 📩' : (p.lastChoice ? ` [${p.lastChoice}]` : '');
-                    return `<span class="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-800 border border-sky-300 text-sky-700 dark:text-sky-300 font-bold text-[11px] shadow-sm">🔵 ${p.name}${subBadge}</span>`;
+                    return `<span onclick="togglePlayerTugTeam(${idx})" title="Bấm để đổi sang Đội Đỏ" class="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-sky-300 hover:border-sky-500 text-sky-700 dark:text-sky-300 font-bold text-xs shadow-sm transition">🔵 ${p.name}${subBadge}</span>`;
                 }).join('');
         }
 
@@ -4093,7 +4139,7 @@
             showToast('📊 Đã tải xuống file Excel (.csv) Bảng điểm học sinh!');
         }
 
-        // 14. LOGIC KÉO CO KIẾN THỨC (ĐỒNG BỘ THỜI GIAN 20S - 30S - 40S & CHỮ TO RÕ TRÊN TV)
+        // 14. LOGIC KÉO CO KIẾN THỨC (ĐỐI KHÁNG 2 ĐỘI TRỰC TIẾP TRÊN MÀN CHIẾU & QUA ĐIỆN THOẠI QR)
         function renderTugStage() {
             const q = examQuestions[tugIndex];
             if (!q) return;
@@ -4133,8 +4179,8 @@
             const hintEl = document.getElementById('tug-question-type-hint');
 
             if (q.type === 'mcq') {
-                hintEl.innerText = 'PHẦN I - KHỞI ĐỘNG (20 GIÂY): Trắc nghiệm 4 lựa chọn (Bấm vào phương án hoặc cộng điểm Đội Đỏ / Đội Xanh)';
-                optArea.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">` +
+                hintEl.innerText = 'PHẦN I - KHỞI ĐỘNG (20 GIÂY): 2 Đội chọn đáp án trên Điện thoại hoặc bấm chọn trực tiếp ở bảng Đội Đỏ / Đội Xanh bên dưới';
+                const optionsGrid = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">` +
                     q.options.map((opt, idx) => {
                         const letter = String.fromCharCode(65 + idx);
                         let style = 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 hover:border-rose-400';
@@ -4143,16 +4189,45 @@
                                 ? 'bg-emerald-100 dark:bg-emerald-900/70 border-emerald-500 text-emerald-950 dark:text-emerald-100 ring-4 ring-emerald-400'
                                 : 'bg-white/60 dark:bg-slate-800/40 opacity-55 border-slate-200';
                         }
-                        return `<div onclick="selectTugMcqOption(${idx})" class="stage-option-item rounded-2xl border-2 font-bold flex items-center space-x-4 cursor-pointer transition shadow-sm ${style}">
-                            <span class="w-10 h-10 rounded-xl bg-rose-600 text-white font-black text-lg flex items-center justify-center shrink-0 shadow">${letter}</span>
-                            <div class="flex-1">${opt}</div>
+                        const redPickedBadge = (tugRedChoiceMcq === idx) ? `<span class="px-2 py-0.5 rounded-lg bg-rose-600 text-white text-xs font-black">🔴 Đỏ chọn</span>` : '';
+                        const bluePickedBadge = (tugBlueChoiceMcq === idx) ? `<span class="px-2 py-0.5 rounded-lg bg-sky-600 text-white text-xs font-black">🔵 Xanh chọn</span>` : '';
+                        return `<div onclick="selectTugMcqOption(${idx})" class="stage-option-item rounded-2xl border-2 font-bold flex items-center justify-between space-x-3 cursor-pointer transition shadow-sm ${style}">
+                            <div class="flex items-center space-x-4 flex-1">
+                                <span class="w-10 h-10 rounded-xl bg-rose-600 text-white font-black text-lg flex items-center justify-center shrink-0 shadow">${letter}</span>
+                                <div class="flex-1">${opt}</div>
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0">${redPickedBadge}${bluePickedBadge}</div>
                         </div>`;
                     }).join('') + `</div>`;
+
+                // Bảng bấm đối kháng trực tiếp trên màn hình cho 2 đội Đỏ & Xanh
+                const dualTeamPad = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div class="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border-2 border-rose-300 dark:border-rose-700 flex items-center justify-between gap-2">
+                            <span class="text-xs sm:text-sm font-black text-rose-700 dark:text-rose-300">🔴 ĐỘI ĐỎ CHỌN:</span>
+                            <div class="flex items-center gap-2">
+                                ${['A', 'B', 'C', 'D'].map((l, idx) => `
+                                    <button type="button" onclick="pickTeamMcqOnScreen('red', ${idx})" class="w-10 h-10 rounded-xl font-black text-sm transition shadow ${tugRedChoiceMcq === idx ? 'bg-rose-600 text-white ring-2 ring-rose-400 scale-105' : 'bg-white dark:bg-slate-800 text-rose-700 border border-rose-300 hover:bg-rose-100'}">${l}</button>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="p-3.5 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border-2 border-sky-300 dark:border-sky-700 flex items-center justify-between gap-2">
+                            <span class="text-xs sm:text-sm font-black text-sky-700 dark:text-sky-300">🔵 ĐỘI XANH CHỌN:</span>
+                            <div class="flex items-center gap-2">
+                                ${['A', 'B', 'C', 'D'].map((l, idx) => `
+                                    <button type="button" onclick="pickTeamMcqOnScreen('blue', ${idx})" class="w-10 h-10 rounded-xl font-black text-sm transition shadow ${tugBlueChoiceMcq === idx ? 'bg-sky-600 text-white ring-2 ring-sky-400 scale-105' : 'bg-white dark:bg-slate-800 text-sky-700 border border-sky-300 hover:bg-sky-100'}">${l}</button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                optArea.innerHTML = optionsGrid + dualTeamPad;
             } else if (q.type === 'tf') {
                 hintEl.innerText = 'PHẦN II - TĂNG TỐC (30 GIÂY): Xét tính Đúng / Sai cho từng mệnh đề a), b), c), d)';
                 optArea.innerHTML = `<div class="space-y-3">` +
                     q.statements.map((st, idx) => {
-                        const userVal = tugTfUserSelections[idx];
+                        const redVal = tugRedTfSelections[idx];
+                        const blueVal = tugBlueTfSelections[idx];
                         let badgeHtml = '';
                         if (tugRevealed) {
                             badgeHtml = st.ans
@@ -4161,9 +4236,17 @@
                         }
                         return `<div class="p-4 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-3">
                             <div class="text-lg sm:text-xl lg:text-2xl font-bold flex-1">${st.label}</div>
-                            <div class="flex items-center space-x-2">
-                                <button type="button" onclick="toggleTugTfChoice(${idx}, true)" class="px-4 py-1.5 rounded-xl text-sm font-black border transition ${userVal === true ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 dark:bg-slate-700'}">Đúng</button>
-                                <button type="button" onclick="toggleTugTfChoice(${idx}, false)" class="px-4 py-1.5 rounded-xl text-sm font-black border transition ${userVal === false ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 dark:bg-slate-700'}">Sai</button>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <div class="flex items-center space-x-1 bg-rose-50 dark:bg-rose-950/50 px-2.5 py-1 rounded-xl border border-rose-200">
+                                    <span class="text-xs font-black text-rose-600 mr-1">🔴 Đỏ:</span>
+                                    <button type="button" onclick="toggleTugTeamTf('red', ${idx}, true)" class="px-2.5 py-1 rounded-lg text-xs font-black transition ${redVal === true ? 'bg-rose-600 text-white' : 'bg-white dark:bg-slate-700'}">Đ</button>
+                                    <button type="button" onclick="toggleTugTeamTf('red', ${idx}, false)" class="px-2.5 py-1 rounded-lg text-xs font-black transition ${redVal === false ? 'bg-rose-600 text-white' : 'bg-white dark:bg-slate-700'}">S</button>
+                                </div>
+                                <div class="flex items-center space-x-1 bg-sky-50 dark:bg-sky-950/50 px-2.5 py-1 rounded-xl border border-sky-200">
+                                    <span class="text-xs font-black text-sky-600 mr-1">🔵 Xanh:</span>
+                                    <button type="button" onclick="toggleTugTeamTf('blue', ${idx}, true)" class="px-2.5 py-1 rounded-lg text-xs font-black transition ${blueVal === true ? 'bg-sky-600 text-white' : 'bg-white dark:bg-slate-700'}">Đ</button>
+                                    <button type="button" onclick="toggleTugTeamTf('blue', ${idx}, false)" class="px-2.5 py-1 rounded-lg text-xs font-black transition ${blueVal === false ? 'bg-sky-600 text-white' : 'bg-white dark:bg-slate-700'}">S</button>
+                                </div>
                                 ${badgeHtml}
                             </div>
                         </div>`;
@@ -4203,8 +4286,28 @@
                 explBox.classList.add('hidden');
             }
 
+            renderTugTeamRosters();
             updateTugRopeUI();
             renderAllMath(document.getElementById('tab-tug'));
+        }
+
+        function pickTeamMcqOnScreen(team, idx) {
+            if (tugRevealed) return;
+            playToneNote(team === 'red' ? 587.33 : 659.25, 0, 0.1, 'chime', 0.14);
+            if (team === 'red') tugRedChoiceMcq = idx;
+            else tugBlueChoiceMcq = idx;
+            renderTugStage();
+            // Nếu cả 2 đội đã chọn xong trên màn hình thì tự động mở đáp án và kéo dây!
+            if (tugRedChoiceMcq !== null && tugBlueChoiceMcq !== null) {
+                setTimeout(() => revealTugAnswer(), 350);
+            }
+        }
+
+        function toggleTugTeamTf(team, idx, val) {
+            if (tugRevealed) return;
+            if (team === 'red') tugRedTfSelections[idx] = val;
+            else tugBlueTfSelections[idx] = val;
+            renderTugStage();
         }
 
         function selectTugMcqOption(idx) {
@@ -4217,7 +4320,7 @@
             renderTugStage();
             if (idx === q.correct) {
                 playCorrectSound();
-                showToast('✅ Chính xác! Phương án đúng là ' + String.fromCharCode(65 + idx) + '. Hãy bấm cộng điểm kéo dây cho đội trả lời đúng!');
+                showToast('✅ Chính xác! Phương án đúng là ' + String.fromCharCode(65 + idx) + '.');
             } else {
                 playWrongSound();
                 showToast('❌ Chưa chính xác! Đáp án đúng là ' + String.fromCharCode(65 + q.correct));
@@ -4320,24 +4423,24 @@
         }
 
         function updateTugRopeUI() {
-            const percent = Math.max(10, Math.min(90, 50 + tugPosition * 8));
+            const percent = Math.max(8, Math.min(92, 50 + tugPosition * 8));
             document.getElementById('tug-knot').style.left = percent + '%';
             document.getElementById('tug-score-red').innerText = `${tugRedScore} điểm`;
             document.getElementById('tug-score-blue').innerText = `${tugBlueScore} điểm`;
 
             const svgGroup = document.getElementById('tug-svg-teams-group');
             if (svgGroup) {
-                const shiftPx = tugPosition * 45;
+                const shiftPx = tugPosition * 50; // 5 nấc * 50px = 250px chạm đúng vạch đích 2 biên (x=250 và x=750)
                 svgGroup.setAttribute('transform', `translate(${shiftPx}, 0)`);
             }
 
             const banner = document.getElementById('tug-status-banner');
             if (tugPosition <= -5) {
-                banner.innerText = '🏆 4 CHIẾN BINH ĐỘI ĐỎ CHIẾN THẮNG TUYỆT ĐỐI! 🏆';
+                banner.innerText = '🏆 ĐỘI ĐỎ CHIẾN THẮNG TUYỆT ĐỐI! 🏆';
                 playVictorySoundAndApplause();
                 launchFireworks(3500);
             } else if (tugPosition >= 5) {
-                banner.innerText = '🏆 4 CHIẾN BINH ĐỘI XANH CHIẾN THẮNG TUYỆT ĐỐI! 🏆';
+                banner.innerText = '🏆 ĐỘI XANH CHIẾN THẮNG TUYỆT ĐỐI! 🏆';
                 playVictorySoundAndApplause();
                 launchFireworks(3500);
             } else if (tugPosition < 0) {
@@ -4349,26 +4452,61 @@
             }
         }
 
-        function awardTugPoint(team) {
+        function awardTugPoint(team, silentToast = false) {
             playTugPullSound();
             if (team === 'red') {
                 tugPosition = Math.max(-5, tugPosition - 1);
                 tugRedScore += 10;
-                showToast('🔴 Đội Đỏ vừa ghi điểm và kéo dây về phía mình!');
+                if (!silentToast) showToast('🔴 Đội Đỏ vừa ghi điểm và kéo dây về phía mình!');
             } else {
                 tugPosition = Math.min(5, tugPosition + 1);
                 tugBlueScore += 10;
-                showToast('🔵 Đội Xanh vừa ghi điểm và kéo dây về phía mình!');
+                if (!silentToast) showToast('🔵 Đội Xanh vừa ghi điểm và kéo dây về phía mình!');
             }
             updateTugRopeUI();
         }
 
         function revealTugAnswer() {
+            const wasRevealed = tugRevealed;
             tugRevealed = true;
             bellRevealed = true;
             stageCommandState = 'locked';
             clearInterval(tugTimer);
             stopTensionMusicLoop();
+
+            const q = examQuestions[tugIndex];
+            if (!wasRevealed && q) {
+                // Chấm điểm bảng chọn trực tiếp trên màn hình của Đội Đỏ & Đội Xanh (nếu có chọn)
+                if (q.type === 'mcq') {
+                    const redOk = (tugRedChoiceMcq === q.correct);
+                    const blueOk = (tugBlueChoiceMcq === q.correct);
+                    if (redOk) awardTugPoint('red', true);
+                    if (blueOk) awardTugPoint('blue', true);
+                    if (tugRedChoiceMcq !== null || tugBlueChoiceMcq !== null) {
+                        if (redOk && blueOk) showToast('🎉 Cả Đội Đỏ và Đội Xanh đều chọn đúng!');
+                        else if (redOk) showToast('🔴 Đội Đỏ chọn chính xác và kéo dây về phía mình!');
+                        else if (blueOk) showToast('🔵 Đội Xanh chọn chính xác và kéo dây về phía mình!');
+                        else playWrongSound();
+                    }
+                } else if (q.type === 'tf' && q.statements) {
+                    let redMatch = 0, blueMatch = 0;
+                    let redAny = false, blueAny = false;
+                    q.statements.forEach((st, i) => {
+                        if (tugRedTfSelections[i] !== null) { redAny = true; if (tugRedTfSelections[i] === st.ans) redMatch++; }
+                        if (tugBlueTfSelections[i] !== null) { blueAny = true; if (tugBlueTfSelections[i] === st.ans) blueMatch++; }
+                    });
+                    if (redAny || blueAny) {
+                        if (redMatch > blueMatch || redMatch === 4) awardTugPoint('red', true);
+                        if (blueMatch > redMatch || blueMatch === 4) awardTugPoint('blue', true);
+                        showToast(`🪢 Kết quả Tăng Tốc: Đội Đỏ đúng ${redMatch}/4 ý • Đội Xanh đúng ${blueMatch}/4 ý!`);
+                    }
+                } else if (q.type === 'short' && (tugRedInput.trim() !== '' || tugBlueInput.trim() !== '')) {
+                    const cleanKey = String(q.shortAnswer || '').trim().replace(',', '.');
+                    if (String(tugRedInput || '').trim().replace(',', '.') === cleanKey) awardTugPoint('red', true);
+                    if (String(tugBlueInput || '').trim().replace(',', '.') === cleanKey) awardTugPoint('blue', true);
+                }
+            }
+
             gradeAllPendingSubmissions();
             renderTugStage();
             renderStudentPhoneUI();
@@ -4383,14 +4521,26 @@
 
         function resetTugQuestionState() {
             isGameStarted = true;
+            activeGameMode = 'tug';
             tugRevealed = false;
             bellRevealed = false;
+            tugRedChoiceMcq = null;
+            tugBlueChoiceMcq = null;
             tugRedInput = "";
             tugBlueInput = "";
             tugTfUserSelections = [null, null, null, null];
+            tugRedTfSelections = [null, null, null, null];
+            tugBlueTfSelections = [null, null, null, null];
             stageCommandState = 'open';
             clearInterval(tugTimer);
             stopTensionMusicLoop();
+
+            // Xóa câu trả lời tạm của câu trước để học sinh 2 đội chọn câu tiếp theo
+            bellPlayers.forEach(p => {
+                p.lastChoice = null;
+                p.pendingChoice = null;
+                p.pendingCorrect = null;
+            });
 
             const q = examQuestions[tugIndex];
             tugTimeLeft = getQuestionDuration(q);
@@ -4662,6 +4812,7 @@
             }
             if (tabName === 'bell' || tabName === 'tug') {
                 isGameStarted = true;
+                activeGameMode = tabName;
             }
             ['lobby', 'bell', 'tug', 'student', 'bank', 'practice'].forEach(t => {
                 const sec = document.getElementById(`tab-${t}`);
