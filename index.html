@@ -419,7 +419,7 @@
 
             <div class="flex items-center justify-center gap-3">
                 <div class="px-4 py-2 rounded-xl bg-amber-100 text-amber-900 font-black text-sm border border-amber-300">
-                    MÃ PHÒNG (PIN): <span id="qr-room-pin" class="text-lg tracking-widest">2025</span>
+                    MÃ PHÒNG (PIN): <span id="qr-room-pin" class="text-lg tracking-widest">----</span>
                 </div>
             </div>
 
@@ -640,7 +640,7 @@
 
                         <div class="w-full space-y-2">
                             <div class="inline-block px-5 py-2 rounded-2xl bg-amber-400 text-slate-950 font-black text-base sm:text-lg tracking-wider shadow">
-                                MÃ PHÒNG (PIN): <span id="lobby-room-pin">2025</span>
+                                MÃ PHÒNG (PIN): <span id="lobby-room-pin">----</span>
                             </div>
                             <div class="flex items-center gap-2 max-w-md mx-auto">
                                 <input id="lobby-student-url" type="text" readonly class="flex-1 px-3 py-2 rounded-xl bg-slate-900/80 border border-white/20 text-indigo-200 text-xs font-mono">
@@ -1115,7 +1115,7 @@
         <section id="tab-student" class="hidden space-y-5">
             <div class="max-w-md mx-auto bg-white dark:bg-slate-800 rounded-[2.25rem] border-4 border-slate-800 dark:border-slate-600 shadow-2xl overflow-hidden">
                 <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between text-xs">
-                    <span class="font-bold">📲 Đấu Trường Kiến Thức • PIN: <span id="student-pin-display">2025</span></span>
+                    <span class="font-bold">📲 Đấu Trường Kiến Thức • PIN: <span id="student-pin-display">----</span></span>
                     <span id="student-conn-badge" class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold text-[10px]">● Trực tuyến</span>
                 </div>
 
@@ -1142,7 +1142,7 @@
                             </div>
                             <div>
                                 <label class="text-[11px] font-bold text-slate-600 dark:text-slate-300 block mb-1">Mã phòng PIN:</label>
-                                <input id="student-pin-inp" type="text" value="2025" class="w-full px-2.5 py-2 rounded-xl border bg-white dark:bg-slate-900 dark:border-slate-700 text-xs font-black text-center tracking-widest">
+                                <input id="student-pin-inp" type="text" value="" inputmode="numeric" class="w-full px-2.5 py-2 rounded-xl border bg-white dark:bg-slate-900 dark:border-slate-700 text-xs font-black text-center tracking-widest">
                             </div>
                         </div>
                         <button type="button" onclick="registerStudentFromPhone()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:opacity-95 text-white font-black text-xs uppercase tracking-wider shadow-lg active:scale-95 transition">
@@ -1321,6 +1321,32 @@
             toast.classList.remove('hidden');
             clearTimeout(window._toastTimer);
             window._toastTimer = setTimeout(() => toast.classList.add('hidden'), 3600);
+        }
+
+        // Thoát ký tự HTML cho dữ liệu do học sinh nhập (họ tên, đáp số) trước khi chèn vào innerHTML
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+        }
+
+        // So khớp đáp số trả lời ngắn: bỏ khoảng trắng, chấp nhận dấu phẩy thập phân, 2.50 = 2.5
+        function shortAnswerMatches(userValue, keyValue) {
+            const norm = v => String(v ?? '').trim().replace(/\s+/g, '').replace(',', '.');
+            const u = norm(userValue);
+            const k = norm(keyValue);
+            if (u === '' || k === '') return false;
+            if (!isNaN(u) && !isNaN(k)) return Number(u) === Number(k);
+            return u.toLowerCase() === k.toLowerCase();
+        }
+
+        // Máy GV chấm đáp án HS theo đề đang chiếu (không tin kết quả tự chấm của điện thoại)
+        function isAnswerCorrect(q, qType, answer) {
+            if (!q || qType !== q.type) return false;
+            if (q.type === 'mcq') return Number(answer) === q.correct;
+            if (q.type === 'tf') {
+                return Array.isArray(answer) && Array.isArray(q.statements) && q.statements.length > 0
+                    && q.statements.every((st, i) => answer[i] === st.ans);
+            }
+            return shortAnswerMatches(answer, q.shortAnswer);
         }
 
         // 2. KHO ĐỒ THỊ & BẢNG BIẾN THIÊN SVG SẮC NÉT (DÙNG MŨI TÊN TOÀN CỤC #arr-blue, #arr-red, #arr-axis ĐỂ HIỆN RÕ Ở CẢ KÉO CO & RUNG CHUÔNG VÀNG)
@@ -1895,7 +1921,21 @@
 
         // Trạng thái hiệu lệnh của Giáo viên ('waiting' = chờ hiệu lệnh, 'open' = mở cho HS trả lời, 'locked' = đã khóa)
         let stageCommandState = 'waiting';
-        let currentRoomPin = '2025';
+        const IS_STUDENT_MODE = new URLSearchParams(window.location.search).get('mode') === 'student';
+        // Mỗi máy GV một mã phòng ngẫu nhiên (lưu lại) để không lẫn với lớp khác cùng dùng máy chủ MQTT công cộng
+        let currentRoomPin = (() => {
+            const randomPin = () => String(Math.floor(100000 + Math.random() * 900000));
+            try {
+                const saved = localStorage.getItem('mathlab_room_pin');
+                if (saved && /^\d{4,8}$/.test(saved)) return saved;
+                const pin = randomPin();
+                if (!IS_STUDENT_MODE) localStorage.setItem('mathlab_room_pin', pin);
+                return pin;
+            } catch (e) {
+                return randomPin();
+            }
+        })();
+        let stageQMeta = null; // Thông tin câu hỏi hiện tại do máy GV gửi sang điện thoại HS
 
         // Danh sách học sinh tham gia thực tế
         let bellPlayers = [];
@@ -1949,8 +1989,50 @@
         const MQTT_TOPIC_PREFIX = 'mathlab_thpt_2025_room_';
         const processedMsgIds = new Set();
 
+        // true nếu tin nhắn đã xử lý (tin của chính máy này vọng lại, hoặc nhận trùng qua nhiều kênh/máy chủ)
+        function isDuplicateMsg(msgId) {
+            if (!msgId) return false;
+            if (processedMsgIds.has(msgId)) return true;
+            processedMsgIds.add(msgId);
+            if (processedMsgIds.size > 600) processedMsgIds.delete(processedMsgIds.values().next().value);
+            return false;
+        }
+
+        function receiveRoomMessage(data) {
+            if (!data || isDuplicateMsg(data._msgId)) return;
+            handleRoomSyncMessage(data);
+        }
+
+        function getStageQMeta(idx) {
+            const q = examQuestions[idx];
+            return q ? { type: q.type, qNum: q.qNum, part: q.part, total: examQuestions.length } : null;
+        }
+
+        function broadcastStageState(extra = {}) {
+            broadcastRoomEvent({ type: 'STAGE_SYNC', isGameStarted, bellIndex, stageCommandState, timeLeft: bellTimeLeft, ...extra });
+        }
+
+        // GV gửi lại toàn bộ trạng thái cho HS mới vào/vừa tải lại trang (gom nhiều yêu cầu trong 400ms)
+        let stageSnapshotTimer = null;
+        function scheduleStageSnapshot() {
+            if (IS_STUDENT_MODE) return;
+            clearTimeout(stageSnapshotTimer);
+            stageSnapshotTimer = setTimeout(() => {
+                broadcastStageState();
+                broadcastRoomEvent({ type: 'PLAYERS_LIST_SYNC', players: bellPlayers });
+            }, 400);
+        }
+
         function broadcastRoomEvent(eventData) {
-            const msgWithId = { ...eventData, _msgId: Date.now() + '_' + Math.random().toString(36).slice(2, 7) };
+            const msgWithId = { ...eventData, _msgId: Date.now() + '_' + Math.random().toString(36).slice(2, 9) };
+            if (msgWithId.type === 'STAGE_SYNC' && !IS_STUDENT_MODE) {
+                msgWithId.qMeta = getStageQMeta(msgWithId.bellIndex);
+            }
+            if (msgWithId.type === 'PLAYERS_LIST_SYNC') {
+                // Không gửi kết quả đúng/sai đang chờ chấm sang điện thoại HS
+                msgWithId.players = (msgWithId.players || []).map(({ pendingCorrect, ...rest }) => rest);
+            }
+            isDuplicateMsg(msgWithId._msgId);
             if (syncChannel) {
                 try { syncChannel.postMessage(msgWithId); } catch (e) {}
             }
@@ -1970,6 +2052,9 @@
             if (!data || !data.type) return;
             if (data.type === 'STUDENT_JOIN') {
                 handleIncomingStudentJoin(data.payload, false);
+                scheduleStageSnapshot();
+            } else if (data.type === 'REQUEST_STATE') {
+                scheduleStageSnapshot();
             } else if (data.type === 'STUDENT_SUBMIT') {
                 handleIncomingStudentSubmission(data.payload, false);
             } else if (data.type === 'STAGE_SYNC') {
@@ -1980,9 +2065,12 @@
                 stageCommandState = data.stageCommandState || 'waiting';
                 bellTimeLeft = data.timeLeft !== undefined ? data.timeLeft : getQuestionDuration(examQuestions[bellIndex]);
                 tugTimeLeft = bellTimeLeft;
+                if (data.qMeta) stageQMeta = data.qMeta;
                 if (prevIndex !== bellIndex) {
                     bellRevealed = false;
                     tugRevealed = false;
+                    studentTfDraft = [true, false, true, false];
+                    studentShortDraft = "";
                 }
                 if (data.stageCommandState === 'open' && data.playAlert) {
                     playCommandStartSound();
@@ -2002,7 +2090,7 @@
                 if (bellTimeLeft <= 0) {
                     renderStudentPhoneUI();
                 }
-            } else if (data.type === 'PLAYERS_LIST_SYNC' && Array.isArray(data.players)) {
+            } else if (data.type === 'PLAYERS_LIST_SYNC' && Array.isArray(data.players) && IS_STUDENT_MODE) {
                 bellPlayers = data.players;
                 savePlayersToStorage();
                 renderBellPlayers();
@@ -2012,14 +2100,14 @@
         }
 
         if (syncChannel) {
-            syncChannel.onmessage = (ev) => handleRoomSyncMessage(ev.data);
+            syncChannel.onmessage = (ev) => receiveRoomMessage(ev.data);
         }
 
         window.addEventListener('storage', (ev) => {
             if (ev.key === 'mathlab_2025_sync_event' && ev.newValue) {
                 try {
                     const data = JSON.parse(ev.newValue);
-                    handleRoomSyncMessage(data);
+                    receiveRoomMessage(data);
                 } catch (e) {}
             } else if (ev.key === 'mathlab_2025_real_players' && ev.newValue) {
                 try {
@@ -2056,19 +2144,34 @@
                                 payload: { id: currentStudentId, name: currentStudentName, teamMode: teamSel ? teamSel.value : 'bell' }
                             }));
                         }
+                        if (IS_STUDENT_MODE) {
+                            client.publish(MQTT_TOPIC_PREFIX + currentRoomPin, JSON.stringify({
+                                type: 'REQUEST_STATE',
+                                _msgId: Date.now() + '_req_' + Math.random().toString(36).slice(2, 7)
+                            }));
+                        }
                     });
                     client.on('message', (topic, message) => {
                         try {
-                            const data = JSON.parse(message.toString());
-                            if (data._msgId) {
-                                if (processedMsgIds.has(data._msgId)) return;
-                                processedMsgIds.add(data._msgId);
-                            }
-                            handleRoomSyncMessage(data);
+                            receiveRoomMessage(JSON.parse(message.toString()));
                         } catch (e) {}
                     });
                     mqttClients.push(client);
                 } catch (e) {}
+            });
+        }
+
+        function switchRoomPin(newPin) {
+            if (!newPin || newPin === currentRoomPin) return;
+            const oldTopic = MQTT_TOPIC_PREFIX + currentRoomPin;
+            currentRoomPin = newPin;
+            mqttClients.forEach(client => {
+                if (client && client.connected) {
+                    try {
+                        client.unsubscribe(oldTopic);
+                        client.subscribe(MQTT_TOPIC_PREFIX + newPin);
+                    } catch (e) {}
+                }
             });
         }
 
@@ -2084,6 +2187,12 @@
             if (lobbyQr) lobbyQr.src = qrUrl;
             if (lobbyUrlInp) lobbyUrlInp.value = studentUrl;
             if (lobbyPin) lobbyPin.innerText = currentRoomPin;
+            const qrPin = document.getElementById('qr-room-pin');
+            if (qrPin) qrPin.innerText = currentRoomPin;
+            const pinDisp = document.getElementById('student-pin-display');
+            if (pinDisp) pinDisp.innerText = currentRoomPin;
+            const pinInp = document.getElementById('student-pin-inp');
+            if (pinInp && !pinInp.value.trim()) pinInp.value = currentRoomPin;
         }
 
         function openLobbyScreen() {
@@ -2243,7 +2352,7 @@
             const nameInp = document.getElementById('student-join-name-inp');
             const teamSel = document.getElementById('student-team-select');
             const pinInp = document.getElementById('student-pin-inp');
-            const name = (nameInp ? nameInp.value : '').trim();
+            const name = (nameInp ? nameInp.value : '').trim().replace(/\s+/g, ' ').slice(0, 40);
             if (!name) {
                 showToast('⚠️ Em vui lòng nhập Họ và Tên trước khi vào sàn thi đấu!');
                 if (nameInp) nameInp.focus();
@@ -2251,7 +2360,7 @@
             }
             const teamMode = teamSel ? teamSel.value : 'bell';
             if (pinInp && pinInp.value.trim()) {
-                currentRoomPin = pinInp.value.trim();
+                switchRoomPin(pinInp.value.trim());
                 const pinDisp = document.getElementById('student-pin-display');
                 if (pinDisp) pinDisp.innerText = currentRoomPin;
             }
@@ -2300,7 +2409,7 @@
                 player.teamMode = teamSel.value;
                 savePlayersToStorage();
                 renderBellPlayers();
-                broadcastRoomEvent({ type: 'PLAYERS_LIST_SYNC', players: bellPlayers });
+                broadcastRoomEvent({ type: 'STUDENT_JOIN', payload: { id: player.id, name: player.name, teamMode: player.teamMode } });
             }
         }
 
@@ -2360,7 +2469,7 @@
                 if (foundIdx >= 0) selectedIdx = foundIdx;
             }
             sel.innerHTML = bellPlayers.map((p, idx) =>
-                `<option value="${idx}">${p.name} (${p.alive ? '🟢 Trên sàn' : '🔴 Đã loại'} - ${p.score}đ)</option>`
+                `<option value="${idx}">${escapeHtml(p.name)} (${p.alive ? '🟢 Trên sàn' : '🔴 Đã loại'} - ${p.score}đ)</option>`
             ).join('');
             sel.value = String(selectedIdx);
         }
@@ -2370,7 +2479,7 @@
         // - Khi vào thi: đề bài hiển thị chữ to trên Ti vi của Giáo viên; trên điện thoại học sinh chỉ hiện bộ nút chọn đáp án theo hiệu lệnh Giáo viên!
         function renderStudentPhoneUI() {
             populateStudentDropdown();
-            const q = examQuestions[bellIndex];
+            const q = (IS_STUDENT_MODE && stageQMeta) ? stageQMeta : examQuestions[bellIndex];
             if (!q) return;
 
             const joinCard = document.getElementById('student-join-card');
@@ -2409,7 +2518,7 @@
                         <div class="text-4xl animate-bounce">🏆</div>
                         <div class="text-base font-black text-amber-300 uppercase tracking-wider">ĐÃ BÁO DANH LÊN SÀN ĐẤU!</div>
                         <p class="text-xs text-indigo-200 leading-relaxed">
-                            Họ tên <strong>${registeredPlayer.name}</strong> đã xuất hiện trên màn chiếu <strong>ĐẤU TRƯỜNG KIẾN THỨC</strong>.<br/>
+                            Họ tên <strong>${escapeHtml(registeredPlayer.name)}</strong> đã xuất hiện trên màn chiếu <strong>ĐẤU TRƯỜNG KIẾN THỨC</strong>.<br/>
                             Hãy hướng mắt lên Ti vi và chờ Giáo viên bấm bắt đầu trận đấu!
                         </p>
                     </div>
@@ -2419,7 +2528,7 @@
 
             if (qStatusBox) qStatusBox.classList.remove('hidden');
             document.getElementById('student-part-badge').innerText = q.part;
-            document.getElementById('student-q-number').innerText = `${q.qNum} / ${examQuestions.length}`;
+            document.getElementById('student-q-number').innerText = `${q.qNum} / ${q.total || examQuestions.length}`;
             const sTimer = document.getElementById('student-timer-badge');
             if (sTimer) sTimer.innerText = `⏱️ ${bellTimeLeft}s`;
 
@@ -2450,7 +2559,7 @@
                     <div class="p-5 rounded-2xl bg-slate-100 dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 text-center space-y-2.5">
                         <div class="text-3xl">${stageCommandState === 'waiting' ? '👀' : '🔒'}</div>
                         <div class="text-xs font-extrabold text-slate-700 dark:text-slate-200 leading-relaxed">${lockMsg}</div>
-                        ${alreadySubmitted ? `<div class="inline-block px-3.5 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-black">Đáp án em đã chọn: ${alreadySubmitted}</div>` : ''}
+                        ${alreadySubmitted ? `<div class="inline-block px-3.5 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-black">Đáp án em đã chọn: ${escapeHtml(alreadySubmitted)}</div>` : ''}
                     </div>
                 `;
                 return;
@@ -2498,7 +2607,7 @@
                 pad.innerHTML = `
                     <div class="space-y-3">
                         <label class="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 block text-center">✍️ Nhập đáp số trả lời ngắn cho ${q.qNum}:</label>
-                        <input id="student-short-ans-inp" type="text" value="${studentShortDraft}" oninput="studentShortDraft = this.value" placeholder="Nhập kết quả (VD: 3, 24, 2.67)..." class="w-full px-4 py-3.5 rounded-2xl border-2 border-indigo-400 bg-slate-50 dark:bg-slate-900 font-black text-center text-xl text-indigo-700 dark:text-indigo-300">
+                        <input id="student-short-ans-inp" type="text" value="${escapeHtml(studentShortDraft)}" oninput="studentShortDraft = this.value" placeholder="Nhập kết quả (VD: 3, 24, 2.67)..." class="w-full px-4 py-3.5 rounded-2xl border-2 border-indigo-400 bg-slate-50 dark:bg-slate-900 font-black text-center text-xl text-indigo-700 dark:text-indigo-300">
                         <button type="button" onclick="submitFromStudentPhone('short', document.getElementById('student-short-ans-inp').value)" class="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-lg">
                             🚀 Gửi Đáp Số Về Đích
                         </button>
@@ -2519,7 +2628,7 @@
                 showToast('⏳ Chỉ được gửi đáp án khi Giáo viên đang mở hiệu lệnh làm bài!');
                 return;
             }
-            const q = examQuestions[bellIndex];
+            const q = (IS_STUDENT_MODE && stageQMeta) ? stageQMeta : examQuestions[bellIndex];
             if (!q) return;
 
             let pIdx = bellPlayers.findIndex(p => String(p.id) === String(currentStudentId));
@@ -2536,22 +2645,17 @@
             const teamSel = document.getElementById('student-team-select');
             const teamMode = player.teamMode || (teamSel ? teamSel.value : 'bell');
 
-            let isCorrect = false;
             let displayChoice = "";
+            let answer = answerValue;
 
             if (qType === 'mcq') {
-                isCorrect = (answerValue === q.correct);
                 displayChoice = String.fromCharCode(65 + answerValue);
             } else if (qType === 'tf') {
-                let match = 0;
-                q.statements.forEach((st, i) => { if (answerValue[i] === st.ans) match++; });
-                isCorrect = (match === 4);
-                displayChoice = answerValue.map(v => v ? 'Đ' : 'S').join('-') + ` (${match}/4)`;
+                answer = [...answerValue];
+                displayChoice = answer.map(v => v ? 'Đ' : 'S').join('-');
             } else {
-                const cleanU = String(answerValue || '').trim().replace(',', '.');
-                const cleanK = String(q.shortAnswer || '').trim().replace(',', '.');
-                isCorrect = (cleanU !== '' && cleanU === cleanK);
-                displayChoice = cleanU || '(Trống)';
+                answer = String(answerValue || '').trim().slice(0, 40);
+                displayChoice = answer || '(Trống)';
             }
 
             const subKey = `${player.id}_${bellIndex}`;
@@ -2565,7 +2669,7 @@
                 playerIdx: pIdx,
                 questionIndex: bellIndex,
                 teamMode,
-                isCorrect,
+                answer,
                 displayChoice,
                 qType
             };
@@ -2577,6 +2681,12 @@
 
         function handleIncomingStudentSubmission(payload, isLocal = false) {
             if (!payload) return;
+            if (!IS_STUDENT_MODE) {
+                // Bỏ qua bài nộp cho câu cũ hoặc nộp sau khi đã mở đáp án
+                if (payload.questionIndex !== undefined && payload.questionIndex !== bellIndex) return;
+                if (bellRevealed) return;
+                payload.isCorrect = isAnswerCorrect(examQuestions[bellIndex], payload.qType, payload.answer);
+            }
             let player = bellPlayers.find(p => String(p.id) === String(payload.playerId));
             if (!player && payload.playerName) {
                 player = bellPlayers.find(p => p.name.toLowerCase() === payload.playerName.toLowerCase());
@@ -2595,13 +2705,9 @@
             if (!player) return;
 
             player.pendingChoice = payload.displayChoice;
-            player.pendingCorrect = payload.isCorrect;
+            player.pendingCorrect = !!payload.isCorrect;
             player.pendingQType = payload.qType;
             player.teamMode = payload.teamMode || player.teamMode;
-
-            if (bellRevealed) {
-                gradeSinglePlayerSubmission(player);
-            }
 
             savePlayersToStorage();
             renderBellPlayers();
@@ -3707,15 +3813,15 @@
             redListEl.innerHTML = redPlayers.length === 0
                 ? `<span class="text-[11px] text-slate-400 italic">Chưa có học sinh Đội Đỏ (Quét QR hoặc bấm + Thêm)...</span>`
                 : redPlayers.map(({ p, idx }) => {
-                    const subBadge = (!tugRevealed && p.pendingChoice) ? ' 📩' : (p.lastChoice ? ` [${p.lastChoice}]` : '');
-                    return `<span onclick="togglePlayerTugTeam(${idx})" title="Bấm để đổi sang Đội Xanh" class="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-rose-300 hover:border-rose-500 text-rose-700 dark:text-rose-300 font-bold text-xs shadow-sm transition">🔴 ${p.name}${subBadge}</span>`;
+                    const subBadge = (!tugRevealed && p.pendingChoice) ? ' 📩' : (p.lastChoice ? ` [${escapeHtml(p.lastChoice)}]` : '');
+                    return `<span onclick="togglePlayerTugTeam(${idx})" title="Bấm để đổi sang Đội Xanh" class="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-rose-300 hover:border-rose-500 text-rose-700 dark:text-rose-300 font-bold text-xs shadow-sm transition">🔴 ${escapeHtml(p.name)}${subBadge}</span>`;
                 }).join('');
 
             blueListEl.innerHTML = bluePlayers.length === 0
                 ? `<span class="text-[11px] text-slate-400 italic">Chưa có học sinh Đội Xanh (Quét QR hoặc bấm + Thêm)...</span>`
                 : bluePlayers.map(({ p, idx }) => {
-                    const subBadge = (!tugRevealed && p.pendingChoice) ? ' 📩' : (p.lastChoice ? ` [${p.lastChoice}]` : '');
-                    return `<span onclick="togglePlayerTugTeam(${idx})" title="Bấm để đổi sang Đội Đỏ" class="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-sky-300 hover:border-sky-500 text-sky-700 dark:text-sky-300 font-bold text-xs shadow-sm transition">🔵 ${p.name}${subBadge}</span>`;
+                    const subBadge = (!tugRevealed && p.pendingChoice) ? ' 📩' : (p.lastChoice ? ` [${escapeHtml(p.lastChoice)}]` : '');
+                    return `<span onclick="togglePlayerTugTeam(${idx})" title="Bấm để đổi sang Đội Đỏ" class="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-sky-300 hover:border-sky-500 text-sky-700 dark:text-sky-300 font-bold text-xs shadow-sm transition">🔵 ${escapeHtml(p.name)}${subBadge}</span>`;
                 }).join('');
         }
 
@@ -3755,7 +3861,7 @@
                                 <div class="flex items-center space-x-2.5 truncate">
                                     <span class="w-7 h-7 rounded-full bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center shrink-0">${idx + 1}</span>
                                     <div class="truncate">
-                                        <div class="font-black text-sm sm:text-base text-white truncate">${p.name}</div>
+                                        <div class="font-black text-sm sm:text-base text-white truncate">${escapeHtml(p.name)}</div>
                                         <div class="text-[10px] font-bold text-amber-300">${teamBadge}</div>
                                     </div>
                                 </div>
@@ -3796,13 +3902,13 @@
                     choiceTag = `<span class="ml-2 px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-black">📩 Đã nộp</span>`;
                 } else if (p.lastChoice) {
                     const ansColor = p.alive ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800';
-                    choiceTag = `<span class="ml-2 px-2 py-0.5 rounded-lg ${ansColor} text-xs font-black">Chọn: ${p.lastChoice}</span>`;
+                    choiceTag = `<span class="ml-2 px-2 py-0.5 rounded-lg ${ansColor} text-xs font-black">Chọn: ${escapeHtml(p.lastChoice)}</span>`;
                 }
 
                 return `<div onclick="togglePlayerAlive(${origIdx})" class="p-3 rounded-2xl border-2 cursor-pointer transition flex items-center justify-between text-sm sm:text-base font-extrabold ${statusClass}" title="Bấm để đổi trạng thái Trên sàn / Đã loại">
                     <div class="truncate pr-2 flex items-center">
                         <span class="mr-2 text-base">${p.alive ? '🟢' : '🔴'}</span>
-                        <span class="truncate">${rankIdx + 1}. ${p.name}</span>
+                        <span class="truncate">${rankIdx + 1}. ${escapeHtml(p.name)}</span>
                         ${choiceTag}
                     </div>
                     <span class="px-2.5 py-1 rounded-xl bg-amber-100 dark:bg-slate-700 text-amber-800 dark:text-amber-300 font-black text-xs sm:text-sm shrink-0">${p.score}đ</span>
@@ -3830,6 +3936,8 @@
             stopTensionMusicLoop();
             gradeAllPendingSubmissions();
             renderBellStage();
+            renderStudentPhoneUI();
+            broadcastStageState();
             if (idx === q.correct) {
                 playCorrectSound();
                 showToast('✅ Chính xác! Chúc mừng các thí sinh chọn phương án ' + String.fromCharCode(65 + idx));
@@ -4072,7 +4180,7 @@
                     return `<div class="p-3.5 rounded-2xl border-2 flex items-center justify-between shadow-sm ${bg}">
                         <div class="text-left">
                             <div class="text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-400">${medal}</div>
-                            <div class="font-extrabold text-sm">${p.name}</div>
+                            <div class="font-extrabold text-sm">${escapeHtml(p.name)}</div>
                         </div>
                         <div class="px-3 py-1 rounded-xl bg-amber-500 text-white font-black text-xs">${p.score} điểm</div>
                     </div>`;
@@ -4127,7 +4235,7 @@
             const sorted = [...bellPlayers].sort((a, b) => b.score - a.score);
             sorted.forEach((p, idx) => {
                 const modeName = p.teamMode === 'red' ? 'Đội Đỏ' : (p.teamMode === 'blue' ? 'Đội Xanh' : 'Rung Chuông Vàng');
-                csv += `${idx + 1},"${p.name}","${modeName}",${p.alive ? "Còn trên sàn" : "Đã loại"},${p.score}\n`;
+                csv += `${idx + 1},"${String(p.name).replace(/"/g, '""')}","${modeName}",${p.alive ? "Còn trên sàn" : "Đã loại"},${p.score}\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
@@ -4318,6 +4426,8 @@
             stopTensionMusicLoop();
             gradeAllPendingSubmissions();
             renderTugStage();
+            renderStudentPhoneUI();
+            broadcastStageState();
             if (idx === q.correct) {
                 playCorrectSound();
                 showToast('✅ Chính xác! Phương án đúng là ' + String.fromCharCode(65 + idx) + '.');
@@ -4335,16 +4445,18 @@
         function gradeTugShortAnswer() {
             const q = examQuestions[tugIndex];
             if (!q || q.type !== 'short') return;
-            const cleanKey = String(q.shortAnswer || '').trim().replace(',', '.');
-            const redOk = String(tugRedInput || '').trim().replace(',', '.') === cleanKey;
-            const blueOk = String(tugBlueInput || '').trim().replace(',', '.') === cleanKey;
+            const redOk = shortAnswerMatches(tugRedInput, q.shortAnswer);
+            const blueOk = shortAnswerMatches(tugBlueInput, q.shortAnswer);
 
             tugRevealed = true;
             stageCommandState = 'locked';
+            clearInterval(tugTimer);
             stopTensionMusicLoop();
             if (redOk) awardTugPoint('red');
             if (blueOk) awardTugPoint('blue');
             renderTugStage();
+            renderStudentPhoneUI();
+            broadcastStageState();
 
             if (redOk && blueOk) {
                 playCorrectSound();
@@ -4501,9 +4613,8 @@
                         showToast(`🪢 Kết quả Tăng Tốc: Đội Đỏ đúng ${redMatch}/4 ý • Đội Xanh đúng ${blueMatch}/4 ý!`);
                     }
                 } else if (q.type === 'short' && (tugRedInput.trim() !== '' || tugBlueInput.trim() !== '')) {
-                    const cleanKey = String(q.shortAnswer || '').trim().replace(',', '.');
-                    if (String(tugRedInput || '').trim().replace(',', '.') === cleanKey) awardTugPoint('red', true);
-                    if (String(tugBlueInput || '').trim().replace(',', '.') === cleanKey) awardTugPoint('blue', true);
+                    if (shortAnswerMatches(tugRedInput, q.shortAnswer)) awardTugPoint('red', true);
+                    if (shortAnswerMatches(tugBlueInput, q.shortAnswer)) awardTugPoint('blue', true);
                 }
             }
 
@@ -4700,9 +4811,7 @@
                     else if (match === 3) totalScore += 0.5;
                     else if (match === 4) totalScore += 1.0;
                 } else if (q.type === 'short' && ans !== undefined) {
-                    const cleanUser = String(ans).trim().replace(',', '.');
-                    const cleanKey = String(q.shortAnswer).trim().replace(',', '.');
-                    if (cleanUser === cleanKey) totalScore += 0.5;
+                    if (shortAnswerMatches(ans, q.shortAnswer)) totalScore += 0.5;
                 }
             });
 
@@ -4884,6 +4993,11 @@
                 if (navBar) navBar.classList.add('hidden');
                 if (footerLinks) footerLinks.classList.add('hidden');
                 if (testSelectWrap) testSelectWrap.classList.add('hidden');
+                try {
+                    const profile = JSON.parse(localStorage.getItem('mathlab_2025_my_student_profile') || 'null');
+                    const nameInp = document.getElementById('student-join-name-inp');
+                    if (profile && profile.name && nameInp && !nameInp.value) nameInp.value = profile.name;
+                } catch (e) {}
                 switchTab('student');
                 showToast('📲 Chào mừng đến với ĐẤU TRƯỜNG KIẾN THỨC! Em hãy nhập Họ Tên để báo danh.');
             } else {

@@ -15,6 +15,7 @@ Hỗ trợ tải file `.docx` hoặc dán văn bản câu hỏi, hiển thị c�
 Khảo sát trực quan hàm phân thức Bậc hai / Bậc nhất $y = \frac{ax^2+bx+c}{mx+n}$ (tự động vẽ Tiệm cận đứng & Tiệm cận xiên), hàm bậc ba và hàm nhất biến.
 📝 Lộ trình 10-11-12, Phòng luyện thi 2025 & Sổ tay công thức.
 🚀 Hướng dẫn chạy trên GitHub Pages
-Tải các file trong kho lưu trữ này lên Repository GitHub của bạn (`index.html`, `README.md`, `de_mau_11_cau_3_phan.txt`).
+Tải các file trong kho lưu trữ này lên Repository GitHub của bạn (`index.html`, `README.md`). Muốn trang tự nạp đề riêng khi mở, đặt file đề tên `de_thi_22_cau.txt` (cùng định dạng `demau.txt`) cạnh `index.html`; không có file này trang dùng bộ đề 22 câu tích hợp sẵn.
 Vào mục Settings $\rightarrow$ Pages $\rightarrow$ tại mục Branch chọn `main` và bấm Save.
 Truy cập đường link `https://<ten-tai-khoan>.github.io/<ten-repo>/` để sử dụng trên máy chiếu và điện thoại.
+Mỗi máy giáo viên có một **mã phòng (PIN) 6 chữ số riêng**, sinh ngẫu nhiên lần đầu và giữ nguyên cho các lần sau; mã QR ở Sảnh chờ đã kèm sẵn PIN nên học sinh chỉ cần quét mã.
